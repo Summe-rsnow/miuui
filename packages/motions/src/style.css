@@ -1,0 +1,41 @@
+@layer miu-motion {
+  [data-motion-tier="reduced"] {
+    --miu-motion-translate-sm: 0px;
+    --miu-motion-translate-md: 0px;
+    --miu-motion-scale-active: 1;
+  }
+
+  [data-motion-tier="none"] {
+    --miu-motion-duration-fast: 0.01ms;
+    --miu-motion-duration-base: 0.01ms;
+    --miu-motion-duration-slow: 0.01ms;
+    --miu-motion-translate-sm: 0px;
+    --miu-motion-translate-md: 0px;
+    --miu-motion-scale-active: 1;
+    --miu-motion-loop-duration: 0.01ms;
+  }
+
+  [data-motion-tier="reduced"] .miu-spinner,
+  [data-motion-tier="reduced"] .miu-skeleton__shimmer {
+    animation-play-state: paused;
+  }
+
+  [data-motion-tier="none"] .miu-spinner,
+  [data-motion-tier="none"] .miu-skeleton__shimmer {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --miu-motion-translate-sm: 0px;
+      --miu-motion-translate-md: 0px;
+      --miu-motion-scale-active: 1;
+    }
+
+    .miu-spinner,
+    .miu-skeleton__shimmer {
+      animation-play-state: paused;
+    }
+  }
+}

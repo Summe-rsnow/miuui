@@ -1,0 +1,25 @@
+{
+  "name": "@miuui/icons",
+  "version": "0.1.0",
+  "description": "μui named icon exports, bound to icon-size and currentColor",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-packages.mjs icons",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

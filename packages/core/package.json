@@ -1,0 +1,28 @@
+{
+  "name": "@miuui/core",
+  "version": "0.1.0",
+  "description": "μui framework-agnostic component recipes, plugin contracts and registries",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-packages.mjs core",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@miuui/tokens": "file:../tokens"
+  }
+}

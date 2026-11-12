@@ -1,0 +1,33 @@
+{
+  "name": "@miuui/tokens",
+  "version": "0.1.0",
+  "description": "μui OKLCH palette generator, four-layer design tokens and W3C DTCG exporter",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/tokens.css",
+    "./dtcg.json": "./dist/tokens.dtcg.json"
+  },
+  "scripts": {
+    "tokens:build": "oxnode scripts/build.ts",
+    "build": "node ../../scripts/build-packages.mjs tokens",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0"
+  }
+}

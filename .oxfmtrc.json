@@ -1,0 +1,13 @@
+{
+  "semi": false,
+  "singleQuote": false,
+  "printWidth": 100,
+  "trailingComma": "all",
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/generated/**",
+    "pnpm-lock.yaml",
+    "**/*.md"
+  ]
+}

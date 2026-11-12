@@ -1,0 +1,43 @@
+@layer miu-material {
+  [data-material="solid"] {
+    --miu-material-surface: var(--miu-color-surface-solid-bg);
+    --miu-material-border: var(--miu-color-border-subtle);
+    --miu-material-backdrop: none;
+    --miu-material-highlight: none;
+    --miu-material-gloss: block;
+  }
+
+  [data-material="mica"] {
+    --miu-material-surface: var(--miu-color-surface-mica-bg);
+    --miu-material-border: var(--miu-color-surface-glass-border);
+    --miu-material-backdrop: blur(18px) saturate(140%);
+    --miu-material-highlight: var(--miu-color-surface-glass-highlight);
+    --miu-material-gloss: block;
+  }
+
+  [data-material="glass"] {
+    --miu-material-surface: var(--miu-color-surface-glass-bg);
+    --miu-material-border: var(--miu-color-surface-glass-border);
+    --miu-material-backdrop: blur(22px) saturate(165%);
+    --miu-material-highlight: var(--miu-color-surface-glass-highlight);
+    --miu-material-gloss: block;
+  }
+
+  [data-motion-tier="reduced"] [data-material="mica"],
+  [data-motion-tier="reduced"] [data-material="glass"],
+  [data-motion-tier="none"] [data-material="mica"],
+  [data-motion-tier="none"] [data-material="glass"] {
+    --miu-material-gloss: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-material="mica"],
+    [data-material="glass"] {
+      --miu-material-surface: var(--miu-color-surface-solid-bg);
+      --miu-material-border: var(--miu-color-border-subtle);
+      --miu-material-backdrop: none;
+      --miu-material-highlight: none;
+      --miu-material-gloss: none;
+    }
+  }
+}

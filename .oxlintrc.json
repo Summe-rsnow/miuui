@@ -1,0 +1,56 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "unicorn", "vue"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-console": "off",
+    "typescript/no-explicit-any": "error"
+  },
+  "overrides": [
+    {
+      "files": ["packages/core/src/**/*.ts", "packages/tokens/src/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              { "name": "vue", "message": "core/tokens must stay framework-agnostic." },
+              { "name": "reka-ui", "message": "core/tokens must stay framework-agnostic." },
+              { "name": "@miuui/vue", "message": "core/tokens must not depend on the Vue adapter." }
+            ]
+          }
+        ],
+        "no-restricted-globals": [
+          "error",
+          "window",
+          "document",
+          "localStorage",
+          "sessionStorage",
+          "navigator",
+          "HTMLElement",
+          "HTMLInputElement",
+          "HTMLDivElement"
+        ],
+        "typescript/no-restricted-types": [
+          "error",
+          {
+            "types": {
+              "HTMLElement": "core/tokens must not depend on DOM types.",
+              "HTMLInputElement": "core/tokens must not depend on DOM types.",
+              "HTMLDivElement": "core/tokens must not depend on DOM types.",
+              "Window": "core/tokens must not depend on DOM types.",
+              "Document": "core/tokens must not depend on DOM types."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.test.ts"],
+      "env": { "vitest": true }
+    }
+  ],
+  "ignorePatterns": ["**/node_modules/**", "**/dist/**", "**/generated/**"]
+}

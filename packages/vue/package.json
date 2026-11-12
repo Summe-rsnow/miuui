@@ -1,0 +1,48 @@
+{
+  "name": "@miuui/vue",
+  "version": "0.1.0",
+  "description": "μui Vue 3.5+ adapter built on Reka UI primitives",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/style.css",
+    "./components.css": "./dist/components.css"
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-packages.mjs vue",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@miuui/core": "file:../core",
+    "@miuui/icons": "file:../icons",
+    "@miuui/tokens": "file:../tokens"
+  },
+  "devDependencies": {
+    "reka-ui": "^2.11.0",
+    "vue": "^3.5.45"
+  },
+  "peerDependencies": {
+    "reka-ui": "^2.11.0",
+    "vue": "^3.5.0"
+  },
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 113",
+    "safari >= 15.4"
+  ]
+}

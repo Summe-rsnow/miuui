@@ -1,0 +1,43 @@
+{
+  "name": "@miuui/monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tokens:build": "pnpm --filter @miuui/tokens tokens:build",
+    "tokens:validate": "node packages/tokens/scripts/validate-dtcg.mjs",
+    "build": "node scripts/build-packages.mjs",
+    "check:size": "node scripts/check-bundle-size.mjs",
+    "check:visual": "node scripts/check-visual.mjs",
+    "visual:seed": "node scripts/check-visual.mjs --seed",
+    "visual:update": "node scripts/check-visual.mjs --update",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "lint": "oxlint . --vue-plugin",
+    "lint:fix": "oxlint . --vue-plugin --fix",
+    "lint:hardcoded": "node scripts/check-hardcoded.mjs",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "check": "pnpm tokens:build && pnpm tokens:validate && pnpm lint && pnpm lint:hardcoded && pnpm format:check && pnpm typecheck && pnpm build && pnpm check:size && pnpm test"
+  },
+  "devDependencies": {
+    "@oxc-node/cli": "^1.0.1",
+    "@types/node": "^26.6.6",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "@vitest/coverage-v8": "^5.1.0",
+    "@vue/test-utils": "^2.5.1",
+    "axe-core": "^4.14.0",
+    "jsdom": "^31.0.0",
+    "oxfmt": "^0.78.0",
+    "oxlint": "^1.93.0",
+    "playwright-core": "^1.65.0",
+    "pngjs": "^7.0.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.7",
+    "vitest": "^5.1.0",
+    "vue": "^3.5.45",
+    "vue-tsc": "^3.3.14"
+  },
+  "packageManager": "pnpm@12.16.1"
+}
