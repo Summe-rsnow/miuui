@@ -144,3 +144,16 @@ export function withAlpha(hex: string, alpha: number): string {
   const [r, g, b] = hexToRgb(hex)
   return `rgb(${Math.round(r * 255)} ${Math.round(g * 255)} ${Math.round(b * 255)} / ${alpha})`
 }
+
+/** WCAG 2.1 relative luminance for an sRGB hex color. */
+export function relativeLuminance(hex: string): number {
+  const [r, g, b] = hexToRgb(normalizeHex(hex)).map(srgbToLinear) as [number, number, number]
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+/** WCAG 2.1 contrast ratio between two hex colors (1..21). */
+export function contrastRatio(foreground: string, background: string): number {
+  const l1 = relativeLuminance(foreground)
+  const l2 = relativeLuminance(background)
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)
+}

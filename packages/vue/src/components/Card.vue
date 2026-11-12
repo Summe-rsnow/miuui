@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { regionClass, regionStyle } from "@miuui/core"
 import type { CardProps } from "../types"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 const props = withDefaults(defineProps<CardProps>(), {
   radius: "lg",
@@ -8,6 +9,8 @@ const props = withDefaults(defineProps<CardProps>(), {
   variant: "surface",
   interactive: false,
 })
+
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Card")
 </script>
 
 <template>
@@ -22,8 +25,8 @@ const props = withDefaults(defineProps<CardProps>(), {
         { 'miu-card--interactive': interactive },
       )
     "
-    :style="regionStyle(props, 'root')"
-    :data-material="material"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
+    :data-material="materialName"
     :data-miu-radius="radius"
     :data-density="density"
   >

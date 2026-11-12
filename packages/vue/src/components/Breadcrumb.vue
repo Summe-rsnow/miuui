@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { regionClass, regionStyle, safeHref } from "@miuui/core"
-import type { BreadcrumbProps } from "../types"
+import type { BreadcrumbItem, BreadcrumbProps } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
 
 const props = withDefaults(defineProps<BreadcrumbProps>(), {
   items: () => [],
   size: "md",
 })
+
+const emit = defineEmits<{ select: [item: BreadcrumbItem, event: MouseEvent] }>()
 
 const { t } = useMiuI18n()
 </script>
@@ -33,6 +35,7 @@ const { t } = useMiuI18n()
           :href="safeHref(item.link)"
           :class="regionClass(props, 'link', 'miu-breadcrumb__link')"
           :style="regionStyle(props, 'link')"
+          @click="emit('select', item, $event)"
         >
           {{ item.text }}
         </a>

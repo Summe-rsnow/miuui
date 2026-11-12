@@ -8,8 +8,8 @@ import {
   resolveIconSize,
 } from "@miuui/core"
 import type { ButtonProps } from "../types"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import { useMiuSizeHint } from "../composables/useSizeHint"
-
 import Icon from "./Icon.vue"
 import Spinner from "./Spinner.vue"
 
@@ -32,7 +32,7 @@ const type = computed(() => props.type ?? "button")
 
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
 const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
-
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Button")
 const accessibleLabel = computed(() => {
   const external = attrs["aria-label"]
   return (
@@ -83,11 +83,11 @@ defineExpose({
         },
       )
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
     :data-miu-icon-size="resolvedIconSize.size"
-    :data-material="material"
+    :data-material="materialName"
     :disabled="disabled || loading"
     :aria-label="accessibleLabel"
     :aria-busy="loading || undefined"

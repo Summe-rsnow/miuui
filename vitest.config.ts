@@ -8,10 +8,17 @@ export default defineConfig({
     alias: {
       "@miuui/core": fileURLToPath(new URL("./packages/core/src", import.meta.url)),
       "@miuui/tokens": fileURLToPath(new URL("./packages/tokens/src", import.meta.url)),
+      "@miuui/icons/dynamic": fileURLToPath(
+        new URL("./packages/icons/src/dynamic.ts", import.meta.url),
+      ),
+      "@miuui/icons/brand": fileURLToPath(
+        new URL("./packages/icons/src/brand.ts", import.meta.url),
+      ),
       "@miuui/icons": fileURLToPath(new URL("./packages/icons/src", import.meta.url)),
       "@miuui/materials": fileURLToPath(new URL("./packages/materials/src", import.meta.url)),
       "@miuui/motions": fileURLToPath(new URL("./packages/motions/src", import.meta.url)),
       "@miuui/vue": fileURLToPath(new URL("./packages/vue/src", import.meta.url)),
+      "@miuui/codemod": fileURLToPath(new URL("./packages/codemod/src", import.meta.url)),
     },
   },
   test: {
@@ -27,6 +34,7 @@ export default defineConfig({
         "packages/tokens/src/**/*.ts",
         "packages/vue/src/**/*.ts",
         "packages/vue/src/**/*.vue",
+        "packages/codemod/src/**/*.ts",
       ],
       exclude: ["**/*.test.ts", "**/generated/**", "**/index.ts"],
       thresholds: {

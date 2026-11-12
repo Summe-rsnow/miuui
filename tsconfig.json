@@ -19,10 +19,13 @@
     "paths": {
       "@miuui/core": ["./packages/core/src/index.ts"],
       "@miuui/tokens": ["./packages/tokens/src/index.ts"],
+      "@miuui/icons/dynamic": ["./packages/icons/src/dynamic.ts"],
+      "@miuui/icons/brand": ["./packages/icons/src/brand.ts"],
       "@miuui/icons": ["./packages/icons/src/index.ts"],
       "@miuui/materials": ["./packages/materials/src/index.ts"],
       "@miuui/motions": ["./packages/motions/src/index.ts"],
-      "@miuui/vue": ["./packages/vue/src/index.ts"]
+      "@miuui/vue": ["./packages/vue/src/index.ts"],
+      "@miuui/codemod": ["./packages/codemod/src/index.ts"]
     }
   },
   "include": ["env.d.ts", "packages/**/*.ts", "packages/**/*.vue", "vitest.config.ts"],

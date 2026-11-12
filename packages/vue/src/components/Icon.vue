@@ -5,10 +5,26 @@ import {
   CheckIcon,
   ChevronIcon,
   CloseIcon,
+  DownloadIcon,
+  EditIcon,
+  HeartFilledIcon,
+  HeartIcon,
+  MoonIcon,
+  PauseIcon,
+  PlayIcon,
   PlusIcon,
+  RepeatIcon,
   SearchIcon,
   SettingsIcon,
+  ShareIcon,
+  ShuffleIcon,
+  SkipBackwardIcon,
+  SkipForwardIcon,
+  SunIcon,
+  TrashIcon,
   UserIcon,
+  VolumeHighIcon,
+  VolumeOffIcon,
   type IconDefinition,
   type IconName,
 } from "@miuui/icons"
@@ -33,6 +49,22 @@ const iconMap: Record<IconName, IconDefinition> = {
   settings: SettingsIcon,
   user: UserIcon,
   bell: BellIcon,
+  play: PlayIcon,
+  pause: PauseIcon,
+  skipForward: SkipForwardIcon,
+  skipBackward: SkipBackwardIcon,
+  heart: HeartIcon,
+  heartFilled: HeartFilledIcon,
+  volumeHigh: VolumeHighIcon,
+  volumeOff: VolumeOffIcon,
+  repeat: RepeatIcon,
+  shuffle: ShuffleIcon,
+  moon: MoonIcon,
+  sun: SunIcon,
+  download: DownloadIcon,
+  share: ShareIcon,
+  edit: EditIcon,
+  trash: TrashIcon,
 }
 
 const definition = computed(() => iconMap[props.name])
@@ -50,8 +82,8 @@ const rotation = computed(() => ({ "--miu-icon-rotation": `${props.rotate}deg` }
     :role="label ? 'img' : undefined"
     :aria-label="label"
     :aria-hidden="label ? undefined : 'true'"
-    fill="none"
-    stroke="currentColor"
+    :fill="definition.filled ? 'currentColor' : 'none'"
+    :stroke="definition.filled ? 'none' : 'currentColor'"
     stroke-width="2.4"
     stroke-linecap="round"
     stroke-linejoin="round"

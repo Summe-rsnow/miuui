@@ -37,6 +37,11 @@ const packages = [
     name: "icons",
     vue: false,
     typeCmd: "tsc",
+    entries: {
+      index: "src/index.ts",
+      dynamic: "src/dynamic.ts",
+      brand: "src/brand.ts",
+    },
     assets: [],
   },
   {
@@ -66,6 +71,16 @@ const packages = [
       ["src/components.css", "dist/components.css"],
     ],
   },
+  {
+    name: "codemod",
+    vue: false,
+    typeCmd: "tsc",
+    entries: {
+      index: "src/index.ts",
+      cli: "src/cli.ts",
+    },
+    assets: [],
+  },
 ]
 
 const filter = process.argv.slice(2)
@@ -92,9 +107,10 @@ for (const pkg of targets) {
       outDir: distDir,
       emptyOutDir: true,
       minify: false,
-      sourcemap: true,
       lib: {
-        entry: resolve(pkgDir, "src/index.ts"),
+        entry: pkg.entries
+          ? Object.fromEntries(Object.entries(pkg.entries).map(([k, v]) => [k, resolve(pkgDir, v)]))
+          : resolve(pkgDir, "src/index.ts"),
         formats: ["es"],
       },
       rollupOptions: {

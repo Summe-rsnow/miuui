@@ -22,6 +22,7 @@ import {
 import type { SelectProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
 import { useMiuSizeHint } from "../composables/useSizeHint"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
 import Icon from "./Icon.vue"
@@ -32,6 +33,8 @@ const props = withDefaults(defineProps<SelectProps>(), {
   disabled: false,
   invalid: false,
 })
+
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Select")
 
 const emit = defineEmits<{ "update:modelValue": [value: string] }>()
 
@@ -69,11 +72,11 @@ function onUpdate(value: string | undefined): void {
         'miu-select--invalid': invalid,
       })
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
     :data-miu-icon-size="resolvedIconSize.size"
-    :data-material="material"
+    :data-material="materialName"
     :data-invalid="invalid || undefined"
     :data-disabled="disabled || undefined"
   >
@@ -103,8 +106,8 @@ function onUpdate(value: string | undefined): void {
           position="popper"
           :side-offset="4"
           :class="regionClass(props, 'content', 'miu-select__content')"
-          :style="regionStyle(props, 'content')"
-          :data-material="material"
+          :style="mergeStyle(regionStyle(props, 'content'), materialTokens)"
+          :data-material="materialName"
           :data-miu-radius="radius"
         >
           <SelectViewport class="miu-select__viewport">

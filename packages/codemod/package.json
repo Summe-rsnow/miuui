@@ -1,0 +1,28 @@
+{
+  "name": "@miuui/codemod",
+  "version": "0.2.0",
+  "description": "μui AST/template codemods for SemVer deprecation migrations",
+  "license": "MIT",
+  "bin": {
+    "miuui-codemod": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-packages.mjs codemod",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

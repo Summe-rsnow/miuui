@@ -1,6 +1,6 @@
 {
   "name": "@miuui/icons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "μui named icon exports, bound to icon-size and currentColor",
   "license": "MIT",
   "files": [
@@ -16,6 +16,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./dynamic": {
+      "types": "./dist/dynamic.d.ts",
+      "import": "./dist/dynamic.js"
+    },
+    "./brand": {
+      "types": "./dist/brand.d.ts",
+      "import": "./dist/brand.js"
     }
   },
   "scripts": {

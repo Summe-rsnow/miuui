@@ -13,8 +13,8 @@ import { useMiuTheme } from "../composables/useMiu"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<DropdownMenuProps>(), {
+  open: undefined,
   side: "bottom",
-  align: "end",
   sideOffset: 6,
   radius: "default",
   iconSize: "sm",

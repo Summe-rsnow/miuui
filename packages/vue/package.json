@@ -1,6 +1,6 @@
 {
   "name": "@miuui/vue",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "μui Vue 3.5+ adapter built on Reka UI primitives",
   "license": "MIT",
   "files": [
@@ -36,7 +36,7 @@
     "vue": "^3.5.45"
   },
   "peerDependencies": {
-    "reka-ui": "^2.11.0",
+    "reka-ui": ">=2.11.0 <3.0.0",
     "vue": "^3.5.0"
   },
   "browserslist": [

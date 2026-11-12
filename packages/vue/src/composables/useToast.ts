@@ -16,9 +16,23 @@ export interface ToastItem extends ToastOptions {
 }
 
 const items = ref<ToastItem[]>([])
+const activeViewports = ref<symbol[]>([])
 const timers = new Map<number, ReturnType<typeof setTimeout>>()
 let sequence = 0
 
+export function registerToastViewport(id: symbol): void {
+  if (!activeViewports.value.includes(id)) {
+    activeViewports.value = [...activeViewports.value, id]
+  }
+}
+
+export function unregisterToastViewport(id: symbol): void {
+  activeViewports.value = activeViewports.value.filter((entry) => entry !== id)
+}
+
+export function isPrimaryToastViewport(id: symbol): boolean {
+  return activeViewports.value[0] === id
+}
 function dismiss(id: number): void {
   const timer = timers.get(id)
   if (timer) {

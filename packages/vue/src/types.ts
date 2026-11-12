@@ -74,6 +74,7 @@ export interface InputProps extends ComponentSemanticProps<InputSemanticRegion> 
   readonly?: boolean
   invalid?: boolean
   clearable?: boolean
+  showCount?: boolean
   maxlength?: number
   minlength?: number
   autocomplete?: string
@@ -173,6 +174,7 @@ export interface FormRowProps extends ComponentSemanticProps<
   icon?: IconName
   iconSize?: IconSize
   density?: Density
+  /** @deprecated Use `density="compact"` instead; will be removed in 1.0.0. */
   dense?: boolean
   clickable?: boolean
   layout?: "row" | "column"
@@ -197,6 +199,7 @@ export interface DialogProps extends ComponentSemanticProps<DialogSemanticRegion
   size?: DialogSize
   radius?: Radius | "default"
   material?: MaterialName
+  width?: string
   closeLabel?: string
   ariaLabel?: string
 }
@@ -241,6 +244,7 @@ export interface TabsProps extends ComponentSemanticProps<TabsSemanticRegion> {
   size?: ControlSize
   radius?: Radius | "default"
   iconSize?: IconSize
+  align?: "start" | "center" | "end"
   ariaLabel?: string
 }
 
@@ -293,6 +297,42 @@ export interface PillProps extends ComponentSemanticProps<
   disabled?: boolean
 }
 
+export interface PillGroupOption {
+  value: string | number
+  label: string
+  icon?: IconName
+  count?: number | string
+  disabled?: boolean
+}
+
+export interface PillGroupProps extends ComponentSemanticProps<"root" | "item"> {
+  modelValue?: string | number | Array<string | number>
+  options: Array<string | PillGroupOption>
+  multiple?: boolean
+  max?: number
+  showAllOption?: boolean
+  allLabel?: string
+  allValue?: string | number
+  size?: "sm" | "md" | "lg"
+  radius?: Radius | "default"
+  material?: MaterialName
+  variant?: "filter" | "tag" | "ghost"
+  disabled?: boolean
+  ariaLabel?: string
+}
+
+export interface SliderProps extends ComponentSemanticProps<"root" | "track" | "range" | "thumb"> {
+  modelValue?: number
+  min?: number
+  max?: number
+  step?: number
+  orientation?: "horizontal" | "vertical"
+  size?: "sm" | "md" | "lg"
+  radius?: Radius | "default"
+  disabled?: boolean
+  name?: string
+  ariaLabel?: string
+}
 export interface AvatarProps extends ComponentSemanticProps<"root" | "image" | "fallback"> {
   src?: string
   alt: string
@@ -576,6 +616,9 @@ export interface TruncateTextProps extends ComponentSemanticProps<"root"> {
   lines?: number
   as?: string
   title?: string
+  expandable?: boolean
+  expandLabel?: string
+  collapseLabel?: string
 }
 
 export interface ToastViewportProps extends ComponentSemanticProps<"viewport" | "toast"> {

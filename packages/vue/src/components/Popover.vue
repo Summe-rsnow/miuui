@@ -3,9 +3,10 @@ import { PopoverArrow, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigge
 import { regionClass, regionStyle } from "@miuui/core"
 import type { PopoverProps } from "../types"
 import { useMiuTheme } from "../composables/useMiu"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 const props = withDefaults(defineProps<PopoverProps>(), {
-  open: false,
+  open: undefined,
   side: "bottom",
   align: "center",
   sideOffset: 8,
@@ -16,6 +17,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
 
 const emit = defineEmits<{ "update:open": [value: boolean] }>()
 const theme = useMiuTheme()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Popover")
 </script>
 
 <template>
@@ -26,9 +28,9 @@ const theme = useMiuTheme()
     <PopoverPortal :to="theme.portalTarget.value">
       <PopoverContent
         :class="regionClass(props, 'content', 'miu-popover')"
-        :style="regionStyle(props, 'content')"
+        :style="mergeStyle(regionStyle(props, 'content'), materialTokens)"
         :data-miu-radius="radius"
-        :data-material="material"
+        :data-material="materialName"
         :side="side"
         :align="align"
         :side-offset="sideOffset"

@@ -26,11 +26,13 @@ import NavMenu from "./components/NavMenu.vue"
 import PageHeader from "./components/PageHeader.vue"
 import Pagination from "./components/Pagination.vue"
 import Pill from "./components/Pill.vue"
+import PillGroup from "./components/PillGroup.vue"
 import Popover from "./components/Popover.vue"
 import SectionHeader from "./components/SectionHeader.vue"
 import SegmentedControl from "./components/SegmentedControl.vue"
 import Select from "./components/Select.vue"
 import Skeleton from "./components/Skeleton.vue"
+import Slider from "./components/Slider.vue"
 import Spinner from "./components/Spinner.vue"
 import Switch from "./components/Switch.vue"
 import Table from "./components/Table.vue"
@@ -69,11 +71,13 @@ export const components: Record<string, Component> = {
   MiuNavMenu: NavMenu,
   MiuPageHeader: PageHeader,
   MiuPagination: Pagination,
+  MiuPillGroup: PillGroup,
   MiuPill: Pill,
   MiuPopover: Popover,
   MiuSectionHeader: SectionHeader,
   MiuSegmentedControl: SegmentedControl,
   MiuSelect: Select,
+  MiuSlider: Slider,
   MiuSkeleton: Skeleton,
   MiuSpinner: Spinner,
   MiuSwitch: Switch,

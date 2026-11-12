@@ -1,6 +1,6 @@
 {
   "name": "@miuui/materials",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "μui pluggable surface materials: solid, mica and glass",
   "license": "MIT",
   "files": [

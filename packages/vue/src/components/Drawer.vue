@@ -10,6 +10,7 @@ import {
 import { regionClass, regionStyle } from "@miuui/core"
 import type { DrawerProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<DrawerProps>(), {
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<DrawerProps>(), {
 const emit = defineEmits<{ "update:open": [value: boolean] }>()
 const theme = useMiuTheme()
 const { t } = useMiuI18n()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Drawer")
 </script>
 
 <template>
@@ -32,10 +34,13 @@ const { t } = useMiuI18n()
       />
       <DialogContent
         :class="regionClass(props, 'content', 'miu-drawer__content')"
-        :style="[regionStyle(props, 'content'), width ? { width } : undefined]"
+        :style="[
+          mergeStyle(regionStyle(props, 'content'), materialTokens),
+          width ? { width } : undefined,
+        ]"
         :data-side="side"
         :data-miu-radius="radius"
-        :data-material="material"
+        :data-material="materialName"
         :aria-label="ariaLabel ?? title ?? t('common.menu')"
       >
         <header

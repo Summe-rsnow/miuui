@@ -91,15 +91,21 @@ export const DIALOG_WIDTH_VALUES = {
 export type DialogSize = keyof typeof DIALOG_WIDTH_VALUES
 
 export const MOTION_VALUES = {
-  durationFast: "120ms",
-  durationBase: "200ms",
-  durationSlow: "300ms",
-  easeOut: "cubic-bezier(0.16, 1, 0.3, 1)",
+  durationFast: "150ms",
+  durationBase: "260ms",
+  durationSlow: "380ms",
+  easeOut: "cubic-bezier(0.22, 1, 0.36, 1)",
   easeIn: "cubic-bezier(0.7, 0, 0.84, 0)",
   easeInOut: "cubic-bezier(0.65, 0, 0.35, 1)",
-  translateSm: "4px",
-  translateMd: "8px",
-  scaleActive: "0.97",
+  easeSpring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+  translateSm: "8px",
+  translateMd: "16px",
+  scaleActive: "0.95",
+  scaleSubtle: "0.98",
+  scaleHover: "1.12",
+  scaleEnter: "0.84",
+  scalePop: "0.35",
+  drawerOffset: "100%",
   loopDuration: "1200ms",
 } as const
 

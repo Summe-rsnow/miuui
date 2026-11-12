@@ -41,7 +41,7 @@ function cancel(): void {
     :styles="styles"
     @update:open="emit('update:open', $event)"
   >
-    <slot />
+    <template v-if="$slots.default" #default><slot /></template>
     <template #footer>
       <Button
         variant="secondary"

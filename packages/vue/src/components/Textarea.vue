@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, useId, watch } from "vue"
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue"
 import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@miuui/core"
 import type { TextareaProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
@@ -50,7 +50,49 @@ function resize(): void {
   element.style.overflowY = max > 0 && element.scrollHeight > max ? "auto" : "hidden"
 }
 
+let dragging = false
+let dragStartY = 0
+let dragStartHeight = 0
+let dragMinHeight = 48
+
+function onDragMove(event: MouseEvent): void {
+  const element = textareaRef.value
+  if (!dragging || !element) return
+  const nextHeight = Math.max(
+    dragMinHeight,
+    Math.round(dragStartHeight + (event.clientY - dragStartY)),
+  )
+  element.style.height = `${nextHeight}px`
+}
+
+function stopManualResize(): void {
+  if (!dragging) return
+  dragging = false
+  if (typeof window !== "undefined") {
+    window.removeEventListener("pointermove", onDragMove)
+    window.removeEventListener("pointerup", stopManualResize)
+    window.removeEventListener("pointercancel", stopManualResize)
+  }
+}
+
+function startManualResize(event: MouseEvent): void {
+  const element = textareaRef.value
+  if (!element || props.autoResize || disabled.value) return
+  event.preventDefault()
+  dragging = true
+  dragStartY = event.clientY
+  dragStartHeight = element.getBoundingClientRect().height || element.offsetHeight
+  const parsedMin = Number.parseFloat(getComputedStyle(element).minHeight)
+  dragMinHeight = Number.isFinite(parsedMin) && parsedMin > 0 ? parsedMin : 48
+  if (typeof window !== "undefined") {
+    window.addEventListener("pointermove", onDragMove)
+    window.addEventListener("pointerup", stopManualResize)
+    window.addEventListener("pointercancel", stopManualResize)
+  }
+}
+
 onMounted(resize)
+onBeforeUnmount(stopManualResize)
 watch(model, () => nextTick(resize))
 
 function focus(): void {
@@ -96,7 +138,10 @@ defineExpose({ focus, textareaRef })
     <div
       v-if="$slots.footer || (showCount && maxlength)"
       class="miu-textarea__footer"
-      :class="regionClass(props, 'footer')"
+      :class="[
+        regionClass(props, 'footer'),
+        { 'miu-textarea__footer--resizable': !autoResize && !disabled },
+      ]"
       :style="regionStyle(props, 'footer')"
     >
       <slot name="footer" />
@@ -104,5 +149,20 @@ defineExpose({ focus, textareaRef })
         {{ model.length }} / {{ maxlength }}
       </span>
     </div>
+    <span
+      v-if="!autoResize && !disabled"
+      class="miu-textarea__resizer"
+      aria-hidden="true"
+      @pointerdown="startManualResize"
+    >
+      <svg viewBox="0 0 12 12" fill="none">
+        <path
+          d="M9.5 3.5L3.5 9.5M9.5 7.5L7.5 9.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
   </div>
 </template>

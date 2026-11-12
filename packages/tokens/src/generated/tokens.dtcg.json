@@ -466,15 +466,23 @@
   "scrollbar": {
     "size": {
       "$type": "dimension",
-      "$value": "6px"
+      "$value": "10px"
+    },
+    "inset": {
+      "$type": "dimension",
+      "$value": "2px"
     },
     "thumb": {
       "$type": "color",
-      "$value": "oklch(0.42 0.02 305 / 0.6)"
+      "$value": "oklch(0.42 0.02 305 / 0.28)"
     },
     "thumb-hover": {
       "$type": "color",
-      "$value": "oklch(0.42 0.02 305 / 0.85)"
+      "$value": "oklch(0.42 0.02 305 / 0.56)"
+    },
+    "thumb-active": {
+      "$type": "color",
+      "$value": "oklch(0.42 0.02 305 / 0.78)"
     },
     "track": {
       "$type": "color",
@@ -765,24 +773,24 @@
     "duration": {
       "fast": {
         "$type": "duration",
-        "$value": "120ms"
+        "$value": "150ms"
       },
       "base": {
         "$type": "duration",
-        "$value": "200ms"
+        "$value": "260ms"
       },
       "slow": {
         "$type": "duration",
-        "$value": "300ms"
+        "$value": "380ms"
       }
     },
     "easing": {
       "out": {
         "$type": "cubicBezier",
         "$value": [
-          0.16,
+          0.22,
           1,
-          0.3,
+          0.36,
           1
         ]
       },
@@ -801,6 +809,15 @@
           0.65,
           0,
           0.35,
+          1
+        ]
+      },
+      "spring": {
+        "$type": "cubicBezier",
+        "$value": [
+          0.34,
+          1.56,
+          0.64,
           1
         ]
       }

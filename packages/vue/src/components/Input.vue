@@ -12,6 +12,7 @@ import { useMiuFormField } from "../composables/useFormField"
 import { useMiuSizeHint } from "../composables/useSizeHint"
 
 import { useMiuI18n } from "../composables/useMiu"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<InputProps>(), {
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<InputProps>(), {
   readonly: false,
   invalid: false,
   clearable: false,
+  showCount: false,
   autofocus: false,
 })
 
@@ -40,6 +42,7 @@ const sizeHint = useMiuSizeHint()
 const size = computed(() => props.size ?? sizeHint.value ?? "md")
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
 const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Input")
 
 const inputId = computed(() => props.id ?? formField?.id.value ?? autoId)
 const describedBy = computed(() => formField?.describedBy.value)
@@ -78,11 +81,11 @@ defineExpose({ focus, inputRef })
         'miu-input--invalid': invalid,
       })
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
     :data-miu-icon-size="resolvedIconSize.size"
-    :data-material="material"
+    :data-material="materialName"
     :data-invalid="invalid || undefined"
   >
     <span v-if="$slots.prefix" class="miu-input__prefix" :class="regionClass(props, 'prefix')">
@@ -111,12 +114,15 @@ defineExpose({ focus, inputRef })
       @keydown.enter="$emit('enter', $event)"
     />
     <span
-      v-if="$slots.suffix || (clearable && model.length > 0 && !disabled && !readonly)"
+      v-if="$slots.suffix || showCount || (clearable && model.length > 0 && !disabled && !readonly)"
       class="miu-input__suffix"
       :class="regionClass(props, 'suffix')"
       :style="regionStyle(props, 'suffix')"
     >
       <slot name="suffix" />
+      <span v-if="showCount" class="miu-input__count">
+        {{ maxlength ? `${model.length} / ${maxlength}` : model.length }}
+      </span>
       <button
         v-if="clearable && model.length > 0 && !disabled && !readonly"
         type="button"

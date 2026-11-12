@@ -12,8 +12,8 @@ import type { TooltipProps } from "../types"
 import { useMiuTheme } from "../composables/useMiu"
 
 const props = withDefaults(defineProps<TooltipProps>(), {
+  open: undefined,
   side: "top",
-  align: "center",
   sideOffset: 6,
   delayDuration: 300,
   radius: "sm",

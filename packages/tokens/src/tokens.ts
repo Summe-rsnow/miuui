@@ -1,5 +1,12 @@
-import { formatOklch } from "./color"
-import { BRAND_PALETTE, STATUS_SEEDS, type ColorScale, generateScale } from "./palette"
+import { contrastRatio, formatOklch } from "./color"
+import {
+  BRAND_PALETTE,
+  STATUS_SEEDS,
+  type ColorScale,
+  type ScaleStop,
+  generatePalette,
+  generateScale,
+} from "./palette"
 import {
   CONTROL_SIZE_VALUES,
   CONTROL_SIZES,
@@ -92,8 +99,9 @@ export function semanticTokens(theme: ThemeName): TokenMap {
       "--miu-color-surface-glass-border": "oklch(1 0 0 / 0.14)",
       "--miu-color-surface-glass-highlight": "oklch(1 0 0 / 0.16)",
       "--miu-color-shadow": "oklch(0 0 0 / 0.5)",
-      "--miu-scrollbar-thumb": "oklch(0.85 0.02 305 / 0.6)",
-      "--miu-scrollbar-thumb-hover": "oklch(0.85 0.02 305 / 0.85)",
+      "--miu-scrollbar-thumb": "oklch(0.85 0.02 305 / 0.28)",
+      "--miu-scrollbar-thumb-hover": "oklch(0.85 0.02 305 / 0.56)",
+      "--miu-scrollbar-thumb-active": "oklch(0.85 0.02 305 / 0.78)",
       "--miu-scrollbar-track": "transparent",
     }
   }
@@ -143,9 +151,121 @@ export function semanticTokens(theme: ThemeName): TokenMap {
     "--miu-color-surface-glass-border": "oklch(1 0 0 / 0.6)",
     "--miu-color-surface-glass-highlight": "oklch(1 0 0 / 0.78)",
     "--miu-color-shadow": "oklch(0 0 0 / 0.1)",
-    "--miu-scrollbar-thumb": "oklch(0.42 0.02 305 / 0.6)",
-    "--miu-scrollbar-thumb-hover": "oklch(0.42 0.02 305 / 0.85)",
+    "--miu-scrollbar-thumb": "oklch(0.42 0.02 305 / 0.28)",
+    "--miu-scrollbar-thumb-hover": "oklch(0.42 0.02 305 / 0.56)",
+    "--miu-scrollbar-thumb-active": "oklch(0.42 0.02 305 / 0.78)",
     "--miu-scrollbar-track": "transparent",
+  }
+}
+
+function pickStopWithContrast(
+  scale: ColorScale,
+  candidates: readonly ScaleStop[],
+  background: string,
+  minRatio = 4.5,
+): string {
+  let best = scale[candidates[0] ?? 700]
+  let bestRatio = contrastRatio(best, background)
+  for (const stop of candidates) {
+    const value = scale[stop]
+    const ratio = contrastRatio(value, background)
+    if (ratio >= minRatio) return value
+    if (ratio > bestRatio) {
+      best = value
+      bestRatio = ratio
+    }
+  }
+  return best
+}
+
+function pickOnPrimary(background: string): { text: string; ratio: number } {
+  const lightRatio = contrastRatio("#FFFFFF", background)
+  const darkRatio = contrastRatio("#0B0B0F", background)
+  return lightRatio >= darkRatio
+    ? { text: "#FFFFFF", ratio: lightRatio }
+    : { text: "#0B0B0F", ratio: darkRatio }
+}
+
+/**
+ * Generates runtime semantic CSS variable overrides from any hex seed while
+ * guaranteeing >= 4.5:1 WCAG AA contrast for primary buttons, text accents,
+ * subtle surfaces, and tinted neutral surfaces.
+ */
+export function semanticTokensForSeed(seed: string, theme: ThemeName): TokenMap {
+  const palette = generatePalette(seed, { theme })
+  const p = palette.primary
+  const n = palette.neutral
+
+  if (theme === "dark") {
+    const primaryCandidates: readonly ScaleStop[] = [500, 400, 300, 600, 700]
+    let primaryStop: ScaleStop = 500
+    let onPrimary = pickOnPrimary(p[500]).text
+    for (const stop of primaryCandidates) {
+      const picked = pickOnPrimary(p[stop])
+      if (picked.ratio >= 4.5) {
+        primaryStop = stop
+        onPrimary = picked.text
+        break
+      }
+    }
+
+    const subtleBg = p[900]
+    const subtleText = contrastRatio(n[50], subtleBg) >= 4.5 ? n[50] : pickOnPrimary(subtleBg).text
+
+    return {
+      "--miu-color-bg-canvas": n[950],
+      "--miu-color-bg-surface": n[900],
+      "--miu-color-bg-elevated": n[800],
+      "--miu-color-bg-overlay": n[800],
+      "--miu-color-bg-muted": n[800],
+      "--miu-color-surface-solid-bg": n[900],
+      "--miu-color-primary": p[primaryStop],
+      "--miu-color-primary-hover": p[primaryStop === 300 ? 200 : 400],
+      "--miu-color-primary-active": p[300],
+      "--miu-color-primary-subtle": subtleBg,
+      "--miu-color-primary-text": pickStopWithContrast(p, [300, 200, 400, 100], n[800]),
+      "--miu-color-primary-contrast": p[primaryStop],
+      "--miu-color-text-on-primary": onPrimary,
+      "--miu-color-on-primary-subtle": subtleText,
+      "--miu-color-focus-ring": p[400],
+      "--miu-color-selection": p[800],
+    }
+  }
+
+  const primaryCandidates: readonly ScaleStop[] = [700, 800, 900, 600, 500]
+  let primaryStop: ScaleStop = 700
+  let onPrimary = pickOnPrimary(p[700]).text
+  for (const stop of primaryCandidates) {
+    const picked = pickOnPrimary(p[stop])
+    if (picked.ratio >= 4.5) {
+      primaryStop = stop
+      onPrimary = picked.text
+      break
+    }
+  }
+
+  const subtleBg = p[100]
+  const subtleText = pickStopWithContrast(p, [900, 800, 950], subtleBg)
+
+  return {
+    "--miu-color-bg-canvas": n[50],
+    "--miu-color-bg-muted": n[100],
+    "--miu-color-border-subtle": n[200],
+    "--miu-color-border-default": n[300],
+    "--miu-color-border-strong": n[600],
+    "--miu-color-text-primary": n[950],
+    "--miu-color-text-secondary": n[700],
+    "--miu-color-text-muted": n[700],
+    "--miu-color-primary": p[primaryStop],
+    "--miu-color-primary-hover": p[primaryStop === 900 ? 950 : 800],
+    "--miu-color-primary-active": p[900],
+    "--miu-color-primary-subtle": subtleBg,
+    "--miu-color-primary-text": pickStopWithContrast(p, [700, 800, 900], n[100]),
+    "--miu-color-primary-contrast": p[primaryStop],
+    "--miu-color-text-on-primary": onPrimary,
+    "--miu-color-on-primary-subtle": subtleText,
+    "--miu-color-focus-ring": p[600],
+    "--miu-color-selection": p[200],
   }
 }
 
@@ -221,7 +341,8 @@ export function foundationTokens(): TokenMap {
     "--miu-border-width-strong": "3px",
     "--miu-spinner-stroke-width": "2px",
     "--miu-dialog-max-height": "85vh",
-    "--miu-scrollbar-size": "6px",
+    "--miu-scrollbar-size": "10px",
+    "--miu-scrollbar-inset": "2px",
     "--miu-space-1": "4px",
     "--miu-space-2": "8px",
     "--miu-space-3": "12px",
@@ -238,9 +359,15 @@ export function foundationTokens(): TokenMap {
     "--miu-motion-ease-out": MOTION_VALUES.easeOut,
     "--miu-motion-ease-in": MOTION_VALUES.easeIn,
     "--miu-motion-ease-in-out": MOTION_VALUES.easeInOut,
+    "--miu-motion-ease-spring": MOTION_VALUES.easeSpring,
     "--miu-motion-translate-sm": MOTION_VALUES.translateSm,
     "--miu-motion-translate-md": MOTION_VALUES.translateMd,
     "--miu-motion-scale-active": MOTION_VALUES.scaleActive,
+    "--miu-motion-scale-subtle": MOTION_VALUES.scaleSubtle,
+    "--miu-motion-scale-hover": MOTION_VALUES.scaleHover,
+    "--miu-motion-scale-enter": MOTION_VALUES.scaleEnter,
+    "--miu-motion-scale-pop": MOTION_VALUES.scalePop,
+    "--miu-motion-drawer-offset": MOTION_VALUES.drawerOffset,
     "--miu-motion-loop-duration": MOTION_VALUES.loopDuration,
     "--miu-focus-ring-width": FOCUS_RING.width,
     "--miu-focus-ring-offset": FOCUS_RING.offset,
@@ -339,11 +466,20 @@ export function buildDtcg(): Record<string, unknown> {
   const scrollbar = {
     size: {
       $type: "dimension",
-      $value: foundationTokens()["--miu-scrollbar-size"] ?? "6px",
+      $value: foundationTokens()["--miu-scrollbar-size"] ?? "10px",
+    },
+    inset: {
+      $type: "dimension",
+      $value: foundationTokens()["--miu-scrollbar-inset"] ?? "2px",
     },
     ...Object.fromEntries(
       Object.entries(semanticTokens("light"))
-        .filter(([name]) => name.startsWith("--miu-scrollbar-") && name !== "--miu-scrollbar-size")
+        .filter(
+          ([name]) =>
+            name.startsWith("--miu-scrollbar-") &&
+            name !== "--miu-scrollbar-size" &&
+            name !== "--miu-scrollbar-inset",
+        )
         .map(([name, value]) => [
           name.replace("--miu-scrollbar-", ""),
           { $type: "color", $value: value },
@@ -432,9 +568,10 @@ export function buildDtcg(): Record<string, unknown> {
         slow: { $type: "duration", $value: MOTION_VALUES.durationSlow },
       },
       easing: {
-        out: { $type: "cubicBezier", $value: [0.16, 1, 0.3, 1] },
+        out: { $type: "cubicBezier", $value: [0.22, 1, 0.36, 1] },
         in: { $type: "cubicBezier", $value: [0.7, 0, 0.84, 0] },
         inOut: { $type: "cubicBezier", $value: [0.65, 0, 0.35, 1] },
+        spring: { $type: "cubicBezier", $value: [0.34, 1.56, 0.64, 1] },
       },
     },
     font: {

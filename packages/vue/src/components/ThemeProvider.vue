@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, provide, ref, watch } from "vue"
+import { computed, inject, onBeforeUnmount, onMounted, provide, ref, watch } from "vue"
 import {
   availableLocales as builtinLocales,
   createMiuI18n,
@@ -14,7 +14,9 @@ import {
   type Radius,
   type ThemeMode,
 } from "@miuui/core"
+import { semanticTokensForSeed } from "@miuui/tokens"
 import { MIU_THEME_KEY, type MiuThemeContext } from "../composables/useMiu"
+import { resolveMaterialValue, resolveMotionValue } from "../composables/usePluginResolution"
 import ToastViewport from "./ToastViewport.vue"
 
 const props = withDefaults(
@@ -24,6 +26,7 @@ const props = withDefaults(
     radius?: Radius
     material?: MaterialName
     motionTier?: MotionTier
+    accentSeed?: string
     locale?: LocaleCode
     fallbackLocale?: LocaleCode
     messages?: Record<LocaleCode, MiuMessageTree>
@@ -92,12 +95,39 @@ const availableLocales = computed(() => [
   ...new Set([...builtinLocales, ...Object.keys(props.messages ?? {})]),
 ])
 
+const resolvedMotion = computed(() => resolveMotionValue(props.motionTier, "ThemeProvider"))
+const resolvedMaterial = computed(() =>
+  resolveMaterialValue(
+    props.material,
+    {
+      theme: resolvedTheme.value,
+      density: props.density,
+      radius: props.radius,
+      material: props.material,
+      motionTier: resolvedMotion.value.name,
+    },
+    "ThemeProvider",
+  ),
+)
+
+const providerStyle = computed<Record<string, string> | undefined>(() => {
+  const seedTokens = props.accentSeed
+    ? semanticTokensForSeed(props.accentSeed, resolvedTheme.value)
+    : undefined
+  const matTokens = resolvedMaterial.value.tokens
+  const motTokens = resolvedMotion.value.tokens
+  if (!seedTokens && !matTokens && !motTokens) return undefined
+  return { ...seedTokens, ...matTokens, ...motTokens }
+})
+
+const isRootProvider = inject(MIU_THEME_KEY, null) === null
+
 const context: MiuThemeContext = {
   theme: resolvedTheme,
   density: computed(() => props.density),
   radius: computed(() => props.radius),
-  material: computed(() => props.material),
-  motionTier: computed(() => props.motionTier),
+  material: computed(() => resolvedMaterial.value.name),
+  motionTier: computed(() => resolvedMotion.value.name),
   i18n: {
     locale,
     fallbackLocale,
@@ -131,16 +161,16 @@ const attrs = computed(() =>
     theme: resolvedTheme.value,
     density: props.density,
     radius: props.radius,
-    material: props.material,
-    motionTier: props.motionTier,
+    material: resolvedMaterial.value.name,
+    motionTier: resolvedMotion.value.name,
   }),
 )
 </script>
 
 <template>
-  <component :is="as" class="miu-theme-provider" v-bind="attrs">
+  <component :is="as" class="miu-theme-provider" v-bind="attrs" :style="providerStyle">
     <slot />
     <div ref="portalTarget" class="miu-portal-root" />
-    <ToastViewport />
+    <ToastViewport v-if="isRootProvider" />
   </component>
 </template>

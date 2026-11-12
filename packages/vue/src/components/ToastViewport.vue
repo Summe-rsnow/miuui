@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 import { regionClass, regionStyle } from "@miuui/core"
 import type { ToastViewportProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
-import { useToast } from "../composables/useToast"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
+import {
+  isPrimaryToastViewport,
+  registerToastViewport,
+  unregisterToastViewport,
+  useToast,
+} from "../composables/useToast"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<ToastViewportProps>(), {
@@ -13,17 +19,25 @@ const props = withDefaults(defineProps<ToastViewportProps>(), {
 const { toasts, dismiss } = useToast()
 const theme = useMiuTheme()
 const { t } = useMiuI18n()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "ToastViewport")
 const mounted = ref(false)
+const viewportId = Symbol("miu-toast-viewport")
+const isPrimary = computed(() => isPrimaryToastViewport(viewportId))
 
 onMounted(() => {
+  registerToastViewport(viewportId)
   mounted.value = true
+})
+
+onBeforeUnmount(() => {
+  unregisterToastViewport(viewportId)
 })
 
 const target = computed(() => theme.portalTarget.value ?? "body")
 </script>
 
 <template>
-  <Teleport v-if="mounted" :to="target">
+  <Teleport v-if="mounted && isPrimary" :to="target">
     <TransitionGroup
       name="miu-toast"
       tag="div"
@@ -36,9 +50,9 @@ const target = computed(() => theme.portalTarget.value ?? "body")
         v-for="item in toasts"
         :key="item.id"
         :class="regionClass(props, 'toast', 'miu-toast')"
-        :style="regionStyle(props, 'toast')"
+        :style="mergeStyle(regionStyle(props, 'toast'), materialTokens)"
         :data-variant="item.variant"
-        :data-material="material"
+        :data-material="materialName"
         :data-miu-radius="radius"
         :role="item.variant === 'error' ? 'alert' : 'status'"
       >

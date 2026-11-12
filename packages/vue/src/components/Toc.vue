@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { regionClass, regionStyle } from "@miuui/core"
-import type { TocProps } from "../types"
+import type { TocItem, TocProps } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
 
 const props = withDefaults(defineProps<TocProps>(), {
   items: () => [],
 })
+
+const emit = defineEmits<{ select: [item: TocItem, event: MouseEvent] }>()
 
 const { t } = useMiuI18n()
 </script>
@@ -38,6 +40,7 @@ const { t } = useMiuI18n()
           :style="regionStyle(props, 'link')"
           :aria-current="activeId === item.id ? 'location' : undefined"
           :data-active="activeId === item.id || undefined"
+          @click="emit('select', item, $event)"
         >
           {{ item.text }}
         </a>

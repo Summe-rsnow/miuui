@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue"
 import { regionClass, regionStyle } from "@miuui/core"
 import type { FormRowProps } from "../types"
 import Icon from "./Icon.vue"
@@ -9,6 +10,12 @@ const props = withDefaults(defineProps<FormRowProps>(), {
   clickable: false,
   layout: "row",
 })
+
+if (import.meta.env.DEV && props.dense) {
+  console.warn('[μui] FormRow: `dense` is deprecated, use `density="compact"` instead.')
+}
+
+const effectiveDensity = computed(() => props.density ?? (props.dense ? "compact" : undefined))
 
 const emit = defineEmits<{ click: [event: MouseEvent | KeyboardEvent] }>()
 
@@ -34,7 +41,7 @@ function onKeydown(event: KeyboardEvent): void {
       })
     "
     :style="regionStyle(props, 'root')"
-    :data-density="density"
+    :data-density="effectiveDensity"
     :data-miu-icon-size="iconSize"
     :role="clickable ? 'button' : undefined"
     :tabindex="clickable ? 0 : undefined"

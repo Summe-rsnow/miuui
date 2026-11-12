@@ -15,6 +15,7 @@ import { useMiuSizeHint } from "../composables/useSizeHint"
 const props = withDefaults(defineProps<TabsProps>(), {
   variant: "underline",
   radius: "default",
+  align: "start",
 })
 
 const emit = defineEmits<{ "update:modelValue": [value: string] }>()
@@ -23,6 +24,12 @@ const sizeHint = useMiuSizeHint()
 const size = computed(() => props.size ?? sizeHint.value ?? "md")
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
 const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
+
+if (import.meta.env.DEV && resolvedSize.value.fallback) {
+  console.warn(
+    `[μui] Tabs: unsupported size "${size.value}", fell back to "${resolvedSize.value.size}".`,
+  )
+}
 </script>
 
 <template>
@@ -31,6 +38,7 @@ const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size,
     :class="regionClass(props, 'root', 'miu-tabs', `miu-tabs--${resolvedSize.size}`)"
     :style="regionStyle(props, 'root')"
     :data-variant="variant"
+    :data-align="align"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
     :data-miu-icon-size="resolvedIconSize.size"

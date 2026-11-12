@@ -4,6 +4,7 @@ import { regionClass, regionStyle } from "@miuui/core"
 import type { TableColumn, TableProps, TableRow } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
 import Skeleton from "./Skeleton.vue"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import { MIU_SIZE_HINT_KEY } from "../composables/useSizeHint"
 
 const props = withDefaults(defineProps<TableProps>(), {
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<TableProps>(), {
 
 const slots = useSlots()
 const { t } = useMiuI18n()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Table")
 provide(
   MIU_SIZE_HINT_KEY,
   computed(() => (props.density === "compact" ? "sm" : undefined)),
@@ -48,10 +50,10 @@ function alignClass(column: TableColumn): string | undefined {
         'miu-table--sticky': stickyHeader,
       })
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-density="density"
     :data-miu-radius="radius"
-    :data-material="material"
+    :data-material="materialName"
     :data-loading="loading || undefined"
   >
     <table

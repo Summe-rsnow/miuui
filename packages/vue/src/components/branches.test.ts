@@ -425,7 +425,7 @@ describe("ToastViewport branches", () => {
     await flushPromises()
 
     const items = document.querySelectorAll(".miu-toast")
-    expect(items.length).toBeGreaterThanOrEqual(2)
+    expect(items).toHaveLength(2)
     const err = Array.from(items).find((el) => el.getAttribute("data-variant") === "error")
     expect(err?.getAttribute("role")).toBe("alert")
     expect(err?.getAttribute("data-material")).toBe("glass")
