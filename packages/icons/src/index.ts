@@ -26,6 +26,7 @@ export type IconName =
   | "minus"
   | "eye"
   | "eyeOff"
+  | "help"
 export interface IconDefinition {
   name: IconName
   viewBox: string
@@ -216,4 +217,11 @@ export const EyeOffIcon: IconDefinition = {
   viewBox: "0 0 24 24",
   content:
     '<path d="M3 3l18 18M10.5 6.2A9.8 9.8 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16.7 16.7 0 0 1-3.2 4.1M6.6 6.6C4 8.4 2.5 12 2.5 12s3.5 6.5 9.5 6.5c1.7 0 3.3-.4 4.7-1.1"/>',
+}
+
+export const HelpIcon: IconDefinition = {
+  name: "help",
+  viewBox: "0 0 24 24",
+  content:
+    '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.6 2.6 0 0 1 5 .8c0 1.7-2.6 2.3-2.6 3.7"/><circle cx="12" cy="17.2" r="0.8" fill="currentColor" stroke="none"/>',
 }

@@ -25,6 +25,7 @@ const backLabel = computed(() => props.backLabel ?? t("common.back"))
     :data-miu-icon-size="iconSize"
   >
     <div class="miu-page-header__lead">
+      <slot name="lead" />
       <button
         v-if="back"
         type="button"
@@ -37,12 +38,15 @@ const backLabel = computed(() => props.backLabel ?? t("common.back"))
         <Icon name="chevron" :rotate="90" />
       </button>
       <div>
-        <h1
-          :class="regionClass(props, 'title', 'miu-page-header__title')"
-          :style="regionStyle(props, 'title')"
-        >
-          <slot name="title">{{ title }}</slot>
-        </h1>
+        <div class="miu-page-header__title-row">
+          <h1
+            :class="regionClass(props, 'title', 'miu-page-header__title')"
+            :style="regionStyle(props, 'title')"
+          >
+            <slot name="title">{{ title }}</slot>
+          </h1>
+          <slot name="badge" />
+        </div>
         <p
           v-if="description || $slots.description"
           :class="regionClass(props, 'description', 'miu-page-header__description')"

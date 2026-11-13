@@ -170,9 +170,12 @@ function onUpdate(value: string): void {
         :disabled="item.disabled"
         :class="regionClass(props, 'trigger', 'miu-tabs__trigger')"
         :style="regionStyle(props, 'trigger')"
+        @click="!item.disabled && modelValue !== item.value && onUpdate(item.value)"
       >
-        <Icon v-if="item.icon" :name="item.icon" />
-        <span>{{ item.label }}</span>
+        <slot name="trigger" :item="item" :active="item.value === modelValue">
+          <Icon v-if="item.icon" :name="item.icon" />
+          <span>{{ item.label }}</span>
+        </slot>
       </TabsTrigger>
     </TabsList>
     <TabsContent

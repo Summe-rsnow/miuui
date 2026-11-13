@@ -10,18 +10,23 @@ import Button from "./Button.vue"
 import Card from "./Card.vue"
 import Checkbox from "./Checkbox.vue"
 import Code from "./Code.vue"
-import CommandPalette from "./CommandPalette.vue"
+import Collapse from "./Collapse.vue"
+import ColorPicker from "./ColorPicker.vue"
 import ConfirmDialog from "./ConfirmDialog.vue"
+import CommandPalette from "./CommandPalette.vue"
 import Dialog from "./Dialog.vue"
 import Drawer from "./Drawer.vue"
 import EmptyState from "./EmptyState.vue"
 import FormField from "./FormField.vue"
 import FormRow from "./FormRow.vue"
+import HelpTooltip from "./HelpTooltip.vue"
 import Icon from "./Icon.vue"
 import IconButton from "./IconButton.vue"
 import Image from "./Image.vue"
 import Input from "./Input.vue"
 import Kbd from "./Kbd.vue"
+import List from "./List.vue"
+import ListItem from "./ListItem.vue"
 import LoadingOverlay from "./LoadingOverlay.vue"
 import MessageComposer from "./MessageComposer.vue"
 import NavMenu from "./NavMenu.vue"
@@ -132,6 +137,10 @@ describe("SSR rendering and client hydration consistency", () => {
             h(Icon, { name: "check" }),
             h(Kbd, { keys: "Ctrl K" }),
             h(Code, { variant: "primary" }, () => "@miuui/vue"),
+            h(Collapse, { open: true }, () => "Expanded"),
+            h(ColorPicker, { modelValue: "#9A49E0", ariaLabel: "Accent" }),
+            h(List, { bordered: true }, () => [h(ListItem, { title: "Item", subtitle: "Sub" })]),
+            h(HelpTooltip, { text: "Helpful info" }),
             h(TruncateText, { text: "Long text", lines: 2 }),
             h(Progress, { modelValue: 45, showValue: true, ariaLabel: "Progress" }),
             h(RadioGroup, {

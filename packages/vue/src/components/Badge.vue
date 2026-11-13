@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<BadgeProps>(), {
   radius: "sm",
   pill: false,
   dot: false,
+  pulse: false,
 })
 
 const sizeHint = useMiuSizeHint()
@@ -48,7 +49,11 @@ if (import.meta.env.DEV && resolvedSize.value.fallback) {
     :data-miu-radius="pill ? 'full' : radius"
     :data-material="material"
   >
-    <span v-if="dot" class="miu-badge__dot" aria-hidden="true" />
+    <span
+      v-if="dot || pulse"
+      :class="['miu-badge__dot', { 'miu-badge__dot--pulse': pulse }]"
+      aria-hidden="true"
+    />
     <Icon
       v-else-if="icon"
       :name="icon"

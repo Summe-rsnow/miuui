@@ -16,6 +16,8 @@ const props = withDefaults(defineProps<PaginationProps>(), {
   pageSize: 20,
   showPageSize: true,
   showQuickJumper: true,
+  hasNext: true,
+  loading: false,
   size: "xs",
 })
 
@@ -29,14 +31,19 @@ const { t } = useMiuI18n()
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Pagination")
 
 const isNumeric = computed(() => props.mode === "numeric" || props.total !== undefined)
+const hasTotal = computed(() => props.total !== undefined)
 const totalPages = computed(() => {
   const total = props.total ?? 0
   const ps = props.pageSize > 0 ? props.pageSize : 20
   return Math.max(1, Math.ceil(total / ps))
 })
-const currentPage = computed(() => Math.max(1, Math.min(props.page ?? 1, totalPages.value)))
+const currentPage = computed(() => {
+  const raw = Math.max(1, props.page ?? 1)
+  return hasTotal.value ? Math.min(raw, totalPages.value) : raw
+})
 
 const visiblePages = computed<(number | "ellipsis-left" | "ellipsis-right")[]>(() => {
+  if (!hasTotal.value) return [currentPage.value]
   const total = totalPages.value
   const current = currentPage.value
   if (total <= 7) {
@@ -57,10 +64,16 @@ function onClick(link: PaginationLink, event: MouseEvent): void {
 }
 
 function goToPage(target: number): void {
-  const clamped = Math.max(1, Math.min(Math.round(target), totalPages.value))
-  if (clamped !== props.page) {
-    emit("update:page", clamped)
+  if (props.loading) return
+  const rounded = Math.round(target)
+  if (rounded < 1) return
+  if (hasTotal.value) {
+    const clamped = Math.max(1, Math.min(rounded, totalPages.value))
+    if (clamped !== props.page) emit("update:page", clamped)
+    return
   }
+  if (rounded > currentPage.value && props.hasNext === false) return
+  if (rounded !== props.page) emit("update:page", rounded)
 }
 
 function onPageInput(val: number | undefined): void {
@@ -77,6 +90,7 @@ function onPageSizeUpdate(val: string | number): void {
 <template>
   <nav
     v-if="isNumeric"
+    role="navigation"
     :class="regionClass(props, 'root', 'miu-pagination', 'miu-pagination--numeric')"
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-radius="radius"
@@ -100,8 +114,9 @@ function onPageSizeUpdate(val: string | number): void {
         :size="size"
         icon-only
         radius="full"
+        :title="t('pagination.previous')"
         :aria-label="t('pagination.previous')"
-        :disabled="currentPage <= 1"
+        :disabled="currentPage <= 1 || loading"
         @click="goToPage(currentPage - 1)"
       >
         <Icon name="chevron" :rotate="90" />
@@ -132,15 +147,16 @@ function onPageSizeUpdate(val: string | number): void {
         :size="size"
         icon-only
         radius="full"
+        :title="t('pagination.next')"
         :aria-label="t('pagination.next')"
-        :disabled="currentPage >= totalPages"
+        :disabled="loading || (hasTotal ? currentPage >= totalPages : !hasNext)"
         @click="goToPage(currentPage + 1)"
       >
         <Icon name="chevron" :rotate="270" />
       </Button>
     </div>
     <NumberInput
-      v-if="showQuickJumper"
+      v-if="showQuickJumper && hasTotal"
       :model-value="currentPage"
       :size="size"
       :min="1"
@@ -154,6 +170,7 @@ function onPageSizeUpdate(val: string | number): void {
 
   <nav
     v-else
+    role="navigation"
     :class="regionClass(props, 'root', 'miu-pagination')"
     :style="regionStyle(props, 'root')"
     :data-miu-radius="radius"

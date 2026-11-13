@@ -81,11 +81,11 @@ function onKeydown(event: KeyboardEvent): void {
             {{ description }}
           </p>
           <p
-            v-if="hint"
+            v-if="hint || $slots.hint"
             :class="regionClass(props, 'hint', 'miu-form-row__hint')"
             :style="regionStyle(props, 'hint')"
           >
-            {{ hint }}
+            <slot name="hint">{{ hint }}</slot>
           </p>
         </div>
       </slot>

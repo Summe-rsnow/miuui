@@ -30,6 +30,7 @@
   [data-motion-tier="reduced"] .miu-spinner,
   [data-motion-tier="reduced"] .miu-skeleton__shimmer,
   [data-motion-tier="reduced"] .miu-badge__dot,
+  [data-motion-tier="reduced"] .miu-badge__dot--pulse::after,
   [data-motion-tier="reduced"] .miu-progress__indicator--indeterminate,
   [data-motion-tier="reduced"] .miu-empty-state__icon {
     animation-play-state: paused;
@@ -38,6 +39,7 @@
   [data-motion-tier="none"] .miu-spinner,
   [data-motion-tier="none"] .miu-skeleton__shimmer,
   [data-motion-tier="none"] .miu-badge__dot,
+  [data-motion-tier="none"] .miu-badge__dot--pulse::after,
   [data-motion-tier="none"] .miu-progress__indicator--indeterminate,
   [data-motion-tier="none"] .miu-empty-state__icon {
     animation-duration: 0.01ms;
@@ -60,6 +62,7 @@
     .miu-spinner,
     .miu-skeleton__shimmer,
     .miu-badge__dot,
+    .miu-badge__dot--pulse::after,
     .miu-progress__indicator--indeterminate,
     .miu-empty-state__icon {
       animation-play-state: paused;

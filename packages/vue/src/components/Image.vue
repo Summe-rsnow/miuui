@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<ImageProps>(), {
   fit: "cover",
   radius: "default",
   previewable: false,
+  pixelated: false,
   lazy: false,
 })
 
@@ -17,15 +18,22 @@ const emit = defineEmits<{
   load: [event: Event]
 }>()
 
+const usedFallbackSrc = ref(false)
 const loadFailed = ref(false)
 const showPreview = ref(false)
 
 watch(
-  () => props.src,
+  () => [props.src, props.fallbackSrc] as const,
   () => {
+    usedFallbackSrc.value = false
     loadFailed.value = false
   },
 )
+
+const activeSrc = computed(() => {
+  if (usedFallbackSrc.value) return props.fallbackSrc || null
+  return props.src || props.fallbackSrc || null
+})
 
 const rootStyle = computed(() => {
   const base = regionStyle(props, "root")
@@ -37,9 +45,15 @@ const rootStyle = computed(() => {
 
 const imgStyle = computed(() => [regionStyle(props, "img"), { objectFit: props.fit }])
 
-const canPreview = computed(() => Boolean(props.previewable && props.src && !loadFailed.value))
+const canPreview = computed(() =>
+  Boolean(props.previewable && activeSrc.value && !loadFailed.value),
+)
 
 function onError(event: Event): void {
+  if (!usedFallbackSrc.value && props.fallbackSrc && props.src && props.src !== props.fallbackSrc) {
+    usedFallbackSrc.value = true
+    return
+  }
   loadFailed.value = true
   emit("error", event)
 }
@@ -70,13 +84,17 @@ function openPreview(): void {
     @keydown.space.prevent="openPreview"
   >
     <img
-      v-if="src && !loadFailed"
-      :src="src"
+      v-if="activeSrc && !loadFailed"
+      :src="activeSrc"
       :alt="alt"
       :loading="lazy ? 'lazy' : undefined"
+      decoding="async"
       :referrerpolicy="referrerPolicy"
-      :class="regionClass(props, 'img', 'miu-image__img')"
-      :style="imgStyle"
+      :class="
+        regionClass(props, 'img', 'miu-image__img', {
+          'miu-image__img--pixelated': pixelated,
+        })
+      "
       @error="onError"
       @load="onLoad"
     />
@@ -124,7 +142,12 @@ function openPreview(): void {
       @update:open="(v: boolean) => !v && (showPreview = false)"
     >
       <div class="miu-image__lightbox" @click="showPreview = false">
-        <img v-if="src" :src="src" :alt="alt" class="miu-image__lightbox-img" />
+        <img
+          v-if="activeSrc"
+          :src="activeSrc"
+          :alt="alt"
+          :class="['miu-image__lightbox-img', { 'miu-image__img--pixelated': pixelated }]"
+        />
       </div>
     </Dialog>
   </div>

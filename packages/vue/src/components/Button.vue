@@ -117,5 +117,11 @@ defineExpose({
     >
       <slot />
     </span>
+    <span
+      v-if="!iconOnly && iconRight && !loading"
+      class="miu-button__icon miu-button__icon--right"
+    >
+      <Icon :name="iconRight" />
+    </span>
   </button>
 </template>

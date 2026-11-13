@@ -2,6 +2,21 @@
 
 All notable changes to `@miuui/*` are documented in this file.
 
+## [0.5.0] - 2026-11-13
+
+### Added
+- **5 new components** (50 → 55 total):
+  - `Collapse`: CSS grid height expand/collapse container (`open` prop, `reduced`/`none` motion aware).
+  - `ColorPicker`: Native color input + hex text field + preset swatch selector with active checkmark.
+  - `List` & `ListItem`: Structured list container (`gap`, `bordered`, `dividers`) and interactive row (`title`, `subtitle`, `active`, `clickable`, `dense`, `#prefix`/`#badges`/`#actions` slots).
+  - `HelpTooltip`: Accessible `?` info trigger (`help` icon in `@miuui/icons`) wrapping `Tooltip`.
+- **`@miuui/icons`**: Added `help` (`HelpIcon`) across index & dynamic exports.
+- **Enhancements to existing components**:
+  - `Button`: Added `"tonal"` variant and `iconRight` prop.
+  - `Badge`: Added `pulse` prop with pinging status indicator (paused under `reduced`/`none` motion tiers).
+  - `Image`: Added `pixelated` rendering mode and `fallbackSrc` fallback URL before `#fallback`.
+  - `Pagination`: Added `hasNext` and `loading` support for cursor/unknown-total numeric mode.
+
 ## [0.4.1] - 2026-11-13
 
 ### Fixed

@@ -11,6 +11,7 @@ import {
   EyeOffIcon,
   HeartFilledIcon,
   HeartIcon,
+  HelpIcon,
   MinusIcon,
   MoonIcon,
   PauseIcon,
@@ -71,6 +72,7 @@ const iconMap: Record<IconName, IconDefinition> = {
   eye: EyeIcon,
   eyeOff: EyeOffIcon,
   minus: MinusIcon,
+  help: HelpIcon,
 }
 
 const definition = computed(() => iconMap[props.name])

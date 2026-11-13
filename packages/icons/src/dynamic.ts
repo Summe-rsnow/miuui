@@ -28,6 +28,7 @@ const iconLoaders: Record<IconName, () => Promise<IconDefinition>> = {
   minus: () => import("./index").then((m) => m.MinusIcon),
   eye: () => import("./index").then((m) => m.EyeIcon),
   eyeOff: () => import("./index").then((m) => m.EyeOffIcon),
+  help: () => import("./index").then((m) => m.HelpIcon),
 }
 
 export function hasIcon(name: string): name is IconName {

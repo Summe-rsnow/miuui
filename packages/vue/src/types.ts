@@ -8,7 +8,14 @@ import type {
 } from "@miuui/core"
 import type { IconName } from "@miuui/icons"
 
-export type ButtonVariant = "solid" | "secondary" | "outline" | "ghost" | "danger" | "glass"
+export type ButtonVariant =
+  | "solid"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "danger"
+  | "glass"
+  | "tonal"
 export type ButtonSemanticRegion = "root" | "icon" | "label" | "spinner"
 
 export interface ButtonBaseProps extends ComponentSemanticProps<ButtonSemanticRegion> {
@@ -18,6 +25,7 @@ export interface ButtonBaseProps extends ComponentSemanticProps<ButtonSemanticRe
   iconSize?: IconSize
   material?: MaterialName
   icon?: IconName
+  iconRight?: IconName
   loading?: boolean
   disabled?: boolean
   block?: boolean
@@ -283,6 +291,7 @@ export interface BadgeProps extends ComponentSemanticProps<"root" | "icon" | "la
   material?: MaterialName
   pill?: boolean
   dot?: boolean
+  pulse?: boolean
   icon?: IconName
 }
 
@@ -515,6 +524,8 @@ export interface PaginationProps extends ComponentSemanticProps<
   pageSizeOptions?: PaginationPageSizeOption[]
   showPageSize?: boolean
   showQuickJumper?: boolean
+  hasNext?: boolean
+  loading?: boolean
   size?: ControlSize
   radius?: Radius | "default"
   material?: MaterialName
@@ -744,12 +755,14 @@ export interface PopconfirmProps extends ComponentSemanticProps<
 
 export interface ImageProps extends ComponentSemanticProps<"root" | "img" | "fallback"> {
   src?: string | null
+  fallbackSrc?: string | null
   alt?: string
   width?: string
   height?: string
   fit?: "cover" | "contain" | "fill" | "none" | "scale-down"
   radius?: Radius | "default"
   previewable?: boolean
+  pixelated?: boolean
   lazy?: boolean
   referrerPolicy?: "no-referrer" | "origin" | "strict-origin-when-cross-origin" | "unsafe-url"
 }
@@ -760,4 +773,63 @@ export interface LoadingOverlayProps extends ComponentSemanticProps<"root" | "ca
   fullscreen?: boolean
   size?: IconSize
   material?: MaterialName
+}
+
+export interface CollapseProps extends ComponentSemanticProps<"root" | "content"> {
+  open: boolean
+}
+
+export interface ColorPickerPreset {
+  key?: string
+  label?: string
+  hex: string
+}
+
+export interface ColorPickerProps extends ComponentSemanticProps<
+  "root" | "swatch" | "input" | "presets" | "preset"
+> {
+  modelValue?: string
+  presets?: Array<string | ColorPickerPreset>
+  size?: "sm" | "md" | "lg"
+  radius?: Radius | "default"
+  material?: MaterialName
+  disabled?: boolean
+  ariaLabel?: string
+}
+
+export interface ListProps extends ComponentSemanticProps<"root"> {
+  gap?: "none" | "xs" | "sm" | "md"
+  bordered?: boolean
+  dividers?: boolean
+  material?: MaterialName
+  radius?: Radius | "default"
+  density?: Density
+}
+
+export interface ListItemProps extends ComponentSemanticProps<
+  "root" | "prefix" | "body" | "title" | "subtitle" | "badges" | "actions"
+> {
+  title?: string
+  subtitle?: string
+  active?: boolean
+  clickable?: boolean
+  disabled?: boolean
+  dense?: boolean
+  material?: MaterialName
+  radius?: Radius | "default"
+}
+
+export interface HelpTooltipProps extends ComponentSemanticProps<"trigger" | "content" | "arrow"> {
+  text: string
+  icon?: IconName
+  size?: "xs" | "sm" | "md"
+  side?: "top" | "right" | "bottom" | "left"
+  align?: "center" | "start" | "end"
+  sideOffset?: number
+  delayDuration?: number
+  radius?: Radius | "default"
+  material?: MaterialName
+  maxWidth?: string
+  maxHeight?: string
+  ariaLabel?: string
 }

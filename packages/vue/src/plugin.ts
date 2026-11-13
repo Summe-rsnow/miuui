@@ -8,6 +8,8 @@ import Button from "./components/Button.vue"
 import Card from "./components/Card.vue"
 import Checkbox from "./components/Checkbox.vue"
 import Code from "./components/Code.vue"
+import Collapse from "./components/Collapse.vue"
+import ColorPicker from "./components/ColorPicker.vue"
 import CommandPalette from "./components/CommandPalette.vue"
 import ConfirmDialog from "./components/ConfirmDialog.vue"
 import ContextMenu from "./components/ContextMenu.vue"
@@ -17,11 +19,14 @@ import DropdownMenu from "./components/DropdownMenu.vue"
 import EmptyState from "./components/EmptyState.vue"
 import FormField from "./components/FormField.vue"
 import FormRow from "./components/FormRow.vue"
+import HelpTooltip from "./components/HelpTooltip.vue"
 import Icon from "./components/Icon.vue"
 import IconButton from "./components/IconButton.vue"
-import Input from "./components/Input.vue"
 import Image from "./components/Image.vue"
+import Input from "./components/Input.vue"
 import Kbd from "./components/Kbd.vue"
+import List from "./components/List.vue"
+import ListItem from "./components/ListItem.vue"
 import LoadingOverlay from "./components/LoadingOverlay.vue"
 import MessageComposer from "./components/MessageComposer.vue"
 import NavMenu from "./components/NavMenu.vue"
@@ -60,6 +65,8 @@ export const components: Record<string, Component> = {
   MiuCard: Card,
   MiuCheckbox: Checkbox,
   MiuCode: Code,
+  MiuCollapse: Collapse,
+  MiuColorPicker: ColorPicker,
   MiuCommandPalette: CommandPalette,
   MiuConfirmDialog: ConfirmDialog,
   MiuContextMenu: ContextMenu,
@@ -69,11 +76,14 @@ export const components: Record<string, Component> = {
   MiuEmptyState: EmptyState,
   MiuFormField: FormField,
   MiuFormRow: FormRow,
+  MiuHelpTooltip: HelpTooltip,
   MiuIcon: Icon,
   MiuIconButton: IconButton,
   MiuImage: Image,
   MiuInput: Input,
   MiuKbd: Kbd,
+  MiuList: List,
+  MiuListItem: ListItem,
   MiuLoadingOverlay: LoadingOverlay,
   MiuMessageComposer: MessageComposer,
   MiuNavMenu: NavMenu,
