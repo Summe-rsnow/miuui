@@ -156,9 +156,26 @@ describe("v0.5.0 MCLR primitives and enhancements", () => {
     expect(btn.find(".miu-button__icon--right").exists()).toBe(true)
 
     const badge = track(
-      mount(Badge, { props: { pulse: true, variant: "success" }, slots: { default: "Online" } }),
+      mount(Badge, {
+        props: { pulse: true, variant: "success", material: "glass" },
+        slots: { default: "Online" },
+      }),
     )
     expect(badge.find(".miu-badge__dot--pulse").exists()).toBe(true)
+    expect(badge.attributes("data-material")).toBe("glass")
+
+    const micaBadge = track(
+      mount(Badge, { props: { material: "mica" }, slots: { default: "Mica" } }),
+    )
+    expect(micaBadge.attributes("data-material")).toBe("mica")
+
+    const inheritedBadge = track(
+      mount({
+        components: { ThemeProvider, Badge },
+        template: `<ThemeProvider material="mica"><Badge variant="primary">Mica</Badge></ThemeProvider>`,
+      }),
+    )
+    expect(inheritedBadge.find(".miu-theme-provider").attributes("data-material")).toBe("mica")
 
     const img = track(
       mount(Image, {

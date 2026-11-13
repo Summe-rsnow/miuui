@@ -3,8 +3,8 @@ import { computed } from "vue"
 import { regionClass, regionStyle, resolveControlSize } from "@miuui/core"
 import type { BadgeProps } from "../types"
 import Icon from "./Icon.vue"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import { useMiuSizeHint } from "../composables/useSizeHint"
-
 const props = withDefaults(defineProps<BadgeProps>(), {
   variant: "neutral",
   radius: "sm",
@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<BadgeProps>(), {
 })
 
 const sizeHint = useMiuSizeHint()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Badge")
 const size = computed(() => props.size ?? sizeHint.value ?? "md")
 const resolvedSize = computed(() => resolveControlSize(size.value, ["xs", "sm", "md", "lg"], "md"))
 const resolvedIconSize = computed(
@@ -43,11 +44,11 @@ if (import.meta.env.DEV && resolvedSize.value.fallback) {
         },
       )
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-icon-size="resolvedIconSize"
     :data-miu-radius="pill ? 'full' : radius"
-    :data-material="material"
+    :data-material="materialName"
   >
     <span
       v-if="dot || pulse"

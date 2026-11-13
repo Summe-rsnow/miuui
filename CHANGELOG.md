@@ -2,6 +2,12 @@
 
 All notable changes to `@miuui/*` are documented in this file.
 
+## [0.5.1] - 2026-11-13
+
+### Fixed
+- **`Badge`**: Added full three-tier material resolution (`solid` / `mica` / `glass`) via `useResolvedMaterial` and dedicated `mica` / `glass` translucent surfaces & borders across all 6 semantic variants (`neutral`, `primary`, `success`, `warning`, `danger`, `info`).
+- **`ColorPicker`**: Removed native `<input type="color">` inner swatch wrapper padding and default bevel border so the chosen color fills the rounded swatch edge-to-edge.
+
 ## [0.5.0] - 2026-11-13
 
 ### Added

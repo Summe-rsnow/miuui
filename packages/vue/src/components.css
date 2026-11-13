@@ -1398,7 +1398,7 @@
   inset-inline-start: 0;
   pointer-events: none;
   border-radius: var(--miu-radius-sm);
-  background: var(--miu-color-bg-surface);
+  background: var(--miu-color-bg-elevated);
   border: var(--miu-border-width) solid var(--miu-color-border-subtle);
   box-shadow:
     inset 0 var(--miu-border-width) 0 var(--miu-color-specular),
@@ -1444,13 +1444,12 @@
 .miu-segmented__item:hover:not(:disabled):not([data-state="on"]) {
   color: var(--miu-color-text-primary);
 }
-
 .miu-segmented__item:active:not(:disabled) {
   transform: scale(var(--miu-motion-scale-subtle));
 }
 
 .miu-segmented__item[data-state="on"] {
-  background: var(--miu-color-bg-surface);
+  background: var(--miu-color-bg-elevated);
   border-color: var(--miu-color-border-subtle);
   color: var(--miu-color-text-primary);
   box-shadow:
@@ -1543,10 +1542,69 @@
   color: var(--miu-color-info-text);
 }
 
-.miu-badge--neutral[data-material] {
-  background: var(--miu-material-surface, var(--miu-color-bg-muted));
-  border: var(--miu-border-width) solid var(--miu-material-border, var(--miu-color-border-subtle));
+.miu-badge[data-material="solid"],
+[data-material="solid"] .miu-badge:not([data-material]) {
+  border-color: var(--miu-color-border-subtle);
+}
+
+.miu-badge[data-material="mica"],
+[data-material="mica"] .miu-badge:not([data-material]) {
+  border-color: var(--miu-material-border, var(--miu-color-border-subtle));
   backdrop-filter: var(--miu-material-backdrop, none);
+}
+
+.miu-badge[data-material="glass"],
+[data-material="glass"] .miu-badge:not([data-material]) {
+  border-color: var(--miu-material-border, var(--miu-color-border-subtle));
+  backdrop-filter: var(--miu-material-backdrop, none);
+  box-shadow: inset 0 var(--miu-border-width) 0 var(--miu-material-highlight, transparent);
+}
+
+.miu-badge--neutral[data-material="mica"],
+.miu-badge--neutral[data-material="glass"],
+[data-material="mica"] .miu-badge--neutral:not([data-material]),
+[data-material="glass"] .miu-badge--neutral:not([data-material]) {
+  background: var(--miu-material-surface, var(--miu-color-bg-muted));
+}
+
+.miu-badge--primary[data-material="mica"],
+.miu-badge--primary[data-material="glass"],
+[data-material="mica"] .miu-badge--primary:not([data-material]),
+[data-material="glass"] .miu-badge--primary:not([data-material]) {
+  background: color-mix(in oklch, var(--miu-color-primary-subtle) 82%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-color-primary) 28%, var(--miu-material-border));
+}
+
+.miu-badge--success[data-material="mica"],
+.miu-badge--success[data-material="glass"],
+[data-material="mica"] .miu-badge--success:not([data-material]),
+[data-material="glass"] .miu-badge--success:not([data-material]) {
+  background: color-mix(in oklch, var(--miu-color-success-subtle) 82%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-color-success) 28%, var(--miu-material-border));
+}
+
+.miu-badge--warning[data-material="mica"],
+.miu-badge--warning[data-material="glass"],
+[data-material="mica"] .miu-badge--warning:not([data-material]),
+[data-material="glass"] .miu-badge--warning:not([data-material]) {
+  background: color-mix(in oklch, var(--miu-color-warning-subtle) 82%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-color-warning) 28%, var(--miu-material-border));
+}
+
+.miu-badge--danger[data-material="mica"],
+.miu-badge--danger[data-material="glass"],
+[data-material="mica"] .miu-badge--danger:not([data-material]),
+[data-material="glass"] .miu-badge--danger:not([data-material]) {
+  background: color-mix(in oklch, var(--miu-color-danger-subtle) 82%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-color-danger) 28%, var(--miu-material-border));
+}
+
+.miu-badge--info[data-material="mica"],
+.miu-badge--info[data-material="glass"],
+[data-material="mica"] .miu-badge--info:not([data-material]),
+[data-material="glass"] .miu-badge--info:not([data-material]) {
+  background: color-mix(in oklch, var(--miu-color-info-subtle) 82%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-color-info) 28%, var(--miu-material-border));
 }
 .miu-badge__dot {
   position: relative;
@@ -1851,8 +1909,12 @@
 .miu-skeleton__shimmer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, var(--miu-color-bg-elevated), transparent);
-  opacity: 0.55;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--miu-color-text-primary) 12%, transparent),
+    transparent
+  );
   animation: miu-shimmer var(--miu-motion-loop-duration) var(--miu-motion-ease-in-out) infinite;
 }
 
@@ -4166,10 +4228,25 @@
   width: var(--miu-control-md-height);
   height: var(--miu-control-md-height);
   padding: 0;
+  overflow: hidden;
   border: var(--miu-border-width) solid var(--miu-color-border-default);
   border-radius: var(--miu-radius-sm);
   background: transparent;
   cursor: pointer;
+}
+
+.miu-color-picker__swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.miu-color-picker__swatch::-webkit-color-swatch {
+  border: 0;
+  border-radius: inherit;
+}
+
+.miu-color-picker__swatch::-moz-color-swatch {
+  border: 0;
+  border-radius: inherit;
 }
 
 .miu-color-picker__input {
