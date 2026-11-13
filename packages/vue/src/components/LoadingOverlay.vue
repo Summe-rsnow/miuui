@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, inject, onMounted, ref } from "vue"
 import { regionClass, regionStyle } from "@miuui/core"
 import type { LoadingOverlayProps } from "../types"
+import { MIU_THEME_KEY } from "../composables/useMiu"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Spinner from "./Spinner.vue"
-
 const props = withDefaults(defineProps<LoadingOverlayProps>(), {
   fullscreen: true,
   size: "lg",
@@ -15,6 +15,8 @@ onMounted(() => {
   mounted.value = true
 })
 
+const theme = inject(MIU_THEME_KEY, null)
+
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "LoadingOverlay")
 const rootClasses = computed(() =>
   regionClass(props, "root", "miu-loading-overlay", {
@@ -24,7 +26,7 @@ const rootClasses = computed(() =>
 </script>
 
 <template>
-  <Teleport v-if="fullscreen && mounted" to="body">
+  <Teleport v-if="fullscreen && mounted" :to="theme?.portalTarget.value ?? 'body'">
     <Transition name="miu-fade">
       <div
         v-if="loading"

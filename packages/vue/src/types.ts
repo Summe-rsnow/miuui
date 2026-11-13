@@ -754,9 +754,7 @@ export interface ImageProps extends ComponentSemanticProps<"root" | "img" | "fal
   referrerPolicy?: "no-referrer" | "origin" | "strict-origin-when-cross-origin" | "unsafe-url"
 }
 
-export interface LoadingOverlayProps extends ComponentSemanticProps<
-  "root" | "backdrop" | "card" | "text"
-> {
+export interface LoadingOverlayProps extends ComponentSemanticProps<"root" | "card" | "text"> {
   loading: boolean
   text?: string
   fullscreen?: boolean

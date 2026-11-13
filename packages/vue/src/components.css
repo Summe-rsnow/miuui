@@ -3776,9 +3776,9 @@
 .miu-radio-group--button .miu-radio-group__item {
   position: relative;
   display: inline-flex;
+  align-items: center;
   justify-content: center;
   height: var(--miu-control-md-height);
-  padding-inline: var(--miu-control-md-padding-x);
   border: var(--miu-border-width) solid transparent;
   border-radius: var(--miu-radius-sm);
   background: transparent;
@@ -3993,7 +3993,7 @@
 }
 
 .miu-image--previewable:hover .miu-image__img {
-  transform: scale(1.05);
+  transform: scale(calc(1 + (var(--miu-motion-scale-hover) - 1) * 0.42));
 }
 
 .miu-image__fallback {
