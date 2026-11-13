@@ -1513,40 +1513,77 @@
 }
 
 .miu-badge--neutral {
-  background: color-mix(in oklch, var(--miu-color-text-primary) 6%, var(--miu-color-bg-surface));
+  background: color-mix(in oklch, var(--miu-color-text-primary) 5%, transparent);
   border-color: color-mix(in oklch, var(--miu-color-text-primary) 12%, transparent);
   color: var(--miu-color-text-secondary);
 }
 
 .miu-badge--primary {
-  background: color-mix(in oklch, var(--miu-color-primary) 11%, var(--miu-color-bg-surface));
-  border-color: color-mix(in oklch, var(--miu-color-primary) 26%, transparent);
-  color: color-mix(in oklch, var(--miu-color-primary-text) 84%, var(--miu-color-text-primary));
+  background: color-mix(in oklch, var(--miu-color-primary) 10%, transparent);
+  border-color: color-mix(in oklch, var(--miu-color-primary) 24%, transparent);
+  color: var(--miu-color-primary-text);
 }
 
 .miu-badge--success {
-  background: color-mix(in oklch, var(--miu-color-success) 11%, var(--miu-color-bg-surface));
-  border-color: color-mix(in oklch, var(--miu-color-success) 26%, transparent);
-  color: color-mix(in oklch, var(--miu-color-success-text) 84%, var(--miu-color-text-primary));
+  background: color-mix(in oklch, var(--miu-success-600) 11%, transparent);
+  border-color: color-mix(in oklch, var(--miu-success-600) 25%, transparent);
+  color: var(--miu-success-800);
 }
 
 .miu-badge--warning {
-  background: color-mix(in oklch, var(--miu-color-warning) 12%, var(--miu-color-bg-surface));
-  border-color: color-mix(in oklch, var(--miu-color-warning) 28%, transparent);
-  color: color-mix(in oklch, var(--miu-color-warning-text) 84%, var(--miu-color-text-primary));
+  background: color-mix(in oklch, var(--miu-warning-600) 12%, transparent);
+  border-color: color-mix(in oklch, var(--miu-warning-600) 26%, transparent);
+  color: var(--miu-warning-800);
 }
 
 .miu-badge--danger {
-  background: color-mix(in oklch, var(--miu-color-danger) 11%, var(--miu-color-bg-surface));
-  border-color: color-mix(in oklch, var(--miu-color-danger) 26%, transparent);
-  color: color-mix(in oklch, var(--miu-color-danger-text) 84%, var(--miu-color-text-primary));
+  background: color-mix(in oklch, var(--miu-danger-600) 10%, transparent);
+  border-color: color-mix(in oklch, var(--miu-danger-600) 24%, transparent);
+  color: var(--miu-danger-700);
 }
 
 .miu-badge--info {
-  background: color-mix(in oklch, var(--miu-color-info) 11%, var(--miu-color-bg-surface));
-  border-color: color-mix(in oklch, var(--miu-color-info) 26%, transparent);
-  color: color-mix(in oklch, var(--miu-color-info-text) 84%, var(--miu-color-text-primary));
+  background: color-mix(in oklch, var(--miu-info-600) 11%, transparent);
+  border-color: color-mix(in oklch, var(--miu-info-600) 25%, transparent);
+  color: var(--miu-info-700);
 }
+
+[data-theme="dark"] .miu-badge--neutral {
+  background: color-mix(in oklch, var(--miu-white) 6%, transparent);
+  border-color: color-mix(in oklch, var(--miu-white) 13%, transparent);
+  color: var(--miu-gray-300);
+}
+
+[data-theme="dark"] .miu-badge--primary {
+  background: color-mix(in oklch, var(--miu-color-primary) 14%, transparent);
+  border-color: color-mix(in oklch, var(--miu-color-primary) 30%, transparent);
+  color: color-mix(in oklch, var(--miu-color-primary) 55%, var(--miu-color-primary-text));
+}
+
+[data-theme="dark"] .miu-badge--success {
+  background: color-mix(in oklch, var(--miu-success-600) 16%, transparent);
+  border-color: color-mix(in oklch, var(--miu-success-600) 34%, transparent);
+  color: color-mix(in oklch, var(--miu-success-600) 60%, var(--miu-white));
+}
+
+[data-theme="dark"] .miu-badge--warning {
+  background: color-mix(in oklch, var(--miu-warning-500) 16%, transparent);
+  border-color: color-mix(in oklch, var(--miu-warning-500) 34%, transparent);
+  color: color-mix(in oklch, var(--miu-warning-500) 68%, var(--miu-white));
+}
+
+[data-theme="dark"] .miu-badge--danger {
+  background: color-mix(in oklch, var(--miu-danger-600) 16%, transparent);
+  border-color: color-mix(in oklch, var(--miu-danger-600) 34%, transparent);
+  color: color-mix(in oklch, var(--miu-danger-600) 58%, var(--miu-white));
+}
+
+[data-theme="dark"] .miu-badge--info {
+  background: color-mix(in oklch, var(--miu-info-600) 16%, transparent);
+  border-color: color-mix(in oklch, var(--miu-info-600) 34%, transparent);
+  color: color-mix(in oklch, var(--miu-info-600) 58%, var(--miu-white));
+}
+
 .miu-badge[data-material="mica"],
 [data-material="mica"] .miu-badge:not([data-material]) {
   backdrop-filter: var(--miu-material-backdrop, none);
@@ -1580,50 +1617,50 @@
 
 .miu-badge--success[data-material="mica"],
 [data-material="mica"] .miu-badge--success:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-success) 14%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-success) 30%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-success-600) 15%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-success-600) 32%, var(--miu-material-border));
 }
 
 .miu-badge--success[data-material="glass"],
 [data-material="glass"] .miu-badge--success:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-success) 18%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-success) 38%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-success-600) 19%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-success-600) 40%, var(--miu-material-border));
 }
 
 .miu-badge--warning[data-material="mica"],
 [data-material="mica"] .miu-badge--warning:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-warning) 15%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-warning) 32%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-warning-500) 15%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-warning-500) 32%, var(--miu-material-border));
 }
 
 .miu-badge--warning[data-material="glass"],
 [data-material="glass"] .miu-badge--warning:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-warning) 19%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-warning) 40%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-warning-500) 19%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-warning-500) 40%, var(--miu-material-border));
 }
 
 .miu-badge--danger[data-material="mica"],
 [data-material="mica"] .miu-badge--danger:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-danger) 14%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-danger) 30%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-danger-600) 15%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-danger-600) 32%, var(--miu-material-border));
 }
 
 .miu-badge--danger[data-material="glass"],
 [data-material="glass"] .miu-badge--danger:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-danger) 18%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-danger) 38%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-danger-600) 19%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-danger-600) 40%, var(--miu-material-border));
 }
 
 .miu-badge--info[data-material="mica"],
 [data-material="mica"] .miu-badge--info:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-info) 14%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-info) 30%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-info-600) 15%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-info-600) 32%, var(--miu-material-border));
 }
 
 .miu-badge--info[data-material="glass"],
 [data-material="glass"] .miu-badge--info:not([data-material]) {
-  background: color-mix(in oklch, var(--miu-color-info) 18%, var(--miu-material-surface));
-  border-color: color-mix(in oklch, var(--miu-color-info) 38%, var(--miu-material-border));
+  background: color-mix(in oklch, var(--miu-info-600) 19%, var(--miu-material-surface));
+  border-color: color-mix(in oklch, var(--miu-info-600) 40%, var(--miu-material-border));
 }
 .miu-badge__dot {
   position: relative;

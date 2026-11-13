@@ -2,6 +2,11 @@
 
 All notable changes to `@miuui/*` are documented in this file.
 
+## [0.5.3] - 2026-11-14
+
+### Changed
+- **`Badge` surface-adaptive palette & high-chroma dark tones**: Switched base badge tints from mixing against `--miu-color-bg-surface` to `transparent` so badges blend cleanly on any card surface, and raised dark-mode semantic chroma (`--miu-*-500/600` mixed with white) for crisp Emerald, Amber, Rose, and Sky tones.
+
 ## [0.5.2] - 2026-11-13
 
 ### Changed

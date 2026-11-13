@@ -1,6 +1,6 @@
 {
   "name": "@miuui/motions",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "μui pluggable motion tiers: full, reduced and none",
   "license": "MIT",
   "files": [
