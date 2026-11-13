@@ -5,12 +5,12 @@ export interface BrandMarkDefinition {
 }
 
 /**
- * Multi-layer Precision Violet squircle mark isolated to `@miuui/icons/brand`
+ * Canonical 9-cell Precision Violet brand mark isolated to `@miuui/icons/brand`
  * so the main icon entry stays monochrome and tree-shakeable.
  */
 export const MiuBrandMark: BrandMarkDefinition = {
   name: "miu-brand",
-  viewBox: "0 0 64 64",
+  viewBox: "0 0 48 48",
   content:
-    '<defs><linearGradient id="miu-brand-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#A758EF"/><stop offset="100%" stop-color="#5A2687"/></linearGradient></defs><rect x="4" y="4" width="56" height="56" rx="16" fill="url(#miu-brand-grad)"/><path d="M19 42V22h5v11.5a4.5 4.5 0 0 0 9 0V22h5v20h-5v-2.4a7.5 7.5 0 0 1-9 0V46h-5v-4z" fill="#FCFBFD"/>',
+    '<rect x="7.125" y="7.125" width="33.75" height="33.75" rx="8.55" fill="#8F43D0"/><g fill="#FFFFFF"><rect x="17.25" y="12.46875" width="3.9375" height="3.9375" rx="1.0"/><rect x="17.25" y="17.25" width="3.9375" height="3.9375" rx="1.0"/><rect x="17.25" y="22.03125" width="3.9375" height="3.9375" rx="1.0"/><rect x="17.25" y="26.8125" width="3.9375" height="3.9375" rx="1.0"/><rect x="26.8125" y="17.25" width="3.9375" height="3.9375" rx="1.0"/><rect x="26.8125" y="22.03125" width="3.9375" height="3.9375" rx="1.0"/><rect x="26.8125" y="26.8125" width="3.9375" height="3.9375" rx="1.0"/><rect x="22.03125" y="26.8125" width="3.9375" height="3.9375" rx="1.0"/></g><rect x="17.25" y="31.59375" width="3.9375" height="3.9375" rx="1.0" fill="#0B0B0F"/>',
 }

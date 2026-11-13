@@ -331,15 +331,23 @@
       },
       "border-subtle": {
         "$type": "color",
-        "$value": "{color.gray.200}"
+        "$value": "oklch(0.2 0.015 305 / 0.09)"
       },
       "border-default": {
         "$type": "color",
-        "$value": "{color.gray.300}"
+        "$value": "oklch(0.2 0.015 305 / 0.15)"
       },
       "border-strong": {
         "$type": "color",
         "$value": "{color.gray.600}"
+      },
+      "specular": {
+        "$type": "color",
+        "$value": "oklch(1 0 0 / 0.85)"
+      },
+      "primary-specular": {
+        "$type": "color",
+        "$value": "oklch(1 0 0 / 0.28)"
       },
       "primary": {
         "$type": "color",
@@ -435,7 +443,7 @@
       },
       "overlay": {
         "$type": "color",
-        "$value": "oklch(0 0 0 / 0.56)"
+        "$value": "oklch(0.15 0.02 305 / 0.45)"
       },
       "surface-solid-bg": {
         "$type": "color",
@@ -443,23 +451,23 @@
       },
       "surface-mica-bg": {
         "$type": "color",
-        "$value": "oklch(0.99 0.004 305 / 0.82)"
+        "$value": "oklch(0.99 0.004 305 / 0.84)"
       },
       "surface-glass-bg": {
         "$type": "color",
-        "$value": "oklch(0.99 0.004 305 / 0.58)"
+        "$value": "oklch(0.99 0.004 305 / 0.62)"
       },
       "surface-glass-border": {
         "$type": "color",
-        "$value": "oklch(1 0 0 / 0.6)"
+        "$value": "oklch(0.2 0.015 305 / 0.12)"
       },
       "surface-glass-highlight": {
         "$type": "color",
-        "$value": "oklch(1 0 0 / 0.78)"
+        "$value": "oklch(1 0 0 / 0.85)"
       },
       "shadow": {
         "$type": "color",
-        "$value": "oklch(0 0 0 / 0.1)"
+        "$value": "oklch(0.18 0.02 305 / 0.1)"
       }
     }
   },

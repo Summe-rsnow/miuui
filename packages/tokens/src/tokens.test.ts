@@ -52,6 +52,8 @@ describe("token artefacts", () => {
     expect(css).toContain("--miu-motion-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);")
     expect(css).toContain("--miu-scrollbar-inset: 2px;")
     expect(css).toContain("--miu-color-danger-text: var(--miu-danger-700);")
+    expect(css).toContain("--miu-color-specular:")
+    expect(css).toContain("--miu-color-primary-specular:")
     expect(css).toContain('[data-theme="dark"]')
   })
 

@@ -1,6 +1,6 @@
 {
   "name": "@miuui/tokens",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "μui OKLCH palette generator, four-layer design tokens and W3C DTCG exporter",
   "license": "MIT",
   "files": [
