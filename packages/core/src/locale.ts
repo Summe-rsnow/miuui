@@ -54,6 +54,8 @@ export const zhCN: MiuMessageTree = {
   },
   input: {
     clear: "清空",
+    showPassword: "显示密码",
+    hidePassword: "隐藏密码",
   },
   select: {
     placeholder: "请选择",
@@ -80,6 +82,7 @@ export const zhCN: MiuMessageTree = {
     previous: "上一页",
     next: "下一页",
     label: "分页",
+    jumpTo: "跳转至第 {page} 页",
   },
   toc: {
     title: "本页",
@@ -115,6 +118,8 @@ export const enUS: MiuMessageTree = {
   },
   input: {
     clear: "Clear",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
   },
   select: {
     placeholder: "Select an option",
@@ -141,6 +146,7 @@ export const enUS: MiuMessageTree = {
     previous: "Previous page",
     next: "Next page",
     label: "Pagination",
+    jumpTo: "Jump to page {page}",
   },
   toc: {
     title: "On this page",

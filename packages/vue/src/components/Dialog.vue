@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<DialogProps>(), {
   open: undefined,
   size: "md",
   radius: "lg",
+  hideHeader: false,
 })
 
 const emit = defineEmits<{ "update:open": [value: boolean] }>()
@@ -51,7 +52,11 @@ const contentStyle = computed(() => {
         :data-material="materialName"
         :aria-label="ariaLabel"
       >
+        <DialogTitle v-if="hideHeader" class="miu-sr-only">
+          {{ title ?? ariaLabel ?? t("dialog.title") }}
+        </DialogTitle>
         <header
+          v-else
           :class="regionClass(props, 'header', 'miu-dialog__header')"
           :style="regionStyle(props, 'header')"
         >

@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import { regionClass, regionStyle } from "@miuui/core"
 import type { AppBarProps } from "../types"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 const props = withDefaults(defineProps<AppBarProps>(), {
   sticky: false,
   blurred: false,
   radius: "none",
 })
+
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "AppBar")
 </script>
 
 <template>
   <header
     :class="regionClass(props, 'root', 'miu-app-bar')"
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-sticky="sticky || undefined"
     :data-blurred="blurred || undefined"
-    :data-material="material"
-    :data-miu-radius="radius"
+    :data-material="materialName"
     :data-density="density"
   >
     <div

@@ -74,6 +74,7 @@ export interface InputProps extends ComponentSemanticProps<InputSemanticRegion> 
   readonly?: boolean
   invalid?: boolean
   clearable?: boolean
+  passwordToggle?: boolean
   showCount?: boolean
   maxlength?: number
   minlength?: number
@@ -129,7 +130,7 @@ export interface SwitchProps extends ComponentSemanticProps<"root" | "track" | "
 }
 
 export interface SelectOption {
-  value: string
+  value: string | number
   label: string
   disabled?: boolean
   icon?: IconName
@@ -138,7 +139,7 @@ export interface SelectOption {
 export type SelectSemanticRegion = "root" | "trigger" | "content" | "item" | "empty"
 
 export interface SelectProps extends ComponentSemanticProps<SelectSemanticRegion> {
-  modelValue?: string
+  modelValue?: string | number
   options: SelectOption[]
   id?: string
   name?: string
@@ -168,7 +169,7 @@ export interface FormFieldProps extends ComponentSemanticProps<
 export interface FormRowProps extends ComponentSemanticProps<
   "root" | "label" | "control" | "description" | "hint" | "icon"
 > {
-  label: string
+  label?: string
   description?: string
   hint?: string
   icon?: IconName
@@ -202,6 +203,7 @@ export interface DialogProps extends ComponentSemanticProps<DialogSemanticRegion
   width?: string
   closeLabel?: string
   ariaLabel?: string
+  hideHeader?: boolean
 }
 
 export type ConfirmDialogSemanticRegion = DialogSemanticRegion | "cancel" | "confirm"
@@ -235,7 +237,7 @@ export interface TabsItem {
 }
 
 export type TabsVariant = "underline" | "pills"
-export type TabsSemanticRegion = "root" | "list" | "trigger" | "panel"
+export type TabsSemanticRegion = "root" | "list" | "trigger" | "indicator" | "panel"
 
 export interface TabsProps extends ComponentSemanticProps<TabsSemanticRegion> {
   modelValue?: string
@@ -250,12 +252,14 @@ export interface TabsProps extends ComponentSemanticProps<TabsSemanticRegion> {
 
 export interface SegmentedOption {
   value: string
-  label: string
+  label?: string
   icon?: IconName
   disabled?: boolean
+  title?: string
+  ariaLabel?: string
 }
 
-export type SegmentedControlSemanticRegion = "root" | "item"
+export type SegmentedControlSemanticRegion = "root" | "indicator" | "item"
 
 export interface SegmentedControlProps extends ComponentSemanticProps<SegmentedControlSemanticRegion> {
   modelValue?: string
@@ -263,6 +267,7 @@ export interface SegmentedControlProps extends ComponentSemanticProps<SegmentedC
   size?: ControlSize
   radius?: Radius | "default"
   iconSize?: IconSize
+  iconOnly?: boolean
   material?: MaterialName
   disabled?: boolean
   ariaLabel?: string
@@ -343,6 +348,7 @@ export interface AvatarProps extends ComponentSemanticProps<"root" | "image" | "
 }
 
 export interface CardProps extends ComponentSemanticProps<"root" | "header" | "body" | "footer"> {
+  title?: string
   material?: MaterialName
   radius?: Radius | "default"
   padding?: "none" | "sm" | "md" | "lg"
@@ -411,6 +417,7 @@ export interface PageHeaderProps extends ComponentSemanticProps<
   title: string
   description?: string
   back?: boolean
+  divider?: boolean
   density?: Density
   iconSize?: IconSize
   backLabel?: string
@@ -489,11 +496,26 @@ export interface PaginationLink {
   link: string
 }
 
+export type PaginationMode = "links" | "numeric"
+
+export interface PaginationPageSizeOption {
+  label: string
+  value: number
+}
+
 export interface PaginationProps extends ComponentSemanticProps<
   "root" | "link" | "label" | "icon"
 > {
+  mode?: PaginationMode
   previous?: PaginationLink
   next?: PaginationLink
+  page?: number
+  pageSize?: number
+  total?: number
+  pageSizeOptions?: PaginationPageSizeOption[]
+  showPageSize?: boolean
+  showQuickJumper?: boolean
+  size?: ControlSize
   radius?: Radius | "default"
   material?: MaterialName
   iconSize?: IconSize
@@ -587,8 +609,11 @@ export interface TooltipProps extends ComponentSemanticProps<"content" | "arrow"
   sideOffset?: number
   delayDuration?: number
   open?: boolean
+  disabled?: boolean
   radius?: Radius | "default"
   material?: MaterialName
+  maxWidth?: string
+  maxHeight?: string
 }
 
 export interface DropdownMenuProps extends ComponentSemanticProps<MenuSemanticRegion> {
@@ -615,13 +640,126 @@ export interface TruncateTextProps extends ComponentSemanticProps<"root"> {
   text?: string
   lines?: number
   as?: string
-  title?: string
+  title?: string | false
   expandable?: boolean
   expandLabel?: string
   collapseLabel?: string
 }
 
-export interface ToastViewportProps extends ComponentSemanticProps<"viewport" | "toast"> {
+export type ToastPosition =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right"
+
+export type ToastStyleVariant = "accent" | "subtle" | "solid" | "outline"
+
+export interface ToastViewportProps extends ComponentSemanticProps<
+  "viewport" | "toast" | "icon" | "body" | "title" | "description" | "action" | "close"
+> {
+  position?: ToastPosition
   material?: MaterialName
+  styleVariant?: ToastStyleVariant
   radius?: Radius | "default"
+  max?: number
+}
+
+export type ProgressVariant = "primary" | "success" | "warning" | "danger"
+
+export interface ProgressProps extends ComponentSemanticProps<
+  "root" | "track" | "indicator" | "label"
+> {
+  modelValue?: number
+  max?: number
+  size?: "sm" | "md" | "lg"
+  variant?: ProgressVariant
+  radius?: Radius | "default"
+  indeterminate?: boolean
+  showValue?: boolean
+  ariaLabel?: string
+}
+
+export interface RadioGroupOption {
+  value: string | number
+  label: string
+  description?: string
+  disabled?: boolean
+}
+
+export interface RadioGroupProps extends ComponentSemanticProps<
+  "root" | "item" | "indicator" | "label" | "description"
+> {
+  modelValue?: string | number
+  options: Array<string | RadioGroupOption>
+  orientation?: "vertical" | "horizontal"
+  variant?: "radio" | "button"
+  size?: "sm" | "md" | "lg"
+  radius?: Radius | "default"
+  material?: MaterialName
+  disabled?: boolean
+  invalid?: boolean
+  name?: string
+  ariaLabel?: string
+}
+
+export interface NumberInputProps extends ComponentSemanticProps<
+  "root" | "input" | "decrement" | "increment"
+> {
+  modelValue?: number
+  defaultValue?: number
+  min?: number
+  max?: number
+  step?: number
+  size?: ControlSize
+  radius?: Radius | "default"
+  material?: MaterialName
+  disabled?: boolean
+  readonly?: boolean
+  invalid?: boolean
+  placeholder?: string
+  hideSteppers?: boolean
+  id?: string
+  name?: string
+  ariaLabel?: string
+}
+
+export interface PopconfirmProps extends ComponentSemanticProps<
+  "content" | "body" | "actions" | "cancel" | "confirm"
+> {
+  open?: boolean
+  title: string
+  description?: string
+  confirmLabel?: string
+  cancelLabel?: string
+  danger?: boolean
+  loading?: boolean
+  side?: "top" | "right" | "bottom" | "left"
+  align?: "center" | "start" | "end"
+  sideOffset?: number
+  radius?: Radius | "default"
+  material?: MaterialName
+}
+
+export interface ImageProps extends ComponentSemanticProps<"root" | "img" | "fallback"> {
+  src?: string | null
+  alt?: string
+  width?: string
+  height?: string
+  fit?: "cover" | "contain" | "fill" | "none" | "scale-down"
+  radius?: Radius | "default"
+  previewable?: boolean
+  lazy?: boolean
+  referrerPolicy?: "no-referrer" | "origin" | "strict-origin-when-cross-origin" | "unsafe-url"
+}
+
+export interface LoadingOverlayProps extends ComponentSemanticProps<
+  "root" | "backdrop" | "card" | "text"
+> {
+  loading: boolean
+  text?: string
+  fullscreen?: boolean
+  size?: IconSize
+  material?: MaterialName
 }

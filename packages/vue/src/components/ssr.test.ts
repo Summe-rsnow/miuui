@@ -19,14 +19,20 @@ import FormField from "./FormField.vue"
 import FormRow from "./FormRow.vue"
 import Icon from "./Icon.vue"
 import IconButton from "./IconButton.vue"
+import Image from "./Image.vue"
 import Input from "./Input.vue"
 import Kbd from "./Kbd.vue"
+import LoadingOverlay from "./LoadingOverlay.vue"
 import MessageComposer from "./MessageComposer.vue"
 import NavMenu from "./NavMenu.vue"
 import PageHeader from "./PageHeader.vue"
+import NumberInput from "./NumberInput.vue"
 import Pagination from "./Pagination.vue"
 import Pill from "./Pill.vue"
+import Popconfirm from "./Popconfirm.vue"
 import Popover from "./Popover.vue"
+import Progress from "./Progress.vue"
+import RadioGroup from "./RadioGroup.vue"
 import SectionHeader from "./SectionHeader.vue"
 import SegmentedControl from "./SegmentedControl.vue"
 import Select from "./Select.vue"
@@ -121,10 +127,24 @@ describe("SSR rendering and client hydration consistency", () => {
             h(MessageComposer, { modelValue: "Hi" }),
             h(Skeleton, { width: 120, height: 24 }),
             h(Spinner, { size: "md" }),
+            h(Image, { src: "https://example.com/demo.png", alt: "Preview", previewable: true }),
+            h(LoadingOverlay, { loading: false, text: "Working..." }),
             h(Icon, { name: "check" }),
             h(Kbd, { keys: "Ctrl K" }),
             h(Code, { variant: "primary" }, () => "@miuui/vue"),
             h(TruncateText, { text: "Long text", lines: 2 }),
+            h(Progress, { modelValue: 45, showValue: true, ariaLabel: "Progress" }),
+            h(RadioGroup, {
+              modelValue: "a",
+              options: ["a", "b"],
+              ariaLabel: "Radio group",
+            }),
+            h(NumberInput, { modelValue: 5, min: 1, max: 10, ariaLabel: "Count" }),
+            h(
+              Popconfirm,
+              { open: false, title: "Confirm?" },
+              { trigger: () => h("button", "Delete") },
+            ),
             h(Dialog, { open: false, title: "Closed" }),
             h(ConfirmDialog, { open: false, title: "Closed" }),
             h(Drawer, { open: false, title: "Closed" }),

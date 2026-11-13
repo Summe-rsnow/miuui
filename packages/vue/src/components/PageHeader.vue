@@ -7,6 +7,7 @@ import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<PageHeaderProps>(), {
   back: false,
+  divider: false,
   iconSize: "md",
 })
 
@@ -20,6 +21,7 @@ const backLabel = computed(() => props.backLabel ?? t("common.back"))
     :class="regionClass(props, 'root', 'miu-page-header')"
     :style="regionStyle(props, 'root')"
     :data-density="density"
+    :data-divider="divider || undefined"
     :data-miu-icon-size="iconSize"
   >
     <div class="miu-page-header__lead">

@@ -25,6 +25,9 @@ const iconLoaders: Record<IconName, () => Promise<IconDefinition>> = {
   share: () => import("./index").then((m) => m.ShareIcon),
   edit: () => import("./index").then((m) => m.EditIcon),
   trash: () => import("./index").then((m) => m.TrashIcon),
+  minus: () => import("./index").then((m) => m.MinusIcon),
+  eye: () => import("./index").then((m) => m.EyeIcon),
+  eyeOff: () => import("./index").then((m) => m.EyeOffIcon),
 }
 
 export function hasIcon(name: string): name is IconName {

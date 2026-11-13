@@ -49,44 +49,46 @@ function onKeydown(event: KeyboardEvent): void {
     @keydown="onKeydown"
   >
     <div class="miu-form-row__lead">
-      <span
-        v-if="icon"
-        :class="regionClass(props, 'icon', 'miu-form-row__icon')"
-        :style="regionStyle(props, 'icon')"
-      >
-        <Icon :name="icon" />
-      </span>
-      <div class="miu-form-row__text">
-        <label
-          v-if="labelFor"
-          :for="labelFor"
-          :class="regionClass(props, 'label', 'miu-form-row__label')"
-          :style="regionStyle(props, 'label')"
-        >
-          {{ label }}
-        </label>
+      <slot name="lead">
         <span
-          v-else
-          :class="regionClass(props, 'label', 'miu-form-row__label')"
-          :style="regionStyle(props, 'label')"
+          v-if="icon"
+          :class="regionClass(props, 'icon', 'miu-form-row__icon')"
+          :style="regionStyle(props, 'icon')"
         >
-          {{ label }}
+          <Icon :name="icon" />
         </span>
-        <p
-          v-if="description"
-          :class="regionClass(props, 'description', 'miu-form-row__description')"
-          :style="regionStyle(props, 'description')"
-        >
-          {{ description }}
-        </p>
-        <p
-          v-if="hint"
-          :class="regionClass(props, 'hint', 'miu-form-row__hint')"
-          :style="regionStyle(props, 'hint')"
-        >
-          {{ hint }}
-        </p>
-      </div>
+        <div class="miu-form-row__text">
+          <label
+            v-if="labelFor"
+            :for="labelFor"
+            :class="regionClass(props, 'label', 'miu-form-row__label')"
+            :style="regionStyle(props, 'label')"
+          >
+            <slot name="label">{{ label }}</slot>
+          </label>
+          <span
+            v-else-if="label || $slots.label"
+            :class="regionClass(props, 'label', 'miu-form-row__label')"
+            :style="regionStyle(props, 'label')"
+          >
+            <slot name="label">{{ label }}</slot>
+          </span>
+          <p
+            v-if="description"
+            :class="regionClass(props, 'description', 'miu-form-row__description')"
+            :style="regionStyle(props, 'description')"
+          >
+            {{ description }}
+          </p>
+          <p
+            v-if="hint"
+            :class="regionClass(props, 'hint', 'miu-form-row__hint')"
+            :style="regionStyle(props, 'hint')"
+          >
+            {{ hint }}
+          </p>
+        </div>
+      </slot>
     </div>
     <div
       v-if="$slots.default"

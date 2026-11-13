@@ -20,13 +20,14 @@ const title = computed(() => props.title ?? t("emptyState.title"))
     :data-density="density"
   >
     <div
-      v-if="icon"
+      v-if="icon || $slots.icon"
       :class="regionClass(props, 'icon', 'miu-empty-state__icon')"
       :style="regionStyle(props, 'icon')"
     >
-      <Icon :name="icon" />
+      <slot name="icon">
+        <Icon v-if="icon" :name="icon" />
+      </slot>
     </div>
-    <slot name="icon" />
     <p
       :class="regionClass(props, 'title', 'miu-empty-state__title')"
       :style="regionStyle(props, 'title')"

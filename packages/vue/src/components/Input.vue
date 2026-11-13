@@ -22,6 +22,7 @@ const props = withDefaults(defineProps<InputProps>(), {
   readonly: false,
   invalid: false,
   clearable: false,
+  passwordToggle: false,
   showCount: false,
   autofocus: false,
 })
@@ -66,10 +67,18 @@ function clear(): void {
   inputRef.value?.focus()
 }
 
+const passwordRevealed = ref(false)
+const effectiveType = computed(() =>
+  props.passwordToggle && props.type === "password" && passwordRevealed.value ? "text" : props.type,
+)
+
+function togglePassword(): void {
+  passwordRevealed.value = !passwordRevealed.value
+}
+
 function focus(): void {
   inputRef.value?.focus()
 }
-
 defineExpose({ focus, inputRef })
 </script>
 
@@ -95,7 +104,7 @@ defineExpose({ focus, inputRef })
       ref="inputRef"
       v-model="model"
       :id="inputId"
-      :type="type"
+      :type="effectiveType"
       :name="name"
       :placeholder="placeholder"
       :disabled="disabled"
@@ -114,7 +123,12 @@ defineExpose({ focus, inputRef })
       @keydown.enter="$emit('enter', $event)"
     />
     <span
-      v-if="$slots.suffix || showCount || (clearable && model.length > 0 && !disabled && !readonly)"
+      v-if="
+        $slots.suffix ||
+        showCount ||
+        (passwordToggle && type === 'password' && !disabled) ||
+        (clearable && model.length > 0 && !disabled && !readonly)
+      "
       class="miu-input__suffix"
       :class="regionClass(props, 'suffix')"
       :style="regionStyle(props, 'suffix')"
@@ -123,6 +137,16 @@ defineExpose({ focus, inputRef })
       <span v-if="showCount" class="miu-input__count">
         {{ maxlength ? `${model.length} / ${maxlength}` : model.length }}
       </span>
+      <button
+        v-if="passwordToggle && type === 'password' && !disabled"
+        type="button"
+        class="miu-input__toggle"
+        :aria-label="passwordRevealed ? t('input.hidePassword') : t('input.showPassword')"
+        :aria-pressed="passwordRevealed"
+        @click="togglePassword"
+      >
+        <Icon :name="passwordRevealed ? 'eyeOff' : 'eye'" size="sm" />
+      </button>
       <button
         v-if="clearable && model.length > 0 && !disabled && !readonly"
         type="button"

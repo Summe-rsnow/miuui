@@ -101,12 +101,13 @@ defineExpose({
       :style="regionStyle(props, 'spinner')"
     />
     <span
-      v-else-if="icon || $slots.icon"
+      v-else-if="icon || $slots.icon || (iconOnly && $slots.default)"
       :class="regionClass(props, 'icon', 'miu-button__icon')"
       :style="regionStyle(props, 'icon')"
     >
       <slot name="icon">
         <Icon v-if="icon" :name="icon" />
+        <slot v-else-if="iconOnly" />
       </slot>
     </span>
     <span

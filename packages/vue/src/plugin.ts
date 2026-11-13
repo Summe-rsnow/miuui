@@ -20,14 +20,20 @@ import FormRow from "./components/FormRow.vue"
 import Icon from "./components/Icon.vue"
 import IconButton from "./components/IconButton.vue"
 import Input from "./components/Input.vue"
+import Image from "./components/Image.vue"
 import Kbd from "./components/Kbd.vue"
+import LoadingOverlay from "./components/LoadingOverlay.vue"
 import MessageComposer from "./components/MessageComposer.vue"
 import NavMenu from "./components/NavMenu.vue"
+import NumberInput from "./components/NumberInput.vue"
 import PageHeader from "./components/PageHeader.vue"
 import Pagination from "./components/Pagination.vue"
 import Pill from "./components/Pill.vue"
 import PillGroup from "./components/PillGroup.vue"
+import Popconfirm from "./components/Popconfirm.vue"
 import Popover from "./components/Popover.vue"
+import Progress from "./components/Progress.vue"
+import RadioGroup from "./components/RadioGroup.vue"
 import SectionHeader from "./components/SectionHeader.vue"
 import SegmentedControl from "./components/SegmentedControl.vue"
 import Select from "./components/Select.vue"
@@ -65,15 +71,21 @@ export const components: Record<string, Component> = {
   MiuFormRow: FormRow,
   MiuIcon: Icon,
   MiuIconButton: IconButton,
+  MiuImage: Image,
   MiuInput: Input,
   MiuKbd: Kbd,
+  MiuLoadingOverlay: LoadingOverlay,
   MiuMessageComposer: MessageComposer,
   MiuNavMenu: NavMenu,
+  MiuNumberInput: NumberInput,
   MiuPageHeader: PageHeader,
   MiuPagination: Pagination,
   MiuPillGroup: PillGroup,
   MiuPill: Pill,
+  MiuPopconfirm: Popconfirm,
   MiuPopover: Popover,
+  MiuProgress: Progress,
+  MiuRadioGroup: RadioGroup,
   MiuSectionHeader: SectionHeader,
   MiuSegmentedControl: SegmentedControl,
   MiuSelect: Select,

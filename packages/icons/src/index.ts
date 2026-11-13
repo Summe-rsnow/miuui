@@ -23,7 +23,9 @@ export type IconName =
   | "share"
   | "edit"
   | "trash"
-
+  | "minus"
+  | "eye"
+  | "eyeOff"
 export interface IconDefinition {
   name: IconName
   viewBox: string
@@ -194,4 +196,24 @@ export const TrashIcon: IconDefinition = {
   viewBox: "0 0 24 24",
   content:
     '<path d="M4.5 6.5h15M9.5 6.5V4.8a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.7M6.5 6.5l1 12.2a1.5 1.5 0 0 0 1.5 1.3h6a1.5 1.5 0 0 0 1.5-1.3l1-12.2"/>',
+}
+
+export const MinusIcon: IconDefinition = {
+  name: "minus",
+  viewBox: "0 0 24 24",
+  content: '<path d="M5 12h14"/>',
+}
+
+export const EyeIcon: IconDefinition = {
+  name: "eye",
+  viewBox: "0 0 24 24",
+  content:
+    '<path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/>',
+}
+
+export const EyeOffIcon: IconDefinition = {
+  name: "eyeOff",
+  viewBox: "0 0 24 24",
+  content:
+    '<path d="M3 3l18 18M10.5 6.2A9.8 9.8 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16.7 16.7 0 0 1-3.2 4.1M6.6 6.6C4 8.4 2.5 12 2.5 12s3.5 6.5 9.5 6.5c1.7 0 3.3-.4 4.7-1.1"/>',
 }

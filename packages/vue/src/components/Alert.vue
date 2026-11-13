@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { regionClass, regionStyle } from "@miuui/core"
 import type { AlertProps } from "../types"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<AlertProps>(), {
@@ -8,16 +9,17 @@ const props = withDefaults(defineProps<AlertProps>(), {
   radius: "sm",
   iconSize: "md",
 })
+
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Alert")
 </script>
 
 <template>
   <div
     :class="regionClass(props, 'root', 'miu-alert', `miu-alert--${variant}`)"
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-variant="variant"
     :data-miu-radius="radius"
-    :data-material="material"
-    :data-miu-icon-size="iconSize"
+    :data-material="materialName"
     role="note"
   >
     <span

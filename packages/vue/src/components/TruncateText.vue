@@ -6,6 +6,7 @@ import type { TruncateTextProps } from "../types"
 const props = withDefaults(defineProps<TruncateTextProps>(), {
   lines: 1,
   as: "span",
+  title: undefined,
   expandable: false,
   expandLabel: "展开",
   collapseLabel: "收起",
@@ -99,7 +100,7 @@ watch(
       })
     "
     :style="rootStyle"
-    :title="title ?? text"
+    :title="title === false ? undefined : (title ?? text)"
   >
     <span ref="textRef" class="miu-truncate__text">
       <slot>{{ text }}</slot>

@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<SelectProps>(), {
 
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Select")
 
-const emit = defineEmits<{ "update:modelValue": [value: string] }>()
+const emit = defineEmits<{ "update:modelValue": [value: string | number] }>()
 
 const autoId = useId()
 const formField = useMiuFormField()
@@ -48,8 +48,10 @@ const size = computed(() => props.size ?? sizeHint.value ?? "md")
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
 const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
 const selectId = computed(() => props.id ?? formField?.id.value ?? autoId)
+const selectedOption = computed(() =>
+  props.options.find((option) => option.value === props.modelValue),
+)
 const describedBy = computed(() => formField?.describedBy.value)
-const invalid = computed(() => props.invalid || formField?.invalid.value || false)
 const disabled = computed(() => props.disabled || formField?.disabled.value || false)
 const required = computed(() => formField?.required.value || false)
 
@@ -59,8 +61,10 @@ if (import.meta.env.DEV && resolvedSize.value.fallback) {
   )
 }
 
-function onUpdate(value: string | undefined): void {
-  if (typeof value === "string") emit("update:modelValue", value)
+function onUpdate(value: unknown): void {
+  if (typeof value === "string" || typeof value === "number") {
+    emit("update:modelValue", value)
+  }
 }
 </script>
 
@@ -95,7 +99,9 @@ function onUpdate(value: string | undefined): void {
         :class="regionClass(props, 'trigger', 'miu-select__trigger')"
         :style="regionStyle(props, 'trigger')"
       >
-        <SelectValue :placeholder="placeholder ?? t('select.placeholder')" />
+        <SelectValue :placeholder="placeholder ?? t('select.placeholder')">
+          {{ selectedOption?.label ?? placeholder ?? t("select.placeholder") }}
+        </SelectValue>
         <SelectIcon class="miu-select__chevron">
           <Icon name="chevron" />
         </SelectIcon>

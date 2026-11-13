@@ -14,9 +14,12 @@ import {
   type Radius,
   type ThemeMode,
 } from "@miuui/core"
+import type { ToastPosition, ToastStyleVariant } from "../types"
 import { semanticTokensForSeed } from "@miuui/tokens"
 import { MIU_THEME_KEY, type MiuThemeContext } from "../composables/useMiu"
 import { resolveMaterialValue, resolveMotionValue } from "../composables/usePluginResolution"
+import { useConfirm } from "../composables/useConfirm"
+import ConfirmDialog from "./ConfirmDialog.vue"
 import ToastViewport from "./ToastViewport.vue"
 
 const props = withDefaults(
@@ -30,6 +33,10 @@ const props = withDefaults(
     locale?: LocaleCode
     fallbackLocale?: LocaleCode
     messages?: Record<LocaleCode, MiuMessageTree>
+    toastPosition?: ToastPosition
+    toastMaterial?: MaterialName
+    toastStyleVariant?: ToastStyleVariant
+    toastMax?: number
     as?: string
   }>(),
   {
@@ -122,6 +129,7 @@ const providerStyle = computed<Record<string, string> | undefined>(() => {
 
 const isRootProvider = inject(MIU_THEME_KEY, null) === null
 
+const { currentConfirm, resolveConfirm } = useConfirm()
 const context: MiuThemeContext = {
   theme: resolvedTheme,
   density: computed(() => props.density),
@@ -171,6 +179,31 @@ const attrs = computed(() =>
   <component :is="as" class="miu-theme-provider" v-bind="attrs" :style="providerStyle">
     <slot />
     <div ref="portalTarget" class="miu-portal-root" />
-    <ToastViewport v-if="isRootProvider" />
+    <ToastViewport
+      v-if="isRootProvider"
+      :position="toastPosition"
+      :material="toastMaterial"
+      :style-variant="toastStyleVariant"
+      :max="toastMax"
+    />
+    <ConfirmDialog
+      v-if="isRootProvider && currentConfirm"
+      :open="Boolean(currentConfirm)"
+      :title="currentConfirm.title"
+      :description="currentConfirm.description"
+      :confirm-label="currentConfirm.confirmLabel"
+      :cancel-label="currentConfirm.cancelLabel"
+      :danger="currentConfirm.danger"
+      :size="currentConfirm.size"
+      :radius="currentConfirm.radius"
+      :material="currentConfirm.material"
+      @confirm="resolveConfirm(true)"
+      @cancel="resolveConfirm(false)"
+      @update:open="
+        (open) => {
+          if (!open) resolveConfirm(false)
+        }
+      "
+    />
   </component>
 </template>
