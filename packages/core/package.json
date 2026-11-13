@@ -1,6 +1,6 @@
 {
   "name": "@miuui/core",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "μui framework-agnostic component recipes, plugin contracts and registries",
   "license": "MIT",
   "files": [

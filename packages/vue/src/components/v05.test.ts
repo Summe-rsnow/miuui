@@ -209,4 +209,13 @@ describe("v0.5.0 MCLR primitives and enhancements", () => {
     await btns[0]?.trigger("click")
     expect(onPage).toHaveBeenCalledWith(1)
   })
+
+  it("exports every registered plugin component from package entry including ConfirmDialog", async () => {
+    const entry = await import("../index")
+    for (const [pluginKey, comp] of Object.entries(entry.components)) {
+      const exportName = pluginKey.replace(/^Miu/, "")
+      expect((entry as Record<string, unknown>)[exportName]).toBe(comp)
+    }
+    expect(entry.ConfirmDialog).toBeDefined()
+  })
 })

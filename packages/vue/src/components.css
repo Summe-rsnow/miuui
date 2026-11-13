@@ -1143,6 +1143,11 @@
   fill: var(--miu-color-bg-overlay);
 }
 
+.miu-popover[data-material] .miu-popover__arrow,
+[data-material] .miu-popover:not([data-material]) .miu-popover__arrow {
+  fill: var(--miu-material-surface, var(--miu-color-bg-overlay));
+}
+
 .miu-tooltip {
   z-index: var(--miu-z-tooltip);
   max-width: var(--miu-dialog-width-sm);

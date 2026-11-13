@@ -2,6 +2,12 @@
 
 All notable changes to `@miuui/*` are documented in this file.
 
+## [0.5.5] - 2026-11-14
+
+### Fixed
+- **`@miuui/vue` exports**: Exported `ConfirmDialog` directly from `@miuui/vue` entry alongside its `plugin.ts` registration (55/55 components exported).
+- **`Popover` arrow material inheritance**: Added `[data-material]` fill alignment for `.miu-popover__arrow` so `mica`/`glass` popovers match their arrow surface.
+
 ## [0.5.4] - 2026-11-14
 
 ### Fixed
