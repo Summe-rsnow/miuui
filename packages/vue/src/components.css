@@ -1195,19 +1195,28 @@
   animation: miu-popover-out var(--miu-motion-duration-fast) var(--miu-motion-ease-in) forwards;
 }
 
-.miu-tooltip[data-material] {
+.miu-tooltip[data-material],
+[data-material] .miu-tooltip:not([data-material]) {
   background: var(--miu-material-surface, var(--miu-color-bg-overlay));
   border: var(--miu-border-width) solid var(--miu-material-border, var(--miu-color-border-subtle));
   color: var(--miu-color-text-primary);
   backdrop-filter: var(--miu-material-backdrop, none);
 }
 
-.miu-tooltip[data-material] .miu-tooltip__arrow {
-  fill: var(--miu-material-surface, var(--miu-color-bg-overlay));
+.miu-tooltip[data-material="glass"],
+[data-material="glass"] .miu-tooltip:not([data-material]) {
+  box-shadow:
+    inset 0 var(--miu-border-width) 0 var(--miu-material-highlight, transparent),
+    var(--miu-shadow-3);
 }
 
 .miu-tooltip__arrow {
   fill: var(--miu-color-bg-inverse);
+}
+
+.miu-tooltip[data-material] .miu-tooltip__arrow,
+[data-material] .miu-tooltip:not([data-material]) .miu-tooltip__arrow {
+  fill: var(--miu-material-surface, var(--miu-color-bg-overlay));
 }
 
 .miu-menu {

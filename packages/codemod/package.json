@@ -1,6 +1,6 @@
 {
   "name": "@miuui/codemod",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "μui AST/template codemods for SemVer deprecation migrations",
   "license": "MIT",
   "bin": {

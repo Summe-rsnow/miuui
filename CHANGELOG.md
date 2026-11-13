@@ -2,6 +2,11 @@
 
 All notable changes to `@miuui/*` are documented in this file.
 
+## [0.5.4] - 2026-11-14
+
+### Fixed
+- **`Tooltip` & `HelpTooltip`**: Inherited `ThemeProvider`'s active `[data-material]` (`solid` / `mica` / `glass`) surface, border, text, backdrop blur, and glass specular rim automatically even when `:material` is not explicitly passed on individual tooltips.
+
 ## [0.5.3] - 2026-11-14
 
 ### Changed
