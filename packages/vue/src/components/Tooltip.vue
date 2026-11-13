@@ -51,7 +51,9 @@ const contentStyle = computed(() => {
           :align="align"
           :side-offset="sideOffset"
         >
-          <slot />
+          <div class="miu-tooltip__body">
+            <slot />
+          </div>
           <TooltipArrow
             :class="regionClass(props, 'arrow', 'miu-tooltip__arrow')"
             :style="regionStyle(props, 'arrow')"

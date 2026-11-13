@@ -2,6 +2,12 @@
 
 All notable changes to `@miuui/*` are documented in this file.
 
+## [0.4.1] - 2026-11-13
+
+### Fixed
+- **`Tooltip`**: Isolated scrollable text inside `.miu-tooltip__body` while keeping `.miu-tooltip__arrow` outside the scroll container, eliminating false vertical scrollbars on short tooltips and preventing arrow clipping.
+- **`Drawer` & `CommandPalette`**: Unified overlay `backdrop-filter: blur(var(--miu-space-2))` with `Dialog` so all modal backdrops share identical frosted dimming.
+
 ## [0.4.0] - 2026-11-13
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "@miuui/icons",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "μui named icon exports, bound to icon-size and currentColor",
   "license": "MIT",
   "files": [

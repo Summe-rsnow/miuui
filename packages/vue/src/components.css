@@ -1133,11 +1133,9 @@
   z-index: var(--miu-z-tooltip);
   max-width: var(--miu-dialog-width-sm);
   max-block-size: min(17.5rem, var(--reka-tooltip-content-available-height, 17.5rem));
-  overflow-y: auto;
-  overscroll-behavior: contain;
   overflow-wrap: anywhere;
   line-height: 1.5;
-  padding: var(--miu-space-2) var(--miu-space-3);
+  padding: 0;
   background: var(--miu-color-bg-inverse);
   border-radius: var(--miu-radius-current);
   color: var(--miu-color-text-inverse);
@@ -1145,6 +1143,14 @@
   font-size: var(--miu-text-sm);
   box-shadow: var(--miu-shadow-2);
   transform-origin: var(--reka-tooltip-content-transform-origin, center);
+}
+
+.miu-tooltip__body {
+  max-block-size: inherit;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: inherit;
+  padding: var(--miu-space-2) var(--miu-space-3);
 }
 
 .miu-tooltip[data-state="open"],
@@ -3120,6 +3126,7 @@
   inset: 0;
   z-index: var(--miu-z-modal-backdrop);
   background: var(--miu-color-overlay);
+  backdrop-filter: blur(var(--miu-space-2));
 }
 
 .miu-drawer__content {
@@ -3236,6 +3243,7 @@
   inset: 0;
   z-index: var(--miu-z-modal-backdrop);
   background: var(--miu-color-overlay);
+  backdrop-filter: blur(var(--miu-space-2));
 }
 
 .miu-command-palette {
