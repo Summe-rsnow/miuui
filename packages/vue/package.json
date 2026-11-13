@@ -1,6 +1,6 @@
 {
   "name": "@miuui/vue",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "μui Vue 3.5+ adapter built on Reka UI primitives",
   "license": "MIT",
   "files": [

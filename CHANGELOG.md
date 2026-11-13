@@ -2,6 +2,11 @@
 
 All notable changes to `@miuui/*` are documented in this file.
 
+## [0.5.2] - 2026-11-13
+
+### Changed
+- **`Badge` modern OKLCH tinted palette**: Replaced heavy dark semantic fills with airy OKLCH tinted surfaces (`color-mix`), crisp matching hairline borders, and WCAG AA-verified foreground tones across `solid`, `mica`, and `glass` materials in both light and dark modes.
+
 ## [0.5.1] - 2026-11-13
 
 ### Fixed
