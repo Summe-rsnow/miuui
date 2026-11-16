@@ -9,7 +9,7 @@ import {
   type MiuMessageParams,
   type MotionTier,
   type Radius,
-} from "@miuui/core"
+} from "@xcmm1543/miuui-core"
 
 export interface MiuI18nContext {
   locale: Ref<LocaleCode>

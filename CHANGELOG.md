@@ -1,11 +1,18 @@
 # Changelog
 
-All notable changes to `@miuui/*` are documented in this file.
+All notable changes to `@xcmm1543/miuui-*` are documented in this file.
+
+## [0.5.6] - 2026-11-16
+
+### Changed
+- **Package scope**: Renamed workspace packages to `@xcmm1543/miuui-*` (`core`, `tokens`, `icons`, `materials`, `motions`, `vue`, `codemod`) for publishing under the `xcmm1543` npm scope.
+- **npm release readiness**: Replaced local `file:../...` inter-package dependencies with `workspace:^` so `pnpm publish` resolves SemVer ranges across `@xcmm1543/miuui-*` packages.
+- **Package metadata**: Added `publishConfig.access: "public"`, `repository`, `homepage`, `bugs`, per-package `README.md` files, and root `release:dry` / `release:publish` scripts across all 7 workspace packages.
 
 ## [0.5.5] - 2026-11-14
 
 ### Fixed
-- **`@miuui/vue` exports**: Exported `ConfirmDialog` directly from `@miuui/vue` entry alongside its `plugin.ts` registration (55/55 components exported).
+- **`@xcmm1543/miuui-vue` exports**: Exported `ConfirmDialog` directly from `@xcmm1543/miuui-vue` entry alongside its `plugin.ts` registration (55/55 components exported).
 - **`Popover` arrow material inheritance**: Added `[data-material]` fill alignment for `.miu-popover__arrow` so `mica`/`glass` popovers match their arrow surface.
 
 ## [0.5.4] - 2026-11-14
@@ -36,8 +43,8 @@ All notable changes to `@miuui/*` are documented in this file.
   - `Collapse`: CSS grid height expand/collapse container (`open` prop, `reduced`/`none` motion aware).
   - `ColorPicker`: Native color input + hex text field + preset swatch selector with active checkmark.
   - `List` & `ListItem`: Structured list container (`gap`, `bordered`, `dividers`) and interactive row (`title`, `subtitle`, `active`, `clickable`, `dense`, `#prefix`/`#badges`/`#actions` slots).
-  - `HelpTooltip`: Accessible `?` info trigger (`help` icon in `@miuui/icons`) wrapping `Tooltip`.
-- **`@miuui/icons`**: Added `help` (`HelpIcon`) across index & dynamic exports.
+  - `HelpTooltip`: Accessible `?` info trigger (`help` icon in `@xcmm1543/miuui-icons`) wrapping `Tooltip`.
+- **`@xcmm1543/miuui-icons`**: Added `help` (`HelpIcon`) across index & dynamic exports.
 - **Enhancements to existing components**:
   - `Button`: Added `"tonal"` variant and `iconRight` prop.
   - `Badge`: Added `pulse` prop with pinging status indicator (paused under `reduced`/`none` motion tiers).
@@ -59,7 +66,7 @@ All notable changes to `@miuui/*` are documented in this file.
   - Navigation & layout primitives (`AppBar`, `SideNav` / `NavMenu`, `Breadcrumb`, `Toc`, `Pagination` numeric + link modes, `SectionHeader`, `PageHeader`, `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge`, `Card`, `Pill`, `PillGroup`, `Alert`, `Code`, `Kbd`, `CommandPalette`, `ContextMenu`, `DropdownMenu`, `Drawer`, `Table`, `TruncateText`, `MessageComposer`, `FormRow`).
 - **Unified spring motion language across all 50 components**:
   - Added sliding active indicator (`ResizeObserver` + `translate3d`) to `Tabs` (`underline` & `pills`) and `RadioGroup` (`variant="button"`), matching `SegmentedControl`.
-  - Added gentle breathing float (`@keyframes miu-float`) to `EmptyState` icon with automatic pause in `@miuui/motions` for `reduced` / `none` / `prefers-reduced-motion`.
+  - Added gentle breathing float (`@keyframes miu-float`) to `EmptyState` icon with automatic pause in `@xcmm1543/miuui-motions` for `reduced` / `none` / `prefers-reduced-motion`.
   - Unified `--miu-motion-ease-spring` press & hover transitions across `Select`, `DropdownMenu`, `ContextMenu`, `CommandPalette`, `FormRow`, `Pill`, `ToastViewport` actions, `Image`, `LoadingOverlay`, `Avatar`, `Badge`, `Table`, `Pagination`, `NumberInput`, `Slider`, `Toc`, `Breadcrumb`, `Kbd`, and `Code`.
 - **Enhancements & fixes**:
   - `TruncateText`: `title?: string | false` allows suppressing native browser `title` tooltips when wrapped in custom `<Tooltip>`.
@@ -85,4 +92,4 @@ All notable changes to `@miuui/*` are documented in this file.
 ## [0.1.0] - 2026-11-13
 
 ### Added
-- Initial monorepo foundation: `@miuui/core`, `@miuui/tokens`, `@miuui/icons`, `@miuui/materials`, `@miuui/motions`, `@miuui/vue`, and `@miuui/codemod`.
+- Initial monorepo foundation: `@xcmm1543/miuui-core`, `@xcmm1543/miuui-tokens`, `@xcmm1543/miuui-icons`, `@xcmm1543/miuui-materials`, `@xcmm1543/miuui-motions`, `@xcmm1543/miuui-vue`, and `@xcmm1543/miuui-codemod`.

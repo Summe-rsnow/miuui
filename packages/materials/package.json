@@ -1,8 +1,17 @@
 {
-  "name": "@miuui/materials",
-  "version": "0.5.5",
+  "name": "@xcmm1543/miuui-materials",
+  "version": "0.5.6",
   "description": "μui pluggable surface materials: solid, mica and glass",
+  "homepage": "https://github.com/Summe-rsnow/miuui#readme",
+  "bugs": {
+    "url": "https://github.com/Summe-rsnow/miuui/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Summe-rsnow/miuui.git",
+    "directory": "packages/materials"
+  },
   "files": [
     "dist",
     "README.md"
@@ -21,12 +30,15 @@
     },
     "./style.css": "./dist/style.css"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "node ../../scripts/build-packages.mjs materials",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@miuui/core": "file:../core",
-    "@miuui/tokens": "file:../tokens"
+    "@xcmm1543/miuui-core": "workspace:^",
+    "@xcmm1543/miuui-tokens": "workspace:^"
   }
 }

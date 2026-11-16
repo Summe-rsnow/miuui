@@ -1,8 +1,17 @@
 {
-  "name": "@miuui/tokens",
-  "version": "0.5.5",
+  "name": "@xcmm1543/miuui-tokens",
+  "version": "0.5.6",
   "description": "μui OKLCH palette generator, four-layer design tokens and W3C DTCG exporter",
+  "homepage": "https://github.com/Summe-rsnow/miuui#readme",
+  "bugs": {
+    "url": "https://github.com/Summe-rsnow/miuui/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Summe-rsnow/miuui.git",
+    "directory": "packages/tokens"
+  },
   "files": [
     "dist",
     "README.md"
@@ -21,6 +30,9 @@
     },
     "./style.css": "./dist/tokens.css",
     "./dtcg.json": "./dist/tokens.dtcg.json"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "tokens:build": "oxnode scripts/build.ts",

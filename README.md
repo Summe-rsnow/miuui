@@ -2,12 +2,12 @@
 
 独立的 pnpm monorepo。包含：
 
-- `@miuui/core`：框架无关契约、Registry、Locale、主题序列化
-- `@miuui/tokens`：OKLCH 色阶、四层令牌、DTCG 导出
-- `@miuui/icons`：C 柔和圆润图标命名导出
-- `@miuui/materials`：`solid` / `mica` / `glass`
-- `@miuui/motions`：`full` / `reduced` / `none`
-- `@miuui/vue`：Vue 3.5+ / Reka UI 适配器
+- `@xcmm1543/miuui-core`：框架无关契约、Registry、Locale、主题序列化
+- `@xcmm1543/miuui-tokens`：OKLCH 色阶、四层令牌、DTCG 导出
+- `@xcmm1543/miuui-icons`：C 柔和圆润图标命名导出
+- `@xcmm1543/miuui-materials`：`solid` / `mica` / `glass`
+- `@xcmm1543/miuui-motions`：`full` / `reduced` / `none`
+- `@xcmm1543/miuui-vue`：Vue 3.5+ / Reka UI 适配器
 
 ```bash
 pnpm install

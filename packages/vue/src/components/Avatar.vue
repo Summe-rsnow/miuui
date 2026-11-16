@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
-import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@miuui/core"
+import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
 import type { AvatarProps } from "../types"
 
 const props = withDefaults(defineProps<AvatarProps>(), {

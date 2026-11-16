@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, provide, useId } from "vue"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { FormFieldProps } from "../types"
 import { MIU_FORM_FIELD_KEY } from "../composables/useFormField"
 import { MIU_SIZE_HINT_KEY } from "../composables/useSizeHint"

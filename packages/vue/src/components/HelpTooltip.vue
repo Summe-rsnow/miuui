@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAttrs } from "vue"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { HelpTooltipProps } from "../types"
 import Icon from "./Icon.vue"
 import Tooltip from "./Tooltip.vue"

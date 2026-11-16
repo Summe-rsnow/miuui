@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
-import { regionClass, regionStyle } from "@miuui/core"
-import { STATUS_SEEDS, VIOLET_SEED } from "@miuui/tokens"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
+import { STATUS_SEEDS, VIOLET_SEED } from "@xcmm1543/miuui-tokens"
 import type { ColorPickerPreset, ColorPickerProps } from "../types"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import { useMiuI18n } from "../composables/useMiu"

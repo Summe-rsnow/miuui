@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { regionClass, regionStyle, resolveControlSize } from "@miuui/core"
+import { regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
 import type { BadgeProps } from "../types"
 import Icon from "./Icon.vue"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"

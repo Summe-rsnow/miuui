@@ -1,6 +1,6 @@
 import { markRaw, readonly, ref, type Component, type Ref } from "vue"
-import type { MaterialName, Radius } from "@miuui/core"
-import type { IconName } from "@miuui/icons"
+import type { MaterialName, Radius } from "@xcmm1543/miuui-core"
+import type { IconName } from "@xcmm1543/miuui-icons"
 import type { ToastPosition, ToastStyleVariant } from "../types"
 
 export type ToastVariant = "default" | "success" | "error" | "warning" | "info"

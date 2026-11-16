@@ -12,7 +12,7 @@ import {
   regionStyle,
   resolveControlSize,
   resolveIconSize,
-} from "@miuui/core"
+} from "@xcmm1543/miuui-core"
 import type { NumberInputProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { LoadingOverlayProps } from "../types"
 import { MIU_THEME_KEY } from "../composables/useMiu"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"

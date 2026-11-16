@@ -1,11 +1,11 @@
 # ADR-0001: Reka UI 版本兼容与升级策略
 
 - **状态**：Accepted（0.2.0）
-- **决策主体**：`@miuui/vue`
+- **决策主体**：`@xcmm1543/miuui-vue`
 
 ## 背景
 
-`@miuui/vue` 是全仓库唯一声明 `reka-ui` 为 `peerDependencies` 的包，12 个无障碍与浮层组件直接基于 Reka UI 无头原语构建：
+`@xcmm1543/miuui-vue` 是全仓库唯一声明 `reka-ui` 为 `peerDependencies` 的包，12 个无障碍与浮层组件直接基于 Reka UI 无头原语构建：
 
 | 组件 | 使用的 Reka UI 原语 |
 | --- | --- |
@@ -23,7 +23,7 @@
 
 ## 决策
 
-1. **`peerDependencies` 锁死 2.x 区间**：`"@miuui/vue"` 声明 `"reka-ui": ">=2.11.0 <3.0.0"`（兼容 `^2.11.0`，同时阻断尚未定稿的 `3.0.0-alpha.0` 破坏性主版本）。
+1. **`peerDependencies` 锁死 2.x 区间**：`"@xcmm1543/miuui-vue"` 声明 `"reka-ui": ">=2.11.0 <3.0.0"`（兼容 `^2.11.0`，同时阻断尚未定稿的 `3.0.0-alpha.0` 破坏性主版本）。
 2. **`vue` 下限锁定**：保持 `"vue": "^3.5.0"`（依赖 `useId()` 与响应式 `props` 析构语义）。
 3. **契约矩阵门禁**：新增 `pnpm check:compat`（`scripts/check-reka-compat.mjs`），在每次构建与发布前静态核验：
    - 所有组件从 `"reka-ui"` 导入的具名原语 100% 存在于当前安装的 `reka-ui` 运行时导出与类型声明中；

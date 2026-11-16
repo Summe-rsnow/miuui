@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "reka-ui"
 import { computed, nextTick, ref, useId, watch } from "vue"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { CommandItem, CommandPaletteProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
 import Icon from "./Icon.vue"

@@ -208,11 +208,16 @@ describe("component coverage smoke", () => {
 
   it("renders Code, Table, Skeleton, Spinner and TruncateText", () => {
     const code = track(
-      mount(Code, { props: { variant: "primary", size: "sm" }, slots: { default: "@miuui/vue" } }),
+      mount(Code, {
+        props: { variant: "primary", size: "sm" },
+        slots: { default: "@xcmm1543/miuui-vue" },
+      }),
     )
     expect(code.get("code").classes()).toContain("miu-code--primary")
-    const codeProp = track(mount(Code, { props: { value: "@miuui/core", radius: "full" } }))
-    expect(codeProp.text()).toBe("@miuui/core")
+    const codeProp = track(
+      mount(Code, { props: { value: "@xcmm1543/miuui-core", radius: "full" } }),
+    )
+    expect(codeProp.text()).toBe("@xcmm1543/miuui-core")
     expect(codeProp.attributes("data-miu-radius")).toBe("full")
     const table = track(
       mount(Table, {
@@ -222,7 +227,7 @@ describe("component coverage smoke", () => {
           radius: "lg",
           material: "glass",
           columns: [{ key: "name", label: "Package" }],
-          rows: [{ id: 1, name: "@miuui/vue" }],
+          rows: [{ id: 1, name: "@xcmm1543/miuui-vue" }],
         },
       }),
     )

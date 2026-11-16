@@ -136,7 +136,7 @@ describe("SSR rendering and client hydration consistency", () => {
             h(LoadingOverlay, { loading: false, text: "Working..." }),
             h(Icon, { name: "check" }),
             h(Kbd, { keys: "Ctrl K" }),
-            h(Code, { variant: "primary" }, () => "@miuui/vue"),
+            h(Code, { variant: "primary" }, () => "@xcmm1543/miuui-vue"),
             h(Collapse, { open: true }, () => "Expanded"),
             h(ColorPicker, { modelValue: "#9A49E0", ariaLabel: "Accent" }),
             h(List, { bordered: true }, () => [h(ListItem, { title: "Item", subtitle: "Sub" })]),

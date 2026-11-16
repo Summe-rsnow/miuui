@@ -1,5 +1,10 @@
 import { computed, type ComputedRef, type StyleValue } from "vue"
-import { registry, type MaterialName, type MotionTier, type ThemeContext } from "@miuui/core"
+import {
+  registry,
+  type MaterialName,
+  type MotionTier,
+  type ThemeContext,
+} from "@xcmm1543/miuui-core"
 import { useMiuTheme } from "./useMiu"
 
 const BUILTIN_MATERIALS: Record<string, true> = {

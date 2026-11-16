@@ -8,7 +8,7 @@ import {
   type MaterialName,
   type MotionTier,
   type Radius,
-} from "@miuui/tokens"
+} from "@xcmm1543/miuui-tokens"
 
 export {
   CONTROL_SIZES,
@@ -34,7 +34,7 @@ export {
   Z_INDEX,
   SHADOW_VALUES,
   TYPOGRAPHY,
-} from "@miuui/tokens"
+} from "@xcmm1543/miuui-tokens"
 
 export type { ControlSize, Density, IconSize, MaterialName, MotionTier, Radius }
 

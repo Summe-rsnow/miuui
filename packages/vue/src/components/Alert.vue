@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { AlertProps } from "../types"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"

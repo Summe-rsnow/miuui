@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { PageHeaderProps } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
 import Icon from "./Icon.vue"

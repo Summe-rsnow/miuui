@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { regionClass, regionStyle, safeHref } from "@miuui/core"
+import { regionClass, regionStyle, safeHref } from "@xcmm1543/miuui-core"
 import type { NavMenuGroup, NavMenuItem, NavMenuProps } from "../types"
 
 const props = withDefaults(defineProps<NavMenuProps>(), {

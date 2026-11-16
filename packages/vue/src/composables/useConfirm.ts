@@ -1,6 +1,6 @@
 import { readonly, ref } from "vue"
-import type { MaterialName, Radius } from "@miuui/core"
-import type { DialogSize } from "@miuui/tokens"
+import type { MaterialName, Radius } from "@xcmm1543/miuui-core"
+import type { DialogSize } from "@xcmm1543/miuui-tokens"
 
 export interface ConfirmOptions {
   title: string

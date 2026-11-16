@@ -5,7 +5,7 @@ export interface BrandMarkDefinition {
 }
 
 /**
- * Canonical 9-cell Precision Violet brand mark isolated to `@miuui/icons/brand`
+ * Canonical 9-cell Precision Violet brand mark isolated to `@xcmm1543/miuui-icons/brand`
  * so the main icon entry stays monochrome and tree-shakeable.
  */
 export const MiuBrandMark: BrandMarkDefinition = {

@@ -13,9 +13,9 @@ import {
   type MotionTier,
   type Radius,
   type ThemeMode,
-} from "@miuui/core"
+} from "@xcmm1543/miuui-core"
 import type { ToastPosition, ToastStyleVariant } from "../types"
-import { semanticTokensForSeed } from "@miuui/tokens"
+import { semanticTokensForSeed } from "@xcmm1543/miuui-tokens"
 import { MIU_THEME_KEY, type MiuThemeContext } from "../composables/useMiu"
 import { resolveMaterialValue, resolveMotionValue } from "../composables/usePluginResolution"
 import { useConfirm } from "../composables/useConfirm"

@@ -1,8 +1,17 @@
 {
-  "name": "@miuui/core",
-  "version": "0.5.5",
+  "name": "@xcmm1543/miuui-core",
+  "version": "0.5.6",
   "description": "μui framework-agnostic component recipes, plugin contracts and registries",
+  "homepage": "https://github.com/Summe-rsnow/miuui#readme",
+  "bugs": {
+    "url": "https://github.com/Summe-rsnow/miuui/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Summe-rsnow/miuui.git",
+    "directory": "packages/core"
+  },
   "files": [
     "dist",
     "README.md"
@@ -18,11 +27,14 @@
       "import": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "node ../../scripts/build-packages.mjs core",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@miuui/tokens": "file:../tokens"
+    "@xcmm1543/miuui-tokens": "workspace:^"
   }
 }

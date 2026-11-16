@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { SliderRange, SliderRoot, SliderThumb, SliderTrack } from "reka-ui"
-import { regionClass, regionStyle, resolveControlSize } from "@miuui/core"
+import { regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
 import type { SliderProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
 import { useMiuSizeHint } from "../composables/useSizeHint"

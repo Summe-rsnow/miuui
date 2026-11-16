@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "reka-ui"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { DialogProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"

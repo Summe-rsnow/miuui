@@ -13,17 +13,21 @@ const MAX_ICON_GZIP_BYTES = 2 * 1024
 
 try {
   const buttonEntry = join(tempDir, "button-entry.mjs")
-  writeFileSync(buttonEntry, 'import { Button } from "@miuui/vue"; export { Button };\n', "utf8")
+  writeFileSync(
+    buttonEntry,
+    'import { Button } from "@xcmm1543/miuui-vue"; export { Button };\n',
+    "utf8",
+  )
 
   await build({
     configFile: false,
     logLevel: "silent",
     resolve: {
       alias: {
-        "@miuui/vue": resolve(root, "packages/vue/dist/index.js"),
-        "@miuui/core": resolve(root, "packages/core/dist/index.js"),
-        "@miuui/icons": resolve(root, "packages/icons/dist/index.js"),
-        "@miuui/tokens": resolve(root, "packages/tokens/dist/index.js"),
+        "@xcmm1543/miuui-vue": resolve(root, "packages/vue/dist/index.js"),
+        "@xcmm1543/miuui-core": resolve(root, "packages/core/dist/index.js"),
+        "@xcmm1543/miuui-icons": resolve(root, "packages/icons/dist/index.js"),
+        "@xcmm1543/miuui-tokens": resolve(root, "packages/tokens/dist/index.js"),
       },
     },
     build: {
@@ -60,7 +64,7 @@ try {
   const iconEntry = join(tempDir, "icon-entry.mjs")
   writeFileSync(
     iconEntry,
-    'import { PlusIcon } from "@miuui/icons"; export { PlusIcon };\n',
+    'import { PlusIcon } from "@xcmm1543/miuui-icons"; export { PlusIcon };\n',
     "utf8",
   )
 
@@ -69,7 +73,7 @@ try {
     logLevel: "silent",
     resolve: {
       alias: {
-        "@miuui/icons": resolve(root, "packages/icons/dist/index.js"),
+        "@xcmm1543/miuui-icons": resolve(root, "packages/icons/dist/index.js"),
       },
     },
     build: {

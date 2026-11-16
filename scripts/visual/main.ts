@@ -1,9 +1,9 @@
-import "@miuui/vue/style.css"
-import "@miuui/materials/style.css"
-import "@miuui/motions/style.css"
+import "@xcmm1543/miuui-vue/style.css"
+import "@xcmm1543/miuui-materials/style.css"
+import "@xcmm1543/miuui-motions/style.css"
 
 import { createApp, h, ref } from "vue"
-import type { ControlSize, Density, MaterialName, MotionTier, Radius } from "@miuui/core"
+import type { ControlSize, Density, MaterialName, MotionTier, Radius } from "@xcmm1543/miuui-core"
 import {
   Alert,
   Avatar,
@@ -23,7 +23,7 @@ import {
   Table,
   Tabs,
   ThemeProvider,
-} from "@miuui/vue"
+} from "@xcmm1543/miuui-vue"
 
 const params = new URLSearchParams(window.location.search)
 const theme = (params.get("theme") === "dark" ? "dark" : "light") as "light" | "dark"
@@ -173,9 +173,9 @@ const App = {
                   { key: "status", label: "Status", align: "end" },
                 ],
                 rows: [
-                  { id: 1, name: "Button", pkg: "@miuui/vue", status: "Ready" },
-                  { id: 2, name: "Dialog", pkg: "@miuui/vue", status: "Ready" },
-                  { id: 3, name: "Code", pkg: "@miuui/tokens", status: "Ready" },
+                  { id: 1, name: "Button", pkg: "@xcmm1543/miuui-vue", status: "Ready" },
+                  { id: 2, name: "Dialog", pkg: "@xcmm1543/miuui-vue", status: "Ready" },
+                  { id: 3, name: "Code", pkg: "@xcmm1543/miuui-tokens", status: "Ready" },
                 ],
               },
               {

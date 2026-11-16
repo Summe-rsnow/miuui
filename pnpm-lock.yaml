@@ -219,25 +219,25 @@ importers:
 
   packages/core:
     dependencies:
-      '@miuui/tokens':
-        specifier: file:../tokens
+      '@xcmm1543/miuui-tokens':
+        specifier: workspace:^
         version: link:../tokens
 
   packages/icons: {}
 
   packages/materials:
     dependencies:
-      '@miuui/core':
-        specifier: file:../core
+      '@xcmm1543/miuui-core':
+        specifier: workspace:^
         version: link:../core
-      '@miuui/tokens':
-        specifier: file:../tokens
+      '@xcmm1543/miuui-tokens':
+        specifier: workspace:^
         version: link:../tokens
 
   packages/motions:
     dependencies:
-      '@miuui/core':
-        specifier: file:../core
+      '@xcmm1543/miuui-core':
+        specifier: workspace:^
         version: link:../core
 
   packages/tokens:
@@ -248,14 +248,14 @@ importers:
 
   packages/vue:
     dependencies:
-      '@miuui/core':
-        specifier: file:../core
+      '@xcmm1543/miuui-core':
+        specifier: workspace:^
         version: link:../core
-      '@miuui/icons':
-        specifier: file:../icons
+      '@xcmm1543/miuui-icons':
+        specifier: workspace:^
         version: link:../icons
-      '@miuui/tokens':
-        specifier: file:../tokens
+      '@xcmm1543/miuui-tokens':
+        specifier: workspace:^
         version: link:../tokens
     devDependencies:
       reka-ui:

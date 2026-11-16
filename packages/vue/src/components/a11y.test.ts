@@ -309,7 +309,7 @@ describe("axe-core accessibility gate", () => {
             <NavMenu aria-label="Docs" :groups="[{ text: 'Start', items: [{ text: 'Button', link: '/button', active: true }] }]" />
             <Toc :items="[{ id: 'api', text: 'API', level: 2 }]" active-id="api" />
             <Alert title="Notice" variant="info" icon="bell">Body text</Alert>
-            <Card><Avatar alt="Ada Lovelace" /><Badge variant="success" dot>Ready</Badge><Pill label="Active" active removable /><Code variant="primary">@miuui/vue</Code></Card>
+            <Card><Avatar alt="Ada Lovelace" /><Badge variant="success" dot>Ready</Badge><Pill label="Active" active removable /><Code variant="primary">@xcmm1543/miuui-vue</Code></Card>
             <MessageComposer v-model="msg" placeholder="Reply" />
             <Pagination :previous="{ text: 'Prev', link: '/prev' }" :next="{ text: 'Next', link: '/next' }" />
             <Popover open>

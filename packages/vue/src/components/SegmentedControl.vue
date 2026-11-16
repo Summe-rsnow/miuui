@@ -15,7 +15,7 @@ import {
   regionStyle,
   resolveControlSize,
   resolveIconSize,
-} from "@miuui/core"
+} from "@xcmm1543/miuui-core"
 import type { SegmentedControlProps } from "../types"
 import Icon from "./Icon.vue"
 import { useMiuSizeHint } from "../composables/useSizeHint"

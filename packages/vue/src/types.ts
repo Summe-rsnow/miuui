@@ -5,8 +5,8 @@ import type {
   IconSize,
   MaterialName,
   Radius,
-} from "@miuui/core"
-import type { IconName } from "@miuui/icons"
+} from "@xcmm1543/miuui-core"
+import type { IconName } from "@xcmm1543/miuui-icons"
 
 export type ButtonVariant =
   | "solid"

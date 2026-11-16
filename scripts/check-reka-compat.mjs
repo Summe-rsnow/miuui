@@ -35,7 +35,7 @@ if (major !== 2 || Number.isNaN(minor) || minor < 11) {
   errors.push(`Installed reka-ui@${rekaPkg.version} is outside supported >=2.11.0 <3.0.0 range`)
 }
 
-// 3. Every named import from "reka-ui" in @miuui/vue must resolve at runtime
+// 3. Every named import from "reka-ui" in @xcmm1543/miuui-vue must resolve at runtime
 const componentsDir = join(vueDir, "src/components")
 const importedSymbols = new Set()
 const importRe = /import\s*\{([^}]+)\}\s*from\s*["']reka-ui["']/g
@@ -76,7 +76,7 @@ for (const pkgName of ["core", "tokens", "icons", "materials", "motions"]) {
     ...manifest.devDependencies,
   }
   if ("reka-ui" in allDeps) {
-    errors.push(`@miuui/${pkgName} must not depend on reka-ui`)
+    errors.push(`@xcmm1543/miuui-${pkgName} must not depend on reka-ui`)
   }
 }
 

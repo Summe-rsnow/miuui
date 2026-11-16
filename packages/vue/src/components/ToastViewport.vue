@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue"
-import { regionClass, regionStyle, type MaterialName } from "@miuui/core"
+import { regionClass, regionStyle, type MaterialName } from "@xcmm1543/miuui-core"
 import type { ToastPosition, ToastStyleVariant, ToastViewportProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
 import { mergeStyle, resolveMaterialValue } from "../composables/usePluginResolution"

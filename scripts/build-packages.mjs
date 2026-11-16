@@ -115,7 +115,10 @@ for (const pkg of targets) {
       },
       rollupOptions: {
         external: (id) =>
-          id === "vue" || id === "reka-ui" || id.startsWith("reka-ui/") || id.startsWith("@miuui/"),
+          id === "vue" ||
+          id === "reka-ui" ||
+          id.startsWith("reka-ui/") ||
+          id.startsWith("@xcmm1543/miuui-"),
         output: {
           format: "es",
           preserveModules: true,
@@ -134,5 +137,5 @@ for (const pkg of targets) {
     copyFileSync(resolve(pkgDir, from), dest)
   }
 
-  console.log(`Built @miuui/${pkg.name} -> dist/`)
+  console.log(`Built @xcmm1543/miuui-${pkg.name} -> dist/`)
 }

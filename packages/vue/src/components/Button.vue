@@ -6,7 +6,7 @@ import {
   regionStyle,
   resolveControlSize,
   resolveIconSize,
-} from "@miuui/core"
+} from "@xcmm1543/miuui-core"
 import type { ButtonProps } from "../types"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import { useMiuSizeHint } from "../composables/useSizeHint"

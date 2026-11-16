@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest"
 import { migrateFormRowDense, transformSource } from "./index"
 import { runCli } from "./cli"
 
-describe("@miuui/codemod", () => {
+describe("@xcmm1543/miuui-codemod", () => {
   it("migrates boolean and bound dense attributes to density='compact'", () => {
     const input = `<template>
   <FormRow label="A" dense />

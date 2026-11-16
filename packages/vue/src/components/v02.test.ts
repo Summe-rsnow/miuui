@@ -1,10 +1,10 @@
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils"
 import axe from "axe-core"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { registerMaterial, registerMotionTier, registry } from "@miuui/core"
-import { fullMotion, noneMotion, reducedMotion } from "@miuui/motions"
-import { hasIcon, loadIcon } from "@miuui/icons/dynamic"
-import { MiuBrandMark } from "@miuui/icons/brand"
+import { registerMaterial, registerMotionTier, registry } from "@xcmm1543/miuui-core"
+import { fullMotion, noneMotion, reducedMotion } from "@xcmm1543/miuui-motions"
+import { hasIcon, loadIcon } from "@xcmm1543/miuui-icons/dynamic"
+import { MiuBrandMark } from "@xcmm1543/miuui-icons/brand"
 import { mergeStyle } from "../composables/usePluginResolution"
 import { useToast } from "../composables/useToast"
 import Button from "./Button.vue"
@@ -210,7 +210,7 @@ describe("v0.2.0 Muyu prep enhancements & FormRow deprecation drill", () => {
     warn.mockRestore()
   })
 
-  it("loads icons via @miuui/icons/dynamic, exposes @miuui/icons/brand, and renders new media icons", async () => {
+  it("loads icons via @xcmm1543/miuui-icons/dynamic, exposes @xcmm1543/miuui-icons/brand, and renders new media icons", async () => {
     expect(hasIcon("play")).toBe(true)
     expect(hasIcon("not-an-icon")).toBe(false)
     const loaded = await loadIcon("play")

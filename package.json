@@ -1,10 +1,10 @@
 {
-  "name": "@miuui/monorepo",
-  "version": "0.5.5",
+  "name": "@xcmm1543/miuui-monorepo",
+  "version": "0.5.6",
   "private": true,
   "type": "module",
   "scripts": {
-    "tokens:build": "pnpm --filter @miuui/tokens tokens:build",
+    "tokens:build": "pnpm --filter @xcmm1543/miuui-tokens tokens:build",
     "tokens:validate": "node packages/tokens/scripts/validate-dtcg.mjs",
     "build": "node scripts/build-packages.mjs",
     "check:compat": "node scripts/check-reka-compat.mjs",
@@ -21,7 +21,9 @@
     "lint:hardcoded": "node scripts/check-hardcoded.mjs",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
-    "check": "pnpm tokens:build && pnpm tokens:validate && pnpm check:compat && pnpm lint && pnpm lint:hardcoded && pnpm format:check && pnpm typecheck && pnpm build && pnpm check:size && pnpm test"
+    "check": "pnpm tokens:build && pnpm tokens:validate && pnpm check:compat && pnpm lint && pnpm lint:hardcoded && pnpm format:check && pnpm typecheck && pnpm build && pnpm check:size && pnpm test",
+    "release:dry": "pnpm check && pnpm -r publish --dry-run --no-git-checks",
+    "release:publish": "pnpm check && pnpm -r publish"
   },
   "devDependencies": {
     "@oxc-node/cli": "^1.0.1",

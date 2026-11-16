@@ -1,5 +1,5 @@
-import type { MaterialPlugin, ThemeContext } from "@miuui/core"
-import { semanticTokens } from "@miuui/tokens"
+import type { MaterialPlugin, ThemeContext } from "@xcmm1543/miuui-core"
+import { semanticTokens } from "@xcmm1543/miuui-tokens"
 
 function tokensFor(theme: ThemeContext, motionTier: string): Record<string, string> {
   const semantic = semanticTokens(theme.theme)

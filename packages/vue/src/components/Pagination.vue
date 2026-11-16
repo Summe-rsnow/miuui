@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { regionClass, regionStyle, safeHref } from "@miuui/core"
+import { regionClass, regionStyle, safeHref } from "@xcmm1543/miuui-core"
 import type { PaginationLink, PaginationProps } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"

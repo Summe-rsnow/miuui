@@ -1,5 +1,5 @@
 import { computed, inject, type ComputedRef, type InjectionKey } from "vue"
-import type { ControlSize } from "@miuui/core"
+import type { ControlSize } from "@xcmm1543/miuui-core"
 
 /**
  * Container-provided default control size.

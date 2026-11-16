@@ -18,7 +18,10 @@
             "paths": [
               { "name": "vue", "message": "core/tokens must stay framework-agnostic." },
               { "name": "reka-ui", "message": "core/tokens must stay framework-agnostic." },
-              { "name": "@miuui/vue", "message": "core/tokens must not depend on the Vue adapter." }
+              {
+                "name": "@xcmm1543/miuui-vue",
+                "message": "core/tokens must not depend on the Vue adapter."
+              }
             ]
           }
         ],

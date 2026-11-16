@@ -31,8 +31,8 @@ import {
   VolumeOffIcon,
   type IconDefinition,
   type IconName,
-} from "@miuui/icons"
-import type { IconSize } from "@miuui/core"
+} from "@xcmm1543/miuui-icons"
+import type { IconSize } from "@xcmm1543/miuui-core"
 
 const props = withDefaults(
   defineProps<{

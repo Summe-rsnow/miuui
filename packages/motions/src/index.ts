@@ -1,4 +1,4 @@
-import type { MotionTierPlugin } from "@miuui/core"
+import type { MotionTierPlugin } from "@xcmm1543/miuui-core"
 
 export const fullMotion: MotionTierPlugin = {
   name: "full",

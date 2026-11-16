@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, provide, useSlots } from "vue"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { TableColumn, TableProps, TableRow } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
 import Skeleton from "./Skeleton.vue"

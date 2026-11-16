@@ -10,7 +10,7 @@ import {
   type ComponentPublicInstance,
 } from "vue"
 import { RadioGroupIndicator, RadioGroupItem, RadioGroupRoot } from "reka-ui"
-import { regionClass, regionStyle, resolveControlSize } from "@miuui/core"
+import { regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
 import type { RadioGroupOption, RadioGroupProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"

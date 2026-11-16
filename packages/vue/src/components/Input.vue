@@ -6,7 +6,7 @@ import {
   regionStyle,
   resolveControlSize,
   resolveIconSize,
-} from "@miuui/core"
+} from "@xcmm1543/miuui-core"
 import type { InputProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
 import { useMiuSizeHint } from "../composables/useSizeHint"

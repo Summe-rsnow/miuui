@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { ProgressIndicator, ProgressRoot } from "reka-ui"
-import { regionClass, regionStyle, resolveControlSize } from "@miuui/core"
+import { regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
 import type { ProgressProps } from "../types"
 import { useMiuSizeHint } from "../composables/useSizeHint"
 

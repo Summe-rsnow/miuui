@@ -7,7 +7,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "reka-ui"
-import { regionClass, regionStyle } from "@miuui/core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ContextMenuProps } from "../types"
 import { useMiuTheme } from "../composables/useMiu"
 import Icon from "./Icon.vue"

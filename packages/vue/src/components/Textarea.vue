@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue"
-import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@miuui/core"
+import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
 import type { TextareaProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
 import { useMiuSizeHint } from "../composables/useSizeHint"
