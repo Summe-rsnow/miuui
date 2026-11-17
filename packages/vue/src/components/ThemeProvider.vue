@@ -16,7 +16,12 @@ import {
 } from "@xcmm1543/miuui-core"
 import type { ToastPosition, ToastStyleVariant } from "../types"
 import { semanticTokensForSeed } from "@xcmm1543/miuui-tokens"
-import { MIU_THEME_KEY, type MiuThemeContext } from "../composables/useMiu"
+import {
+  MIU_ICONS_KEY,
+  MIU_THEME_KEY,
+  type IconRegistry,
+  type MiuThemeContext,
+} from "../composables/useMiu"
 import { resolveMaterialValue, resolveMotionValue } from "../composables/usePluginResolution"
 import { useConfirm } from "../composables/useConfirm"
 import ConfirmDialog from "./ConfirmDialog.vue"
@@ -37,6 +42,7 @@ const props = withDefaults(
     toastMaterial?: MaterialName
     toastStyleVariant?: ToastStyleVariant
     toastMax?: number
+    icons?: IconRegistry
     as?: string
   }>(),
   {
@@ -163,6 +169,12 @@ const context: MiuThemeContext = {
 }
 
 provide(MIU_THEME_KEY, context)
+
+const inheritedIcons = inject(MIU_ICONS_KEY, undefined)
+provide(
+  MIU_ICONS_KEY,
+  computed(() => props.icons ?? inheritedIcons?.value),
+)
 
 const attrs = computed(() =>
   themeAttributes({

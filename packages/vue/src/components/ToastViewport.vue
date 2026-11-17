@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue"
+import type { IconDefinition, IconName } from "@xcmm1543/miuui-icons"
 import { regionClass, regionStyle, type MaterialName } from "@xcmm1543/miuui-core"
 import type { ToastPosition, ToastStyleVariant, ToastViewportProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
@@ -10,8 +11,23 @@ import {
   unregisterToastViewport,
   useToast,
   type ToastItem,
+  type ToastVariant,
 } from "../composables/useToast"
 import Icon from "./Icon.vue"
+
+function isIconDefinition(icon: unknown): icon is IconDefinition {
+  return Boolean(
+    icon &&
+    typeof icon === "object" &&
+    "viewBox" in icon &&
+    "content" in icon &&
+    typeof (icon as { viewBox?: unknown }).viewBox === "string",
+  )
+}
+
+function defaultIconName(variant: ToastVariant): IconName {
+  return variant === "success" ? "checkCircle" : "infoCircle"
+}
 
 const props = withDefaults(defineProps<ToastViewportProps>(), {
   position: "bottom-right",
@@ -87,12 +103,30 @@ function resolveItemStyleVariant(item: ToastItem): ToastStyleVariant {
 }
 
 function resolveItemRadius(item: ToastItem): string {
+  const variant = resolveItemStyleVariant(item)
+  if (variant === "pill") return "full"
   return item.radius ?? toastDefaults.value.radius ?? props.radius ?? "default"
+}
+
+function isClosable(item: ToastItem): boolean {
+  if (item.closable !== undefined) return item.closable
+  return resolveItemStyleVariant(item) !== "pill"
+}
+
+function isDismissOnClick(item: ToastItem): boolean {
+  if (item.dismissOnClick !== undefined) return item.dismissOnClick
+  return resolveItemStyleVariant(item) === "pill"
 }
 
 function toastStyleFor(item: ToastItem) {
   const mat = resolveItemMaterial(item)
   return mergeStyle(regionStyle(props, "toast"), mat.tokens)
+}
+
+function onToastClick(item: ToastItem): void {
+  if (isDismissOnClick(item)) {
+    dismiss(item.id)
+  }
 }
 
 function onAction(item: ToastItem): void {
@@ -122,7 +156,9 @@ function onAction(item: ToastItem): void {
         :data-style-variant="resolveItemStyleVariant(item)"
         :data-material="resolveItemMaterial(item).name"
         :data-miu-radius="resolveItemRadius(item)"
+        :data-clickable="isDismissOnClick(item) || undefined"
         :role="item.variant === 'error' ? 'alert' : 'status'"
+        @click="onToastClick(item)"
       >
         <slot name="toast" :toast="item" :dismiss="() => dismiss(item.id)">
           <span
@@ -132,56 +168,13 @@ function onAction(item: ToastItem): void {
             aria-hidden="true"
           >
             <slot name="icon" :toast="item">
-              <Icon v-if="typeof item.icon === 'string'" :name="item.icon" size="md" />
+              <Icon
+                v-if="typeof item.icon === 'string' || isIconDefinition(item.icon)"
+                :name="item.icon"
+                size="md"
+              />
               <component :is="item.icon" v-else-if="item.icon" class="miu-toast__custom-icon" />
-              <svg
-                v-else-if="item.variant === 'success'"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="9.5" />
-                <path d="M8.5 12.5 11 15l4.5-5" />
-              </svg>
-              <svg
-                v-else-if="item.variant === 'error'"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="9.5" />
-                <path d="m15 9-6 6M9 9l6 6" />
-              </svg>
-              <svg
-                v-else-if="item.variant === 'warning'"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M12 3.5 21 19.5H3z" />
-                <path d="M12 9.5v4.5M12 17h.01" />
-              </svg>
-              <svg
-                v-else-if="item.variant === 'info'"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="9.5" />
-                <path d="M12 11.5v5M12 8h.01" />
-              </svg>
+              <Icon v-else :name="defaultIconName(item.variant)" size="md" />
             </slot>
           </span>
 
@@ -209,7 +202,7 @@ function onAction(item: ToastItem): void {
                   type="button"
                   :class="regionClass(props, 'action', 'miu-toast__action')"
                   :style="regionStyle(props, 'action')"
-                  @click="onAction(item)"
+                  @click.stop="onAction(item)"
                 >
                   {{ item.action.label }}
                 </button>
@@ -218,12 +211,12 @@ function onAction(item: ToastItem): void {
           </div>
 
           <button
-            v-if="item.closable"
+            v-if="isClosable(item)"
             type="button"
             :class="regionClass(props, 'close', 'miu-toast__close')"
             :style="regionStyle(props, 'close')"
             :aria-label="t('toast.dismiss')"
-            @click="dismiss(item.id)"
+            @click.stop="dismiss(item.id)"
           >
             <Icon name="close" size="sm" />
           </button>

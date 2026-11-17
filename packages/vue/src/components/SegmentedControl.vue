@@ -23,15 +23,22 @@ import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolut
 
 const props = withDefaults(defineProps<SegmentedControlProps>(), {
   radius: "default",
+  pill: false,
   disabled: false,
   iconOnly: false,
+  block: false,
+  clearable: false,
 })
 
-const emit = defineEmits<{ "update:modelValue": [value: string] }>()
+const emit = defineEmits<{
+  "update:modelValue": [value: string]
+  change: [value: string]
+}>()
 
 const sizeHint = useMiuSizeHint()
 const size = computed(() => props.size ?? sizeHint.value ?? "md")
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
+const resolvedRadius = computed(() => (props.pill ? "full" : props.radius))
 const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
 const { materialName, materialTokens } = useResolvedMaterial(
   () => props.material,
@@ -109,7 +116,7 @@ onBeforeUnmount(() => {
 })
 
 watch(
-  () => [props.modelValue, props.options, props.size, props.iconOnly] as const,
+  () => [props.modelValue, props.options, props.size, props.iconOnly, props.block] as const,
   async () => {
     await nextTick()
     measureIndicator()
@@ -120,6 +127,10 @@ watch(
 function onUpdate(value: unknown): void {
   if (typeof value === "string" && value.length > 0) {
     emit("update:modelValue", value)
+    emit("change", value)
+  } else if (props.clearable) {
+    emit("update:modelValue", "")
+    emit("change", "")
   }
 }
 </script>
@@ -134,13 +145,15 @@ function onUpdate(value: unknown): void {
     :class="
       regionClass(props, 'root', 'miu-segmented', `miu-segmented--${resolvedSize.size}`, {
         'miu-segmented--has-indicator': Boolean(indicatorMetrics),
+        'miu-segmented--block': block,
       })
     "
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
-    :data-miu-radius="radius"
+    :data-miu-radius="resolvedRadius"
     :data-miu-icon-size="resolvedIconSize.size"
     :data-icon-only="iconOnly || undefined"
+    :data-block="block || undefined"
     :data-material="materialName"
     @update:model-value="onUpdate"
   >
@@ -166,8 +179,15 @@ function onUpdate(value: unknown): void {
       :style="regionStyle(props, 'item')"
     >
       <slot name="item" :option="option" :active="option.value === modelValue" :index="index">
+        <span
+          v-if="option.color"
+          class="miu-segmented__dot"
+          :style="{ backgroundColor: option.color }"
+          aria-hidden="true"
+        />
         <Icon v-if="option.icon" :name="option.icon" />
         <span v-if="!iconOnly && option.label">{{ option.label }}</span>
+        <Icon v-if="option.locked" name="lock" size="xs" class="miu-segmented__lock" />
       </slot>
     </ToggleGroupItem>
   </ToggleGroupRoot>

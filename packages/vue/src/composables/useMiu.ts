@@ -1,4 +1,5 @@
 import { computed, inject, ref, type ComputedRef, type InjectionKey, type Ref } from "vue"
+import type { IconDefinition } from "@xcmm1543/miuui-icons"
 import {
   createMiuI18n,
   DEFAULT_FALLBACK_LOCALE,
@@ -72,4 +73,16 @@ export function useMiuTheme(): MiuThemeContext {
 
 export function useMiuI18n(): MiuI18nContext {
   return useMiuTheme().i18n
+}
+
+export type IconOverride = IconDefinition | string
+export type IconRegistry = Record<string, IconOverride>
+
+export const MIU_ICONS_KEY: InjectionKey<ComputedRef<IconRegistry | undefined>> =
+  Symbol("miu-icons")
+
+const emptyIcons = computed<IconRegistry | undefined>(() => undefined)
+
+export function useMiuIcons(): ComputedRef<IconRegistry | undefined> {
+  return inject(MIU_ICONS_KEY, emptyIcons)
 }

@@ -6,7 +6,9 @@ import type {
   MaterialName,
   Radius,
 } from "@xcmm1543/miuui-core"
-import type { IconName } from "@xcmm1543/miuui-icons"
+import type { IconDefinition, IconName } from "@xcmm1543/miuui-icons"
+
+export type IconProp = IconName | IconDefinition
 
 export type ButtonVariant =
   | "solid"
@@ -22,10 +24,11 @@ export interface ButtonBaseProps extends ComponentSemanticProps<ButtonSemanticRe
   variant?: ButtonVariant
   size?: ControlSize
   radius?: Radius | "default"
-  iconSize?: IconSize
+  pill?: boolean
+  iconSize?: IconSize | number
   material?: MaterialName
-  icon?: IconName
-  iconRight?: IconName
+  icon?: IconProp
+  iconRight?: IconProp
   loading?: boolean
   disabled?: boolean
   block?: boolean
@@ -49,9 +52,15 @@ export type ButtonProps =
       "aria-label": string
     })
 
-export interface IconButtonProps extends Omit<ButtonBaseProps, "icon"> {
-  label: string
-  icon?: IconName
+export interface IconButtonProps extends Omit<ButtonBaseProps, "icon" | "size"> {
+  size?: ControlSize | number
+  label?: string
+  ariaLabel?: string
+  "aria-label"?: string
+  title?: string
+  icon?: IconProp
+  active?: boolean
+  shape?: "circle" | "squircle"
 }
 export type InputSemanticRegion = "root" | "input" | "prefix" | "suffix" | "clear"
 
@@ -174,14 +183,19 @@ export interface FormFieldProps extends ComponentSemanticProps<
   hideLabel?: boolean
 }
 
+export type FormRowVariant = "plain" | "card"
+
 export interface FormRowProps extends ComponentSemanticProps<
   "root" | "label" | "control" | "description" | "hint" | "icon"
 > {
   label?: string
   description?: string
   hint?: string
-  icon?: IconName
+  icon?: IconProp
   iconSize?: IconSize
+  variant?: FormRowVariant
+  radius?: Radius | "default"
+  material?: MaterialName
   density?: Density
   /** @deprecated Use `density="compact"` instead; will be removed in 1.0.0. */
   dense?: boolean
@@ -240,11 +254,11 @@ export interface MenuItem {
 export interface TabsItem {
   value: string
   label: string
-  icon?: IconName
+  icon?: IconProp
   disabled?: boolean
 }
 
-export type TabsVariant = "underline" | "pills"
+export type TabsVariant = "underline" | "pills" | "segmented"
 export type TabsSemanticRegion = "root" | "list" | "trigger" | "indicator" | "panel"
 
 export interface TabsProps extends ComponentSemanticProps<TabsSemanticRegion> {
@@ -254,14 +268,18 @@ export interface TabsProps extends ComponentSemanticProps<TabsSemanticRegion> {
   size?: ControlSize
   radius?: Radius | "default"
   iconSize?: IconSize
+  material?: MaterialName
   align?: "start" | "center" | "end"
+  loading?: boolean
   ariaLabel?: string
 }
 
 export interface SegmentedOption {
   value: string
   label?: string
-  icon?: IconName
+  icon?: IconProp
+  color?: string
+  locked?: boolean
   disabled?: boolean
   title?: string
   ariaLabel?: string
@@ -271,11 +289,14 @@ export type SegmentedControlSemanticRegion = "root" | "indicator" | "item"
 
 export interface SegmentedControlProps extends ComponentSemanticProps<SegmentedControlSemanticRegion> {
   modelValue?: string
-  options: SegmentedOption[]
+  options: readonly SegmentedOption[]
   size?: ControlSize
   radius?: Radius | "default"
+  pill?: boolean
   iconSize?: IconSize
   iconOnly?: boolean
+  block?: boolean
+  clearable?: boolean
   material?: MaterialName
   disabled?: boolean
   ariaLabel?: string
@@ -348,12 +369,15 @@ export interface SliderProps extends ComponentSemanticProps<"root" | "track" | "
   ariaLabel?: string
 }
 export interface AvatarProps extends ComponentSemanticProps<"root" | "image" | "fallback"> {
-  src?: string
+  src?: string | null
   alt: string
   fallback?: string
-  size?: ControlSize
+  fallbackIcon?: IconProp
+  size?: ControlSize | number
   radius?: Radius | "default"
-  shape?: "circle" | "square"
+  shape?: "circle" | "square" | "squircle"
+  bordered?: boolean
+  clickable?: boolean
 }
 
 export interface CardProps extends ComponentSemanticProps<"root" | "header" | "body" | "footer"> {
@@ -381,7 +405,7 @@ export interface SpinnerProps extends ComponentSemanticProps<"root"> {
 export interface EmptyStateProps extends ComponentSemanticProps<
   "root" | "icon" | "title" | "description" | "actions"
 > {
-  icon?: IconName
+  icon?: IconProp
   iconSize?: IconSize
   density?: Density
   title?: string
@@ -433,7 +457,7 @@ export interface PageHeaderProps extends ComponentSemanticProps<
 }
 
 export interface MessageComposerProps extends ComponentSemanticProps<
-  "root" | "input" | "actions" | "send"
+  "root" | "input" | "toolbar" | "actions" | "send" | "cancel"
 > {
   modelValue?: string
   placeholder?: string
@@ -442,6 +466,10 @@ export interface MessageComposerProps extends ComponentSemanticProps<
   material?: MaterialName
   disabled?: boolean
   loading?: boolean
+  compact?: boolean
+  showCount?: boolean
+  showCancel?: boolean
+  cancelLabel?: string
   maxlength?: number
   rows?: number
   sendLabel?: string
@@ -653,6 +681,9 @@ export interface TruncateTextProps extends ComponentSemanticProps<"root"> {
   as?: string
   title?: string | false
   expandable?: boolean
+  expandMode?: "inline" | "popover"
+  material?: MaterialName
+  radius?: Radius | "default"
   expandLabel?: string
   collapseLabel?: string
 }
@@ -665,7 +696,7 @@ export type ToastPosition =
   | "bottom-center"
   | "bottom-right"
 
-export type ToastStyleVariant = "accent" | "subtle" | "solid" | "outline"
+export type ToastStyleVariant = "accent" | "subtle" | "solid" | "outline" | "pill"
 
 export interface ToastViewportProps extends ComponentSemanticProps<
   "viewport" | "toast" | "icon" | "body" | "title" | "description" | "action" | "close"
@@ -760,11 +791,78 @@ export interface ImageProps extends ComponentSemanticProps<"root" | "img" | "fal
   width?: string
   height?: string
   fit?: "cover" | "contain" | "fill" | "none" | "scale-down"
+  cover?: boolean
   radius?: Radius | "default"
   previewable?: boolean
   pixelated?: boolean
   lazy?: boolean
   referrerPolicy?: "no-referrer" | "origin" | "strict-origin-when-cross-origin" | "unsafe-url"
+}
+
+export interface ImagePreviewItem {
+  src: string
+  thumb?: string
+  alt?: string
+}
+
+export interface ImagePreviewProps extends ComponentSemanticProps<
+  "overlay" | "topbar" | "counter" | "actions" | "stage" | "img" | "nav" | "dock"
+> {
+  open?: boolean
+  src?: string | null
+  alt?: string
+  images?: Array<string | ImagePreviewItem>
+  initialIndex?: number
+  material?: MaterialName
+}
+
+export interface ImageGroupItem {
+  src?: string
+  thumb?: string
+  alt?: string
+}
+
+export interface ImageGroupProps extends ComponentSemanticProps<"root" | "item" | "img" | "more"> {
+  images?: Array<string | ImageGroupItem>
+  maxDisplay?: number
+  radius?: Radius | "default"
+}
+
+export interface CategorySubtag {
+  key: string
+  label: string
+  count?: number | string
+  [extra: string]: unknown
+}
+
+export interface CategoryGroupItem {
+  key: string
+  label: string
+  subtags: CategorySubtag[]
+  [extra: string]: unknown
+}
+
+export interface CategoryFilterProps extends ComponentSemanticProps<"root" | "tabs" | "subtags"> {
+  groups: CategoryGroupItem[]
+  modelValue?: string
+  defaultLabel?: string
+  defaultKey?: string
+  showDefault?: boolean
+  size?: ControlSize
+  tabVariant?: TabsVariant
+  allowDeselect?: boolean
+  ariaLabel?: string
+}
+
+export interface PageLayoutProps extends ComponentSemanticProps<"root" | "header" | "content"> {
+  title: string
+  description?: string
+  back?: boolean
+  divider?: boolean
+  density?: Density
+  contentMaxWidth?: "sm" | "md" | "lg" | "xl" | string
+  contentAlign?: "start" | "center"
+  fitHeight?: boolean
 }
 
 export interface LoadingOverlayProps extends ComponentSemanticProps<"root" | "card" | "text"> {

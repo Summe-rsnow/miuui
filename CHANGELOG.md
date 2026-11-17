@@ -2,6 +2,29 @@
 
 All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
+## [0.6.0] - 2026-11-17
+
+### Added
+- **4 new components** (55 → 59 total) for media/desktop app migration:
+  - `ImagePreview`: Standalone multi-image lightbox built on Reka UI `Dialog` with keyboard Left/Right/Esc navigation, counter badge, thumbnail dock, and `#actions` slot.
+  - `ImageGroup`: Responsive 1 / 2×2 quad / 3×3 grid built on `Image` and `ImagePreview` with `maxDisplay` and `+N` overflow badge.
+  - `CategoryFilter`: Two-level collapsible category filter built on `Tabs`, `Collapse`, and `PillGroup`.
+  - `PageLayout`: Page shell container built on `PageHeader` with `contentMaxWidth`, `contentAlign`, `fitHeight`, and `#actions` / `#header-extra` slots.
+- **`@xcmm1543/miuui-icons`**: Added 46 C-style rounded UI, window, navigation, and media icons (`home`, `calendar`, `libraryMusic`, `barChart`, `radio`, `playlist`, `video`, `notebook`, `folder`, `cloud`, `history`, `menu`, `moreHorizontal`, `monitor`, `phone`, `lock`, `logout`, `qrCode`, `album`, `musicNote`, `queue`, `cassette`, `vinyl`, `timer`, `translate`, `sparkles`, `refresh`, `checkCircle`, `infoCircle`, `smile`, `send`, `thumbsUp`, `pin`, `pinFilled`, `comment`, `message`, `minimize`, `maximize`, `maximizeRestore`, `dragHandle`, `fontSize`, `chevronLeft`, `chevronRight`, `chevronUp`, `chevronDown`, `volumeLow`, `repeatOne`).
+
+### Changed
+- **`Icon`**: Added `icon?: IconDefinition` prop and numeric `size` support (`IconSize | number`).
+- **`Button`**: Added `pill` prop (`radius="full"` shorthand).
+- **`IconButton`**: Added `active`, `shape` (`"circle" | "squircle"`), and `title`/`ariaLabel` support.
+- **`Tabs`**: Added `loading` skeleton state (with matching `.miu-tabs__list` / pill skeleton proportions), `variant="segmented"` capsule mode, and `@change` emit.
+- **`SegmentedControl`**: Added `pill`, `block`, `clearable`, `@change` emit, and `color` / `locked` option metadata.
+- **`TruncateText`**: Added `expandMode="popover"` with viewport-clamped glass hover popover, text selection guard, and wheel scroll isolation.
+- **`Toast` & `ThemeProvider`**: Added `styleVariant="pill"`, click-to-dismiss, `ThemeProvider` `icons` registry override, and `.miu-section-header` / `FormRow` `variant="card"` / `CategoryFilter` `#actions` enhancements.
+- **Unified Glass Material System**: Added multi-tier `--miu-glass-*` filter, surface, hairline, specular, sheen, well, and hover tokens across `@xcmm1543/miuui-tokens` and `@xcmm1543/miuui-materials` (`glass` / `mica` / `solid`).
+- **`Avatar`**: Added `shape="squircle"`, `bordered`, `clickable`, `fallbackIcon`, and `@click` emit.
+- **`Image`**: Added `cover` prop and applied computed `imgStyle` (`objectFit`).
+- **`MessageComposer`**: Added `#tools` slot, `compact`, `showCount`, `showCancel`, `cancelLabel`, `@cancel`, and Enter-to-send with IME composition guard.
+
 ## [0.5.6] - 2026-11-16
 
 ### Changed

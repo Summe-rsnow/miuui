@@ -18,21 +18,30 @@ import {
 } from "@xcmm1543/miuui-core"
 import type { TabsProps } from "../types"
 import Icon from "./Icon.vue"
+import Skeleton from "./Skeleton.vue"
 import { useMiuSizeHint } from "../composables/useSizeHint"
-import { mergeStyle } from "../composables/usePluginResolution"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 const props = withDefaults(defineProps<TabsProps>(), {
   variant: "underline",
   radius: "default",
   align: "start",
+  loading: false,
 })
 
-const emit = defineEmits<{ "update:modelValue": [value: string] }>()
+const emit = defineEmits<{
+  "update:modelValue": [value: string]
+  change: [value: string]
+}>()
 
 const sizeHint = useMiuSizeHint()
 const size = computed(() => props.size ?? sizeHint.value ?? "md")
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
 const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Tabs")
+const useSurfaceMaterial = computed(
+  () => props.variant === "segmented" || props.material !== undefined,
+)
 
 if (import.meta.env.DEV && resolvedSize.value.fallback) {
   console.warn(
@@ -87,7 +96,7 @@ const indicatorStyle = computed(() => {
   const m = indicatorMetrics.value
   if (!m) return base
   const geom: Record<string, string> =
-    props.variant === "pills"
+    props.variant === "pills" || props.variant === "segmented"
       ? {
           width: `${m.width}px`,
           height: `${m.height}px`,
@@ -126,24 +135,57 @@ watch(
 
 function onUpdate(value: string): void {
   emit("update:modelValue", value)
+  emit("change", value)
   void nextTick().then(() => measureIndicator())
 }
 </script>
 
 <template>
+  <div
+    v-if="loading"
+    :class="
+      regionClass(props, 'root', 'miu-tabs', `miu-tabs--${resolvedSize.size}`, 'miu-tabs__skeleton')
+    "
+    :style="mergeStyle(regionStyle(props, 'root'), useSurfaceMaterial ? materialTokens : undefined)"
+    :data-variant="variant"
+    :data-align="align"
+    :data-miu-size="resolvedSize.size"
+    :data-miu-radius="radius"
+    :data-material="useSurfaceMaterial ? materialName : undefined"
+  >
+    <div :class="regionClass(props, 'list', 'miu-tabs__list')" :style="regionStyle(props, 'list')">
+      <Skeleton
+        v-for="(item, index) in items.length > 0
+          ? items
+          : [{ value: '1' }, { value: '2' }, { value: '3' }]"
+        :key="item.value ?? index"
+        variant="rect"
+        :class="regionClass(props, 'trigger', 'miu-tabs__skeleton-item')"
+        :style="{
+          '--miu-tabs-skeleton-chars': String(
+            'label' in item && item.label
+              ? item.label.length + ('icon' in item && item.icon ? 2 : 0)
+              : 4,
+          ),
+        }"
+      />
+    </div>
+  </div>
   <TabsRoot
+    v-else
     :model-value="modelValue"
     :class="
       regionClass(props, 'root', 'miu-tabs', `miu-tabs--${resolvedSize.size}`, {
         'miu-tabs--has-indicator': Boolean(indicatorMetrics),
       })
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), useSurfaceMaterial ? materialTokens : undefined)"
     :data-variant="variant"
     :data-align="align"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
     :data-miu-icon-size="resolvedIconSize.size"
+    :data-material="useSurfaceMaterial ? materialName : undefined"
     @update:model-value="onUpdate"
   >
     <TabsList

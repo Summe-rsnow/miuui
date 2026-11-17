@@ -6,6 +6,7 @@ import Badge from "./components/Badge.vue"
 import Breadcrumb from "./components/Breadcrumb.vue"
 import Button from "./components/Button.vue"
 import Card from "./components/Card.vue"
+import CategoryFilter from "./components/CategoryFilter.vue"
 import Checkbox from "./components/Checkbox.vue"
 import Code from "./components/Code.vue"
 import Collapse from "./components/Collapse.vue"
@@ -23,6 +24,8 @@ import HelpTooltip from "./components/HelpTooltip.vue"
 import Icon from "./components/Icon.vue"
 import IconButton from "./components/IconButton.vue"
 import Image from "./components/Image.vue"
+import ImageGroup from "./components/ImageGroup.vue"
+import ImagePreview from "./components/ImagePreview.vue"
 import Input from "./components/Input.vue"
 import Kbd from "./components/Kbd.vue"
 import List from "./components/List.vue"
@@ -32,6 +35,7 @@ import MessageComposer from "./components/MessageComposer.vue"
 import NavMenu from "./components/NavMenu.vue"
 import NumberInput from "./components/NumberInput.vue"
 import PageHeader from "./components/PageHeader.vue"
+import PageLayout from "./components/PageLayout.vue"
 import Pagination from "./components/Pagination.vue"
 import Pill from "./components/Pill.vue"
 import PillGroup from "./components/PillGroup.vue"
@@ -63,6 +67,7 @@ export const components: Record<string, Component> = {
   MiuBreadcrumb: Breadcrumb,
   MiuButton: Button,
   MiuCard: Card,
+  MiuCategoryFilter: CategoryFilter,
   MiuCheckbox: Checkbox,
   MiuCode: Code,
   MiuCollapse: Collapse,
@@ -80,6 +85,8 @@ export const components: Record<string, Component> = {
   MiuIcon: Icon,
   MiuIconButton: IconButton,
   MiuImage: Image,
+  MiuImageGroup: ImageGroup,
+  MiuImagePreview: ImagePreview,
   MiuInput: Input,
   MiuKbd: Kbd,
   MiuList: List,
@@ -89,6 +96,7 @@ export const components: Record<string, Component> = {
   MiuNavMenu: NavMenu,
   MiuNumberInput: NumberInput,
   MiuPageHeader: PageHeader,
+  MiuPageLayout: PageLayout,
   MiuPagination: Pagination,
   MiuPillGroup: PillGroup,
   MiuPill: Pill,

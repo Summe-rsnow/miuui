@@ -23,7 +23,7 @@ const buttonRef = ref<HTMLButtonElement>()
 const variant = computed(() => props.variant ?? "solid")
 const sizeHint = useMiuSizeHint()
 const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const radius = computed(() => props.radius ?? "default")
+const radius = computed(() => (props.pill ? "full" : (props.radius ?? "default")))
 const loading = computed(() => props.loading ?? false)
 const disabled = computed(() => props.disabled ?? false)
 const block = computed(() => props.block ?? false)
@@ -31,7 +31,16 @@ const iconOnly = computed(() => props.iconOnly ?? false)
 const type = computed(() => props.type ?? "button")
 
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
-const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
+const resolvedIconSize = computed(() =>
+  resolveIconSize(
+    resolvedSize.value.size,
+    typeof props.iconSize === "number" ? undefined : props.iconSize,
+  ),
+)
+const forwardedIconSize = computed(() =>
+  typeof props.iconSize === "number" ? props.iconSize : undefined,
+)
+const spinnerSize = computed(() => resolvedIconSize.value.size)
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Button")
 const accessibleLabel = computed(() => {
   const external = attrs["aria-label"]
@@ -95,7 +104,7 @@ defineExpose({
   >
     <Spinner
       v-if="loading"
-      :size="resolvedIconSize.size"
+      :size="spinnerSize"
       class="miu-button__spinner"
       :class="regionClass(props, 'spinner')"
       :style="regionStyle(props, 'spinner')"
@@ -106,7 +115,7 @@ defineExpose({
       :style="regionStyle(props, 'icon')"
     >
       <slot name="icon">
-        <Icon v-if="icon" :name="icon" />
+        <Icon v-if="icon" :name="icon" :size="forwardedIconSize" />
         <slot v-else-if="iconOnly" />
       </slot>
     </span>
@@ -121,7 +130,7 @@ defineExpose({
       v-if="!iconOnly && iconRight && !loading"
       class="miu-button__icon miu-button__icon--right"
     >
-      <Icon :name="iconRight" />
+      <Icon :name="iconRight" :size="forwardedIconSize" />
     </span>
   </button>
 </template>

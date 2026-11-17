@@ -77,6 +77,16 @@ export const zhCN: MiuMessageTree = {
   },
   messageComposer: {
     send: "发送",
+    cancel: "取消",
+  },
+  imagePreview: {
+    previous: "上一张",
+    next: "下一张",
+    close: "关闭预览",
+    moreImages: "还有 {count} 张图片",
+  },
+  categoryFilter: {
+    defaultLabel: "默认",
   },
   pagination: {
     previous: "上一页",
@@ -141,6 +151,16 @@ export const enUS: MiuMessageTree = {
   },
   messageComposer: {
     send: "Send",
+    cancel: "Cancel",
+  },
+  imagePreview: {
+    previous: "Previous image",
+    next: "Next image",
+    close: "Close preview",
+    moreImages: "{count} more images",
+  },
+  categoryFilter: {
+    defaultLabel: "Default",
   },
   pagination: {
     previous: "Previous page",

@@ -7,6 +7,7 @@ import Dialog from "./Dialog.vue"
 const props = withDefaults(defineProps<ImageProps>(), {
   alt: "",
   fit: "cover",
+  cover: false,
   radius: "default",
   previewable: false,
   pixelated: false,
@@ -38,12 +39,20 @@ const activeSrc = computed(() => {
 const rootStyle = computed(() => {
   const base = regionStyle(props, "root")
   const dims: Record<string, string> = {}
-  if (props.width) dims.width = props.width
-  if (props.height) dims.height = props.height
+  if (props.cover) {
+    dims.width = props.width ?? "100%"
+    dims.height = props.height ?? "100%"
+  } else {
+    if (props.width) dims.width = props.width
+    if (props.height) dims.height = props.height
+  }
   return Object.keys(dims).length > 0 ? [base, dims] : base
 })
 
-const imgStyle = computed(() => [regionStyle(props, "img"), { objectFit: props.fit }])
+const imgStyle = computed(() => [
+  regionStyle(props, "img"),
+  { objectFit: props.cover ? "cover" : props.fit },
+])
 
 const canPreview = computed(() =>
   Boolean(props.previewable && activeSrc.value && !loadFailed.value),
@@ -95,6 +104,7 @@ function openPreview(): void {
           'miu-image__img--pixelated': pixelated,
         })
       "
+      :style="imgStyle"
       @error="onError"
       @load="onLoad"
     />

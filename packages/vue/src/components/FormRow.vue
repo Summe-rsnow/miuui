@@ -2,10 +2,13 @@
 import { computed } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { FormRowProps } from "../types"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<FormRowProps>(), {
   iconSize: "sm",
+  variant: "plain",
+  radius: "lg",
   dense: false,
   clickable: false,
   layout: "row",
@@ -16,6 +19,8 @@ if (import.meta.env.DEV && props.dense) {
 }
 
 const effectiveDensity = computed(() => props.density ?? (props.dense ? "compact" : undefined))
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "FormRow")
+const useCardMaterial = computed(() => props.variant === "card" || props.material !== undefined)
 
 const emit = defineEmits<{ click: [event: MouseEvent | KeyboardEvent] }>()
 
@@ -38,9 +43,13 @@ function onKeydown(event: KeyboardEvent): void {
       regionClass(props, 'root', 'miu-form-row', `miu-form-row--${layout}`, {
         'miu-form-row--dense': dense,
         'miu-form-row--clickable': clickable,
+        'miu-form-row--card': variant === 'card',
       })
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), useCardMaterial ? materialTokens : undefined)"
+    :data-variant="variant"
+    :data-miu-radius="variant === 'card' ? radius : undefined"
+    :data-material="useCardMaterial ? materialName : undefined"
     :data-density="effectiveDensity"
     :data-miu-icon-size="iconSize"
     :role="clickable ? 'button' : undefined"

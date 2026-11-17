@@ -1,7 +1,6 @@
 import { markRaw, readonly, ref, type Component, type Ref } from "vue"
 import type { MaterialName, Radius } from "@xcmm1543/miuui-core"
-import type { IconName } from "@xcmm1543/miuui-icons"
-import type { ToastPosition, ToastStyleVariant } from "../types"
+import type { IconProp, ToastPosition, ToastStyleVariant } from "../types"
 
 export type ToastVariant = "default" | "success" | "error" | "warning" | "info"
 
@@ -18,8 +17,9 @@ export interface ToastOptions {
   material?: MaterialName
   position?: ToastPosition
   radius?: Radius | "default"
-  icon?: IconName | Component | false
+  icon?: IconProp | Component | false
   closable?: boolean
+  dismissOnClick?: boolean
   action?: ToastAction
   duration?: number
 }
@@ -32,14 +32,16 @@ export interface ToastDefaults {
   duration?: number
   max?: number
   closable?: boolean
+  dismissOnClick?: boolean
 }
 
 export interface ToastItem extends Omit<ToastOptions, "icon"> {
   id: number
   variant: ToastVariant
   duration: number
-  closable: boolean
-  icon?: IconName | Component | false
+  closable?: boolean
+  dismissOnClick?: boolean
+  icon?: IconProp | Component | false
 }
 
 const items = ref<ToastItem[]>([])
@@ -79,10 +81,22 @@ function dismiss(id: number): void {
   items.value = items.value.filter((item) => item.id !== id)
 }
 
+function isIconDefinition(icon: ToastOptions["icon"]): icon is Exclude<IconProp, string> {
+  return Boolean(
+    icon &&
+    typeof icon === "object" &&
+    "viewBox" in icon &&
+    "content" in icon &&
+    typeof icon.viewBox === "string",
+  )
+}
+
 function toast(options: ToastOptions): number {
   const id = ++sequence
   const resolvedIcon =
-    options.icon && typeof options.icon === "object" ? markRaw(options.icon) : options.icon
+    options.icon && typeof options.icon === "object" && !isIconDefinition(options.icon)
+      ? markRaw(options.icon)
+      : options.icon
   const item: ToastItem = {
     id,
     title: options.title,
@@ -93,7 +107,8 @@ function toast(options: ToastOptions): number {
     position: options.position ?? defaults.value.position,
     radius: options.radius ?? defaults.value.radius,
     icon: resolvedIcon,
-    closable: options.closable ?? defaults.value.closable ?? true,
+    closable: options.closable ?? defaults.value.closable,
+    dismissOnClick: options.dismissOnClick ?? defaults.value.dismissOnClick,
     action: options.action,
     duration: options.duration ?? defaults.value.duration ?? 4000,
   }
