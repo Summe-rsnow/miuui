@@ -1,6 +1,6 @@
 {
   "name": "@xcmm1543/miuui-core",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "μui framework-agnostic component recipes, plugin contracts and registries",
   "homepage": "https://github.com/Summe-rsnow/miuui#readme",
   "bugs": {

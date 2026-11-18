@@ -1,6 +1,6 @@
 {
   "name": "@xcmm1543/miuui-codemod",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "μui AST/template codemods for SemVer deprecation migrations",
   "homepage": "https://github.com/Summe-rsnow/miuui#readme",
   "bugs": {

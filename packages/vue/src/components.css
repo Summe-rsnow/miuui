@@ -420,7 +420,12 @@
 .miu-input[data-material],
 .miu-textarea[data-material] {
   background: var(--miu-material-surface, var(--miu-color-bg-surface));
+  border-color: var(--miu-material-border, var(--miu-color-border-default));
   backdrop-filter: var(--miu-material-backdrop, none);
+  -webkit-backdrop-filter: var(--miu-material-backdrop, none);
+  box-shadow:
+    inset 0 var(--miu-border-width) 0 var(--miu-material-highlight, transparent),
+    var(--miu-shadow-1);
 }
 
 .miu-input:hover:not(.miu-input--disabled),
@@ -432,6 +437,13 @@
 .miu-textarea:focus-within {
   border-color: var(--miu-color-primary);
   box-shadow: 0 0 0 var(--miu-focus-ring-width) var(--miu-color-primary-subtle);
+}
+
+.miu-input[data-material]:focus-within,
+.miu-textarea[data-material]:focus-within {
+  box-shadow:
+    inset 0 var(--miu-border-width) 0 var(--miu-material-highlight, transparent),
+    0 0 0 var(--miu-focus-ring-width) var(--miu-color-primary-subtle);
 }
 .miu-input--invalid,
 .miu-textarea--invalid {

@@ -4,6 +4,7 @@ import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@xc
 import type { TextareaProps } from "../types"
 import { useMiuFormField } from "../composables/useFormField"
 import { useMiuSizeHint } from "../composables/useSizeHint"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 const props = withDefaults(defineProps<TextareaProps>(), {
   rows: 3,
@@ -24,6 +25,7 @@ const textareaRef = ref<HTMLTextAreaElement>()
 const sizeHint = useMiuSizeHint()
 const size = computed(() => props.size ?? sizeHint.value ?? "md")
 const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Textarea")
 const textareaId = computed(() => props.id ?? formField?.id.value ?? autoId)
 const describedBy = computed(() => formField?.describedBy.value)
 const invalid = computed(() => props.invalid || formField?.invalid.value || false)
@@ -110,10 +112,10 @@ defineExpose({ focus, textareaRef })
         'miu-textarea--invalid': invalid,
       })
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
-    :data-material="material"
+    :data-material="materialName"
     :data-invalid="invalid || undefined"
     :data-disabled="disabled || undefined"
   >
