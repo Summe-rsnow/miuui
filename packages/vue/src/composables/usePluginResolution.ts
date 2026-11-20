@@ -1,11 +1,12 @@
-import { computed, type ComputedRef, type StyleValue } from "vue"
+import { computed, inject, type ComputedRef, type StyleValue } from "vue"
 import {
+  defaultThemeContext,
   registry,
   type MaterialName,
   type MotionTier,
   type ThemeContext,
 } from "@xcmm1543/miuui-core"
-import { useMiuTheme } from "./useMiu"
+import { MIU_THEME_KEY } from "./useMiu"
 
 const BUILTIN_MATERIALS: Record<string, true> = {
   solid: true,
@@ -117,17 +118,19 @@ export function useResolvedMaterial(
   materialName: ComputedRef<MaterialName | undefined>
   materialTokens: ComputedRef<Record<string, string> | undefined>
 } {
-  const theme = useMiuTheme()
+  const theme = inject(MIU_THEME_KEY, null)
   const resolved = computed(() => {
     const requested = material()
     if (requested === undefined) return undefined
-    const ctx: ThemeContext = {
-      theme: theme.theme.value,
-      density: theme.density.value,
-      radius: theme.radius.value,
-      material: theme.material.value,
-      motionTier: theme.motionTier.value,
-    }
+    const ctx: ThemeContext = theme
+      ? {
+          theme: theme.theme.value,
+          density: theme.density.value,
+          radius: theme.radius.value,
+          material: theme.material.value,
+          motionTier: theme.motionTier.value,
+        }
+      : defaultThemeContext
     return resolveMaterialValue(requested, ctx, componentName)
   })
 

@@ -2,6 +2,7 @@
 import { computed } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { PageLayoutProps } from "../types"
+import { mergeStyle } from "../composables/usePluginResolution"
 import PageHeader from "./PageHeader.vue"
 
 const props = withDefaults(defineProps<PageLayoutProps>(), {
@@ -11,7 +12,7 @@ const props = withDefaults(defineProps<PageLayoutProps>(), {
   fitHeight: false,
 })
 
-const emit = defineEmits<{ back: [] }>()
+const emit = defineEmits<{ back: [event: MouseEvent] }>()
 
 const PRESET_WIDTHS = new Set(["sm", "md", "lg", "xl"])
 const contentStyle = computed(() => {
@@ -19,7 +20,7 @@ const contentStyle = computed(() => {
   if (!props.contentMaxWidth || PRESET_WIDTHS.has(props.contentMaxWidth)) {
     return base
   }
-  return [base, { maxInlineSize: props.contentMaxWidth }]
+  return mergeStyle(base, { maxInlineSize: props.contentMaxWidth })
 })
 </script>
 
@@ -39,10 +40,20 @@ const contentStyle = computed(() => {
       :back="back"
       :divider="divider"
       :density="density"
+      :icon-size="iconSize"
       :class-names="{ root: regionClass(props, 'header', 'miu-page-layout__header') }"
       :styles="{ root: regionStyle(props, 'header') }"
-      @back="emit('back')"
+      @back="emit('back', $event)"
     >
+      <template v-if="$slots.lead" #lead>
+        <slot name="lead" />
+      </template>
+      <template v-if="$slots.title" #title>
+        <slot name="title" />
+      </template>
+      <template v-if="$slots.description" #description>
+        <slot name="description" />
+      </template>
       <template v-if="$slots.actions" #actions>
         <slot name="actions" />
       </template>

@@ -1,0 +1,63 @@
+.miu-button:focus-visible,
+.miu-select__trigger:focus-visible,
+.miu-checkbox__box:focus-visible,
+.miu-switch__track:focus-visible,
+.miu-dialog__close:focus-visible,
+.miu-drawer__close:focus-visible,
+.miu-toast__close:focus-visible,
+.miu-toast__action:focus-visible,
+.miu-pill__main:focus-visible,
+.miu-pill__remove:focus-visible,
+.miu-segmented__item:focus-visible,
+.miu-tabs__trigger:focus-visible,
+.miu-page-header__back:focus-visible,
+.miu-nav-menu__link:focus-visible,
+.miu-toc__link:focus-visible,
+.miu-breadcrumb__link:focus-visible,
+.miu-pagination__link:focus-visible,
+.miu-command-palette__item:focus-visible,
+.miu-form-row--clickable:focus-visible,
+.miu-slider__thumb:focus-visible,
+.miu-radio-group__item:focus-visible,
+.miu-number-input__stepper:focus-visible,
+.miu-truncate__toggle:focus-visible,
+.miu-input__clear:focus-visible,
+.miu-input__toggle:focus-visible,
+.miu-list-item--clickable:focus-visible,
+.miu-image--previewable:focus-visible,
+.miu-avatar--clickable:focus-visible,
+.miu-image-group__item:focus-visible,
+.miu-image-preview__thumb:focus-visible,
+.miu-color-picker__swatch:focus-visible,
+.miu-color-picker__input:focus-visible,
+.miu-color-picker__preset:focus-visible,
+.miu-help-tooltip__trigger:focus-visible {
+  outline: var(--miu-focus-ring-width) solid var(--miu-color-focus-ring);
+  outline-offset: var(--miu-focus-ring-offset);
+}
+
+.miu-input:has(> input[readonly]),
+.miu-textarea:has(> textarea[readonly]),
+.miu-number-input:has(input[readonly]),
+[data-readonly].miu-input,
+[data-readonly].miu-textarea,
+[data-readonly].miu-number-input {
+  background: var(--miu-color-bg-muted);
+  border-color: var(--miu-color-border-subtle);
+}
+
+.miu-input:has(> input[readonly]):focus-within,
+.miu-textarea:has(> textarea[readonly]):focus-within,
+.miu-number-input:has(input[readonly]):focus-within,
+[data-readonly].miu-input:focus-within,
+[data-readonly].miu-textarea:focus-within,
+[data-readonly].miu-number-input:focus-within {
+  border-color: var(--miu-color-border-default);
+  box-shadow: none;
+}
+
+.miu-input__control[readonly],
+.miu-textarea__control[readonly],
+.miu-number-input__control[readonly] {
+  cursor: default;
+}

@@ -2,6 +2,54 @@
 
 All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
+## [0.7.0] - 2026-11-20
+
+### 重构（Refactoring）
+
+- **正交基础设施与 Composables 拆分**：将 `@xcmm1543/miuui-vue` 共享逻辑拆分为职责单一的文件（`useControlSize.ts`、`useFormField.ts` 含 `useFormFieldBinding` 与 `labelId`、`useListContext.ts` 含 `provideListDensity` / `useListDensity`、`useMounted.ts`、`useScrollLock.ts`、`useDocumentKeydown.ts`、`useFloatingPopover.ts`、`useMiuIcons.ts`、`useSlidingIndicator.ts`）并从包入口统一导出。
+- **样式按功能域模块化**：将单体 `packages/vue/src/components.css` 拆分为 `packages/vue/src/styles/` 下按域划分的样式文件（如 `00-foundation.css`、`01-interactive.css` 等）并通过 `@import` 清单由 `scripts/build-packages.mjs` 内联打包；`@xcmm1543/miuui-vue/style.css` 与 `@xcmm1543/miuui-vue/components.css` 对外入口保持兼容。
+- **浮层层级与确认流重构**：`@xcmm1543/miuui-tokens` `Z_INDEX` 新增 `loading: 1075`（严格位于 `tooltip (1070)` 与 `toast (1080)` 之间）；全屏 `LoadingOverlay` 绑定 `--miu-z-loading`，`ToastViewport` 使用 `isPrimaryToastViewport` 与 `useMounted()` 防止重复挂载，非模态/模态关闭统一经由受控取消链路。
+- **内部冗余导出清理**：移除 `@xcmm1543/miuui-core` 中未使用的 `SemanticRegionMap`、`SizeContext`，`@xcmm1543/miuui-tokens` 中未使用的 `withAlpha`、`CONTROL_HEIGHT_BY_DENSITY`、`shadowToCss`，以及 `@xcmm1543/miuui-materials` 中的内部函数 `tokensFor`。
+
+### 统一（Standardization & Unification）
+
+- **正交设计维度对齐**：全库统一使用 `size`、`iconSize`、`radius`、`material`、`density`、`disabled`、`readonly`、`invalid`、`loading`、`clearable` 与 `IconProp`（`IconName | IconDefinition`）；`CategoryFilter`、`Select`、`PillGroup`、`MessageComposer` 等均接入 `useControlSize()` 与 `useFormFieldBinding()`。
+- **交互状态与 `:focus-visible` 令牌化**：统一 `[data-disabled]`（`--miu-opacity-disabled`）、`[data-readonly]`、`[data-invalid]` 与可聚焦控件的 `:focus-visible` 焦点环及 `--miu-glass-filter-*` 表面映射（`solid` 局部子树在 `<ThemeProvider material="glass">` 等场景可独立覆写），并保持全仓库零硬编码样式门禁通过。
+- **语义区域 1:1 契约补全**：校准 `Input`（`toggle`、`count`）、`Textarea`（`count`、`clear`）、`Select`（`clear`）、`ImagePreview`（`content`）、`Popconfirm`（`arrow`）、`CategoryFilter`（`actions`）、`Drawer` / `CommandPalette`（移除无效 `root`）与 `IconButton`（`"root" | "icon" | "spinner"`），所有 `ComponentSemanticProps` 区域均在模板与测试中达成 1:1 绑定。
+- **内置 Locale 键补全**：`@xcmm1543/miuui-core` 在 `zh-CN` 与 `en-US` 内置词典中新增 `common.select`、`truncate.expand`、`truncate.collapse`、`pillGroup.all`，消除组件内硬编码中英文按钮文案。
+
+### 移除（Removals）
+
+- **破坏性清理（Direct Removals in 0.7.0）**：直接移除全部 11 个历史冗余/别名 Props、`ListItem` `#suffix` 插槽以及 `@xcmm1543/miuui-codemod` 包（仓库收敛为 6 个发布包），详见 [`docs/migration.md`](./docs/migration.md)：
+  - `IconProps.icon` -> `name`（`name: IconProp`）
+  - `ButtonBaseProps.pill` / `BadgeProps.pill` / `SegmentedControlProps.pill` -> `radius="full"`
+  - `IconButtonProps.shape` -> `radius="full"` / `radius`（同时在 `IconButtonProps` 中剔除无效继承字段 `iconRight` 与 `pill`）
+  - `FormRowProps.dense` / `ListItemProps.dense` -> `density="compact"`
+  - `ListItem` `#suffix` 插槽 -> `#actions`
+  - `MessageComposerProps.compact` -> `density="compact"`
+  - `HelpTooltipProps.size` -> `iconSize`
+  - `CategoryFilterProps.allowDeselect` -> `clearable`
+  - `ImageProps.cover` -> `fit="cover"` + 显式宽高
+  - `@xcmm1543/miuui-codemod`（`packages/codemod/`）：随 0.7.0 直接移除旧版 API 一并删除，不再维护独立迁移工具包
+
+### 修复（Fixes）
+
+- **确认浮层与中止路径**：修复 `ConfirmDialog`、`Popconfirm` 与 `ThemeProvider`（`useConfirm()`）在 `loading=true` 异步提交时可被遮罩点击/ESC/关闭按钮静默关闭的问题，统一在取消时 emit `cancel`；修复 `MessageComposer` 在 `loading=true` 时误禁用 Cancel 中止按钮导致流式响应无法取消的问题。
+- **无障碍与 IME 保护**：修复 `Collapse` 关闭态焦点可落入不可见元素的问题（绑定 `:inert`）；修复 `Breadcrumb` / `Toc` / `NavMenu` 空数据时渲染空 `<nav>` 噪音的问题；修复 `Input` / `MessageComposer` 中文输入法组词期间按 `Enter` 误提交（新增 `!event.isComposing` 守卫）；修复 `Popover` `disabled` 属性未阻断弹出层打开的问题；补齐 `IconButton` / `FormField` / `Breadcrumb` / `Toc` 的 ARIA 属性与焦点恢复。
+- **门禁验证**：全量 10 项 `pnpm check` 门禁通过（`check:compat` 覆盖 18 组件 / 64 Reka UI 原语；17 个测试文件 / 200 项单测通过；单 `Button` 产物 32,821 B raw / 9,712 B gzip，`PlusIcon` 127 B raw / 135 B gzip）。
+
+## [0.6.2] - 2026-11-19
+
+### Fixed
+
+- **输入框玻璃高光与边框阴影优化**：为 `.miu-input[data-material]` 与 `.miu-textarea[data-material]` 补全显式边框、`backdrop-filter` / `-webkit-backdrop-filter` 与内嵌边缘高光（`--miu-material-highlight`），增强 `:focus-within` 聚焦态层次感。
+
+## [0.6.1] - 2026-11-18
+
+### Fixed
+
+- **`Textarea` 材质插件解析与透传**：引入 `useResolvedMaterial` 与 `mergeStyle`，对齐 `Input` 的三档材质解析、`materialTokens` 注入与 `[data-material]` 属性继承。
+
 ## [0.6.0] - 2026-11-17
 
 ### Added
@@ -10,7 +58,7 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
   - `ImageGroup`: Responsive 1 / 2×2 quad / 3×3 grid built on `Image` and `ImagePreview` with `maxDisplay` and `+N` overflow badge.
   - `CategoryFilter`: Two-level collapsible category filter built on `Tabs`, `Collapse`, and `PillGroup`.
   - `PageLayout`: Page shell container built on `PageHeader` with `contentMaxWidth`, `contentAlign`, `fitHeight`, and `#actions` / `#header-extra` slots.
-- **`@xcmm1543/miuui-icons`**: Added 46 C-style rounded UI, window, navigation, and media icons (`home`, `calendar`, `libraryMusic`, `barChart`, `radio`, `playlist`, `video`, `notebook`, `folder`, `cloud`, `history`, `menu`, `moreHorizontal`, `monitor`, `phone`, `lock`, `logout`, `qrCode`, `album`, `musicNote`, `queue`, `cassette`, `vinyl`, `timer`, `translate`, `sparkles`, `refresh`, `checkCircle`, `infoCircle`, `smile`, `send`, `thumbsUp`, `pin`, `pinFilled`, `comment`, `message`, `minimize`, `maximize`, `maximizeRestore`, `dragHandle`, `fontSize`, `chevronLeft`, `chevronRight`, `chevronUp`, `chevronDown`, `volumeLow`, `repeatOne`).
+- **`@xcmm1543/miuui-icons`**: Added 47 C-style rounded UI, window, navigation, and media icons (75 total across `index` & `dynamic`: `home`, `calendar`, `libraryMusic`, `barChart`, `radio`, `playlist`, `video`, `notebook`, `folder`, `cloud`, `history`, `menu`, `moreHorizontal`, `monitor`, `phone`, `lock`, `logout`, `qrCode`, `album`, `musicNote`, `queue`, `cassette`, `vinyl`, `timer`, `translate`, `sparkles`, `refresh`, `checkCircle`, `infoCircle`, `smile`, `send`, `thumbsUp`, `pin`, `pinFilled`, `comment`, `message`, `minimize`, `maximize`, `maximizeRestore`, `dragHandle`, `fontSize`, `chevronLeft`, `chevronRight`, `chevronUp`, `chevronDown`, `volumeLow`, `repeatOne`).
 
 ### Changed
 - **`Icon`**: Added `icon?: IconDefinition` prop and numeric `size` support (`IconSize | number`).
@@ -35,7 +83,7 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 ## [0.5.5] - 2026-11-14
 
 ### Fixed
-- **`@xcmm1543/miuui-vue` exports**: Exported `ConfirmDialog` directly from `@xcmm1543/miuui-vue` entry alongside its `plugin.ts` registration (55/55 components exported).
+- **`@xcmm1543/miuui-vue` exports**: Exported `ConfirmDialog` directly from `@xcmm1543/miuui-vue` entry alongside its `packages/vue/src/plugin.ts` registration (55/55 components exported).
 - **`Popover` arrow material inheritance**: Added `[data-material]` fill alignment for `.miu-popover__arrow` so `mica`/`glass` popovers match their arrow surface.
 
 ## [0.5.4] - 2026-11-14

@@ -10,6 +10,7 @@ import {
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { DropdownMenuProps } from "../types"
 import { useMiuTheme } from "../composables/useMiu"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<DropdownMenuProps>(), {
@@ -18,6 +19,10 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
   sideOffset: 6,
   radius: "default",
   iconSize: "sm",
+  modal: true,
+  disabled: false,
+  closeOnClickOutside: true,
+  closeOnEsc: true,
 })
 
 const emit = defineEmits<{
@@ -26,26 +31,46 @@ const emit = defineEmits<{
 }>()
 
 const theme = useMiuTheme()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "DropdownMenu")
+
+function onUpdateOpen(next: boolean): void {
+  if (next && props.disabled) return
+  emit("update:open", next)
+}
+
+function onEscapeKeyDown(event: KeyboardEvent): void {
+  if (!props.closeOnEsc) event.preventDefault()
+}
+
+function onOutsideDismiss(event: Event): void {
+  if (!props.closeOnClickOutside) event.preventDefault()
+}
 </script>
 
 <template>
-  <DropdownMenuRoot :open="open" @update:open="emit('update:open', $event)">
-    <DropdownMenuTrigger as-child>
+  <DropdownMenuRoot :open="disabled ? false : open" :modal="modal" @update:open="onUpdateOpen">
+    <DropdownMenuTrigger as-child :disabled="disabled">
       <slot name="trigger" />
     </DropdownMenuTrigger>
     <DropdownMenuPortal :to="theme.portalTarget.value">
       <DropdownMenuContent
         :class="regionClass(props, 'content', 'miu-menu')"
-        :style="regionStyle(props, 'content')"
-        :data-material="material"
+        :style="mergeStyle(regionStyle(props, 'content'), materialTokens)"
+        :data-material="materialName"
         :data-miu-radius="radius"
         :data-miu-icon-size="iconSize"
         :data-density="density"
         :side="side"
         :align="align"
         :side-offset="sideOffset"
+        @escape-key-down="onEscapeKeyDown"
+        @pointer-down-outside="onOutsideDismiss"
+        @interact-outside="onOutsideDismiss"
       >
-        <template v-for="item in items" :key="item.value">
+        <template
+          v-for="(item, index) in items"
+          :key="item.separator ? `sep-${index}` : `${item.value}-${index}`"
+        >
           <DropdownMenuSeparator
             v-if="item.separator"
             :class="regionClass(props, 'separator', 'miu-menu__separator')"

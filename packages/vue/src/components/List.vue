@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { computed, provide } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ListProps } from "../types"
+import { provideListDensity } from "../composables/useListContext"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
+import { MIU_SIZE_HINT_KEY } from "../composables/useSizeHint"
 
 const props = withDefaults(defineProps<ListProps>(), {
   gap: "xs",
@@ -9,6 +12,12 @@ const props = withDefaults(defineProps<ListProps>(), {
   dividers: false,
   radius: "default",
 })
+
+provideListDensity(() => props.density)
+provide(
+  MIU_SIZE_HINT_KEY,
+  computed(() => (props.density === "compact" ? "sm" : undefined)),
+)
 
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "List")
 </script>

@@ -5,18 +5,6 @@
     --miu-material-backdrop: none;
     --miu-material-highlight: none;
     --miu-material-gloss: none;
-    --miu-glass-filter-micro: none;
-    --miu-glass-filter-thin: none;
-    --miu-glass-filter-regular: none;
-    --miu-glass-filter-thick: none;
-    --miu-glass-surface-ultra-thin: var(--miu-color-bg-muted);
-    --miu-glass-surface-thin: var(--miu-color-bg-surface);
-    --miu-glass-surface-regular: var(--miu-color-surface-solid-bg);
-    --miu-glass-surface-thick: var(--miu-color-bg-elevated);
-    --miu-glass-surface-elevated: var(--miu-color-bg-overlay);
-    --miu-glass-hairline: var(--miu-color-border-subtle);
-    --miu-glass-specular: none;
-    --miu-glass-sheen: none;
   }
 
   [data-material="mica"] {
@@ -35,6 +23,10 @@
     --miu-material-gloss: block;
   }
 
+  [data-motion-tier="reduced"][data-material="mica"],
+  [data-motion-tier="reduced"][data-material="glass"],
+  [data-motion-tier="none"][data-material="mica"],
+  [data-motion-tier="none"][data-material="glass"],
   [data-motion-tier="reduced"] [data-material="mica"],
   [data-motion-tier="reduced"] [data-material="glass"],
   [data-motion-tier="none"] [data-material="mica"],
@@ -50,18 +42,6 @@
       --miu-material-backdrop: none;
       --miu-material-highlight: none;
       --miu-material-gloss: none;
-      --miu-glass-filter-micro: none;
-      --miu-glass-filter-thin: none;
-      --miu-glass-filter-regular: none;
-      --miu-glass-filter-thick: none;
-      --miu-glass-surface-ultra-thin: var(--miu-color-bg-muted);
-      --miu-glass-surface-thin: var(--miu-color-bg-surface);
-      --miu-glass-surface-regular: var(--miu-color-surface-solid-bg);
-      --miu-glass-surface-thick: var(--miu-color-bg-elevated);
-      --miu-glass-surface-elevated: var(--miu-color-bg-overlay);
-      --miu-glass-hairline: var(--miu-color-border-subtle);
-      --miu-glass-specular: none;
-      --miu-glass-sheen: none;
     }
   }
 }

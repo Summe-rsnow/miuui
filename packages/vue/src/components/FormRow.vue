@@ -9,27 +9,33 @@ const props = withDefaults(defineProps<FormRowProps>(), {
   iconSize: "sm",
   variant: "plain",
   radius: "lg",
-  dense: false,
   clickable: false,
+  disabled: false,
   layout: "row",
 })
 
-if (import.meta.env.DEV && props.dense) {
-  console.warn('[μui] FormRow: `dense` is deprecated, use `density="compact"` instead.')
-}
-
-const effectiveDensity = computed(() => props.density ?? (props.dense ? "compact" : undefined))
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "FormRow")
 const useCardMaterial = computed(() => props.variant === "card" || props.material !== undefined)
 
 const emit = defineEmits<{ click: [event: MouseEvent | KeyboardEvent] }>()
 
+const INTERACTIVE_DESCENDANT_SELECTOR =
+  'a, button, input, select, textarea, [role="button"], [role="checkbox"], [role="radio"], [role="switch"], [role="slider"], [role="tab"], [contenteditable="true"]'
+
+function isNestedInteractive(event: Event): boolean {
+  const target = event.target
+  if (!(target instanceof Element)) return false
+  const interactive = target.closest(INTERACTIVE_DESCENDANT_SELECTOR)
+  return Boolean(interactive && interactive !== event.currentTarget)
+}
+
 function onClick(event: MouseEvent): void {
-  if (props.clickable) emit("click", event)
+  if (props.disabled || !props.clickable || isNestedInteractive(event)) return
+  emit("click", event)
 }
 
 function onKeydown(event: KeyboardEvent): void {
-  if (!props.clickable) return
+  if (props.disabled || !props.clickable || isNestedInteractive(event)) return
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault()
     emit("click", event)
@@ -41,8 +47,8 @@ function onKeydown(event: KeyboardEvent): void {
   <div
     :class="
       regionClass(props, 'root', 'miu-form-row', `miu-form-row--${layout}`, {
-        'miu-form-row--dense': dense,
         'miu-form-row--clickable': clickable,
+        'miu-form-row--disabled': disabled,
         'miu-form-row--card': variant === 'card',
       })
     "
@@ -50,21 +56,25 @@ function onKeydown(event: KeyboardEvent): void {
     :data-variant="variant"
     :data-miu-radius="variant === 'card' ? radius : undefined"
     :data-material="useCardMaterial ? materialName : undefined"
-    :data-density="effectiveDensity"
+    :data-density="density"
     :data-miu-icon-size="iconSize"
+    :data-disabled="disabled || undefined"
     :role="clickable ? 'button' : undefined"
-    :tabindex="clickable ? 0 : undefined"
+    :tabindex="clickable && !disabled ? 0 : undefined"
+    :aria-disabled="disabled || undefined"
     @click="onClick"
     @keydown="onKeydown"
   >
     <div class="miu-form-row__lead">
       <slot name="lead">
         <span
-          v-if="icon"
+          v-if="icon || $slots.icon"
           :class="regionClass(props, 'icon', 'miu-form-row__icon')"
           :style="regionStyle(props, 'icon')"
         >
-          <Icon :name="icon" />
+          <slot name="icon">
+            <Icon v-if="icon" :name="icon" />
+          </slot>
         </span>
         <div class="miu-form-row__text">
           <label
@@ -83,11 +93,11 @@ function onKeydown(event: KeyboardEvent): void {
             <slot name="label">{{ label }}</slot>
           </span>
           <p
-            v-if="description"
+            v-if="description || $slots.description"
             :class="regionClass(props, 'description', 'miu-form-row__description')"
             :style="regionStyle(props, 'description')"
           >
-            {{ description }}
+            <slot name="description">{{ description }}</slot>
           </p>
           <p
             v-if="hint || $slots.hint"

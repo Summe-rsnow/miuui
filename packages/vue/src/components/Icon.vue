@@ -79,8 +79,8 @@ import {
   type IconDefinition,
   type IconName,
 } from "@xcmm1543/miuui-icons"
-import type { IconSize } from "@xcmm1543/miuui-core"
-import { useMiuIcons } from "../composables/useMiu"
+import type { IconProps } from "../types"
+import { useMiuIcons } from "../composables/useMiuIcons"
 
 interface ResolvedSvgIcon {
   viewBox: string
@@ -137,16 +137,7 @@ function parseRawSvg(raw: string): ResolvedSvgIcon {
   return resolved
 }
 
-const props = withDefaults(
-  defineProps<{
-    name?: IconName | IconDefinition
-    icon?: IconDefinition
-    size?: IconSize | number
-    label?: string
-    rotate?: 0 | 90 | 180 | 270
-  }>(),
-  { rotate: 0 },
-)
+const props = withDefaults(defineProps<IconProps>(), { rotate: 0 })
 
 const iconOverrides = useMiuIcons()
 
@@ -228,28 +219,21 @@ const iconMap: Record<IconName, IconDefinition> = {
   fontSize: FontSizeIcon,
 }
 
-const resolvedSvg = computed<ResolvedSvgIcon | undefined>(() => {
-  if (props.icon) {
-    return {
-      viewBox: props.icon.viewBox,
-      content: props.icon.content,
-      fill: props.icon.filled ? "currentColor" : "none",
-      stroke: props.icon.filled ? "none" : "currentColor",
-      strokeWidth: props.icon.filled ? undefined : "2.4",
-      strokeLinecap: props.icon.filled ? undefined : "round",
-      strokeLinejoin: props.icon.filled ? undefined : "round",
-    }
+function fromDefinition(def: IconDefinition): ResolvedSvgIcon {
+  return {
+    viewBox: def.viewBox,
+    content: def.content,
+    fill: def.filled ? "currentColor" : "none",
+    stroke: def.filled ? "none" : "currentColor",
+    strokeWidth: def.filled ? undefined : "2.4",
+    strokeLinecap: def.filled ? undefined : "round",
+    strokeLinejoin: def.filled ? undefined : "round",
   }
+}
+
+const resolvedSvg = computed<ResolvedSvgIcon | undefined>(() => {
   if (typeof props.name === "object" && props.name !== null) {
-    return {
-      viewBox: props.name.viewBox,
-      content: props.name.content,
-      fill: props.name.filled ? "currentColor" : "none",
-      stroke: props.name.filled ? "none" : "currentColor",
-      strokeWidth: props.name.filled ? undefined : "2.4",
-      strokeLinecap: props.name.filled ? undefined : "round",
-      strokeLinejoin: props.name.filled ? undefined : "round",
-    }
+    return fromDefinition(props.name)
   }
   if (typeof props.name === "string") {
     const override = iconOverrides.value?.[props.name]
@@ -257,16 +241,7 @@ const resolvedSvg = computed<ResolvedSvgIcon | undefined>(() => {
       return parseRawSvg(override)
     }
     const def = override ?? iconMap[props.name]
-    if (!def) return undefined
-    return {
-      viewBox: def.viewBox,
-      content: def.content,
-      fill: def.filled ? "currentColor" : "none",
-      stroke: def.filled ? "none" : "currentColor",
-      strokeWidth: def.filled ? undefined : "2.4",
-      strokeLinecap: def.filled ? undefined : "round",
-      strokeLinejoin: def.filled ? undefined : "round",
-    }
+    return def ? fromDefinition(def) : undefined
   }
   return undefined
 })

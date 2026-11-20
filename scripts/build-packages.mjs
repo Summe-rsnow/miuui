@@ -1,10 +1,22 @@
 import { execFileSync } from "node:child_process"
-import { copyFileSync, mkdirSync, rmSync } from "node:fs"
+import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { createRequire } from "node:module"
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import vue from "@vitejs/plugin-vue"
 import { build } from "vite"
+
+function bundleCssImports(entryPath, seen = new Set()) {
+  const abs = resolve(entryPath)
+  if (seen.has(abs)) return ""
+  seen.add(abs)
+  const dir = dirname(abs)
+  const source = readFileSync(abs, "utf8")
+  return source.replace(/^\s*@import\s+["']([^"']+)["']\s*;\s*$/gm, (_, rel) => {
+    if (!rel.startsWith(".")) return `@import "${rel}";`
+    return `${bundleCssImports(resolve(dir, rel), seen).trimEnd()}\n`
+  })
+}
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const require = createRequire(import.meta.url)
@@ -66,20 +78,8 @@ const packages = [
     name: "vue",
     vue: true,
     typeCmd: "vue-tsc",
-    assets: [
-      ["src/style.css", "dist/style.css"],
-      ["src/components.css", "dist/components.css"],
-    ],
-  },
-  {
-    name: "codemod",
-    vue: false,
-    typeCmd: "tsc",
-    entries: {
-      index: "src/index.ts",
-      cli: "src/cli.ts",
-    },
-    assets: [],
+    assets: [["src/style.css", "dist/style.css"]],
+    bundleCss: [["src/components.css", "dist/components.css"]],
   },
 ]
 
@@ -103,10 +103,11 @@ for (const pkg of targets) {
     logLevel: "warn",
     plugins: pkg.vue ? [vue()] : [],
     build: {
-      target: ["chrome111", "edge111", "firefox113", "safari15.4"],
+      target: pkg.node ? "node20" : ["chrome111", "edge111", "firefox113", "safari15.4"],
       outDir: distDir,
       emptyOutDir: true,
       minify: false,
+      ...(pkg.node ? { ssr: true } : {}),
       lib: {
         entry: pkg.entries
           ? Object.fromEntries(Object.entries(pkg.entries).map(([k, v]) => [k, resolve(pkgDir, v)]))
@@ -118,7 +119,8 @@ for (const pkg of targets) {
           id === "vue" ||
           id === "reka-ui" ||
           id.startsWith("reka-ui/") ||
-          id.startsWith("@xcmm1543/miuui-"),
+          id.startsWith("@xcmm1543/miuui-") ||
+          (pkg.node && id.startsWith("node:")),
         output: {
           format: "es",
           preserveModules: true,
@@ -135,6 +137,12 @@ for (const pkg of targets) {
     const dest = resolve(pkgDir, to)
     mkdirSync(dirname(dest), { recursive: true })
     copyFileSync(resolve(pkgDir, from), dest)
+  }
+
+  for (const [from, to] of pkg.bundleCss ?? []) {
+    const dest = resolve(pkgDir, to)
+    mkdirSync(dirname(dest), { recursive: true })
+    writeFileSync(dest, bundleCssImports(resolve(pkgDir, from)), "utf8")
   }
 
   console.log(`Built @xcmm1543/miuui-${pkg.name} -> dist/`)

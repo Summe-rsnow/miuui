@@ -1,18 +1,21 @@
 <script setup lang="ts">
+import { computed } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ListItemProps } from "../types"
+import { useListDensity } from "../composables/useListContext"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 const props = withDefaults(defineProps<ListItemProps>(), {
   active: false,
   clickable: false,
   disabled: false,
-  dense: false,
   radius: "default",
 })
 
-const emit = defineEmits<{ click: [event: MouseEvent] }>()
+const emit = defineEmits<{ click: [event: MouseEvent | KeyboardEvent] }>()
 
+const listDensity = useListDensity()
+const effectiveDensity = computed(() => props.density ?? listDensity.value)
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "ListItem")
 
 function onClick(event: MouseEvent): void {
@@ -24,7 +27,7 @@ function onKeydown(event: KeyboardEvent): void {
   if (props.disabled || !props.clickable) return
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault()
-    emit("click", event as unknown as MouseEvent)
+    emit("click", event)
   }
 }
 </script>
@@ -40,11 +43,11 @@ function onKeydown(event: KeyboardEvent): void {
         'miu-list-item--active': active,
         'miu-list-item--clickable': clickable && !disabled,
         'miu-list-item--disabled': disabled,
-        'miu-list-item--dense': dense,
       })
     "
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-radius="radius"
+    :data-density="effectiveDensity"
     :data-material="materialName"
     :data-active="active || undefined"
     :data-disabled="disabled || undefined"
@@ -90,13 +93,11 @@ function onKeydown(event: KeyboardEvent): void {
       </div>
     </div>
     <div
-      v-if="$slots.actions || $slots.suffix"
+      v-if="$slots.actions"
       :class="regionClass(props, 'actions', 'miu-list-item__actions')"
       :style="regionStyle(props, 'actions')"
     >
-      <slot name="actions">
-        <slot name="suffix" />
-      </slot>
+      <slot name="actions" />
     </div>
   </div>
 </template>

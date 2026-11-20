@@ -215,8 +215,6 @@ importers:
         specifier: ^3.3.14
         version: 3.3.14(typescript@6.0.3)
 
-  packages/codemod: {}
-
   packages/core:
     dependencies:
       '@xcmm1543/miuui-tokens':

@@ -205,7 +205,7 @@ export const ShuffleIcon: IconDefinition = {
   name: "shuffle",
   viewBox: "0 0 24 24",
   content:
-    '<path d="m17 4 3 3-3 3"/><path d="M4 17h4.2a3 3 0 0 0 2.3-1.1l4.8-5.8A3 3 0 0 1 17.6 9H20"/><path d="m17 14 3 3-3 3"/><path d="M4 7h4.2a3 3 0 0 1 2.3 1.1l.9 1.1M14.3 14.8l1 1.1a3 3 0 0 0 2.3 1.1H20"/>',
+    '<path d="m17 4 3 3-3 3"/><path d="m17 14 3 3-3 3"/><path d="M4 17h2.5q1.75 0 3.1-1.8l4.8-6.4Q15.75 7 17.5 7H20"/><path d="M4 7h2.5q1.75 0 3.1 1.8l4.8 6.4Q15.75 17 17.5 17H20"/>',
 }
 
 export const MoonIcon: IconDefinition = {
@@ -264,7 +264,7 @@ export const EyeOffIcon: IconDefinition = {
   name: "eyeOff",
   viewBox: "0 0 24 24",
   content:
-    '<path d="M3 3l18 18M10.5 6.2A9.8 9.8 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16.7 16.7 0 0 1-3.2 4.1M6.6 6.6C4 8.4 2.5 12 2.5 12s3.5 6.5 9.5 6.5c1.7 0 3.3-.4 4.7-1.1"/>',
+    '<path d="M3.5 3.5 20.5 20.5"/><path d="M9.8 5.8C10.5 5.6 11.2 5.5 12 5.5c6 0 9.5 6.5 9.5 6.5s-.7 1.3-2 2.7"/><path d="M4.5 9.3C3.2 10.7 2.5 12 2.5 12s3.5 6.5 9.5 6.5c.8 0 1.5-.1 2.2-.3"/>',
 }
 
 export const HelpIcon: IconDefinition = {
@@ -330,7 +330,7 @@ export const LibraryMusicIcon: IconDefinition = {
   name: "libraryMusic",
   viewBox: "0 0 24 24",
   content:
-    '<rect x="6" y="4" width="14.5" height="14.5" rx="2.5"/><path d="M3.5 8.5v10a2 2 0 0 0 2 2h10"/><circle cx="11.5" cy="14" r="1.7"/><path d="M13.2 14V8.5l3-.8"/>',
+    '<rect x="6.5" y="3.5" width="14" height="14" rx="2.5"/><path d="M3 8v10.5a2.5 2.5 0 0 0 2.5 2.5H16"/><circle cx="12" cy="12.8" r="1.9" fill="currentColor" stroke="none"/><path d="M13.3 12.8V7.4l2.7-.7"/>',
 }
 
 export const BarChartIcon: IconDefinition = {
@@ -430,7 +430,7 @@ export const QrCodeIcon: IconDefinition = {
   name: "qrCode",
   viewBox: "0 0 24 24",
   content:
-    '<rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><path d="M14 14h2.5v2.5H14zM19.5 14v2.5M14 19.5h5.5M17 17h2.5"/>',
+    '<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="12.8" y="12.8" width="2.6" height="2.6" rx="0.5" fill="currentColor" stroke="none"/><rect x="18.6" y="12.8" width="2.6" height="2.6" rx="0.5" fill="currentColor" stroke="none"/><rect x="12.8" y="18.6" width="2.6" height="2.6" rx="0.5" fill="currentColor" stroke="none"/><path d="M17.5 20H20v-2.5"/>',
 }
 
 export const AlbumIcon: IconDefinition = {
@@ -530,7 +530,7 @@ export const PinIcon: IconDefinition = {
   name: "pin",
   viewBox: "0 0 24 24",
   content:
-    '<path d="m14.5 4.5 5 5-2 2-1.5-.5-3.5 3.5.5 3-1.5 1.5-4-4-3.5 3.5M7 17l-1.5-1.5 3.5-3.5-4-4 1.5-1.5 3 .5 3.5-3.5-.5-1.5z"/>',
+    '<path d="M15 4 20 9l-2 .5-2.5 2.5-.5 4.5-7.5-7.5 4.5-.5L14.5 6z"/><path d="M11.25 12.75 4.5 19.5"/>',
 }
 
 export const PinFilledIcon: IconDefinition = {
@@ -538,7 +538,7 @@ export const PinFilledIcon: IconDefinition = {
   viewBox: "0 0 24 24",
   filled: true,
   content:
-    '<path d="M15.2 3.8a1 1 0 0 1 1.4 0l3.6 3.6a1 1 0 0 1-.4 1.7l-2.3.7-3.4 3.4.5 2.9a1 1 0 0 1-1.7.9l-3.7-3.7-4.5 4.5a1 1 0 0 1-1.4-1.4l4.5-4.5-3.7-3.7a1 1 0 0 1 .9-1.7l2.9.5 3.4-3.4.7-2.3a1 1 0 0 1 .4-.5z"/>',
+    '<path d="M14.7 3.6a1.1 1.1 0 0 1 1.56 0l4.14 4.14a1.1 1.1 0 0 1-.48 1.84l-2.12.62-2.8 2.8.56 3.5a1 1 0 0 1-1.7.85l-3.4-3.4-5.4 5.4a.75.75 0 0 1-1.06-1.06l5.4-5.4-3.4-3.4a1 1 0 0 1 .85-1.7l3.5.56 2.8-2.8.62-2.12a1.1 1.1 0 0 1 .23-.33z"/>',
 }
 
 export const CommentIcon: IconDefinition = {

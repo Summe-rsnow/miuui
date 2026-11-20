@@ -1,36 +1,44 @@
 <script setup lang="ts">
-import { computed } from "vue"
-import { regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
+import { computed, ref } from "vue"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { PillGroupOption, PillGroupProps } from "../types"
-import { useMiuSizeHint } from "../composables/useSizeHint"
+import { useControlSize } from "../composables/useControlSize"
+import { useMiuI18n } from "../composables/useMiu"
 import Pill from "./Pill.vue"
 
 const props = withDefaults(defineProps<PillGroupProps>(), {
   options: () => [],
   multiple: false,
   showAllOption: false,
-  allLabel: "全部",
   allValue: "all",
   radius: "full",
   variant: "filter",
+  clearable: false,
   disabled: false,
+  readonly: false,
 })
 
 const emit = defineEmits<{
-  "update:modelValue": [value: string | number | Array<string | number>]
-  change: [value: string | number | Array<string | number>]
+  "update:modelValue": [value: string | number | Array<string | number> | undefined]
+  change: [value: string | number | Array<string | number> | undefined]
+  clear: []
   "limit-reached": [max: number]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
 }>()
 
-const sizeHint = useMiuSizeHint()
-const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const resolvedSize = computed(() => resolveControlSize(size.value, ["sm", "md", "lg"], "md"))
+const { t } = useMiuI18n()
+const rootRef = ref<HTMLElement>()
 
-if (import.meta.env.DEV && resolvedSize.value.fallback) {
-  console.warn(
-    `[μui] PillGroup: unsupported size "${size.value}", fell back to "${resolvedSize.value.size}".`,
-  )
-}
+const { resolvedSize, resolvedIconSize } = useControlSize({
+  size: () => props.size,
+  supported: ["sm", "md", "lg"],
+  defaultSize: "md",
+  iconSize: () => props.iconSize,
+  componentName: "PillGroup",
+})
+
+const allLabelText = computed(() => props.allLabel ?? t("pillGroup.all"))
 
 const normalizedOptions = computed<PillGroupOption[]>(() =>
   props.options.map((entry) =>
@@ -50,15 +58,22 @@ function isActive(value: string | number): boolean {
 }
 
 function selectAll(): void {
-  if (props.disabled) return
+  if (props.disabled || props.readonly) return
   const next = props.multiple ? [] : props.allValue
   emit("update:modelValue", next)
   emit("change", next)
+  if (props.multiple) emit("clear")
 }
 
 function selectOption(option: PillGroupOption): void {
-  if (props.disabled || option.disabled) return
+  if (props.disabled || props.readonly || option.disabled) return
   if (!props.multiple) {
+    if (props.clearable && props.modelValue === option.value) {
+      emit("update:modelValue", undefined)
+      emit("change", undefined)
+      emit("clear")
+      return
+    }
     emit("update:modelValue", option.value)
     emit("change", option.value)
     return
@@ -78,23 +93,58 @@ function selectOption(option: PillGroupOption): void {
   emit("update:modelValue", current)
   emit("change", current)
 }
+
+function onFocus(event: FocusEvent): void {
+  const from = event.relatedTarget as Node | null
+  if (from && rootRef.value?.contains(from)) return
+  emit("focus", event)
+}
+
+function onBlur(event: FocusEvent): void {
+  const to = event.relatedTarget as Node | null
+  if (to && rootRef.value?.contains(to)) return
+  emit("blur", event)
+}
+
+function focus(): void {
+  rootRef.value?.querySelector<HTMLElement>(".miu-pill__main:not(:disabled)")?.focus()
+}
+
+function blur(): void {
+  const active = typeof document !== "undefined" ? document.activeElement : null
+  if (active instanceof HTMLElement && rootRef.value?.contains(active)) {
+    active.blur()
+  }
+}
+
+defineExpose({ focus, blur, rootRef })
 </script>
 
 <template>
   <div
+    ref="rootRef"
     role="group"
     :aria-label="ariaLabel"
-    :class="regionClass(props, 'root', 'miu-pill-group')"
+    :aria-readonly="readonly || undefined"
+    :class="
+      regionClass(props, 'root', 'miu-pill-group', {
+        'miu-pill-group--disabled': disabled,
+        'miu-pill-group--readonly': readonly,
+      })
+    "
     :style="regionStyle(props, 'root')"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
+    :data-miu-icon-size="resolvedIconSize.size"
     :data-disabled="disabled || undefined"
+    :data-readonly="readonly || undefined"
   >
     <Pill
       v-if="showAllOption"
-      :label="allLabel"
+      :label="allLabelText"
       :active="isAllActive"
       :size="resolvedSize.size as 'sm' | 'md' | 'lg'"
+      :icon-size="iconSize"
       :radius="radius"
       :material="material"
       :variant="variant"
@@ -102,6 +152,8 @@ function selectOption(option: PillGroupOption): void {
       :class-names="{ root: classNames?.item }"
       :styles="{ root: styles?.item }"
       @click="selectAll"
+      @focus="onFocus"
+      @blur="onBlur"
     />
     <Pill
       v-for="option in normalizedOptions"
@@ -111,6 +163,7 @@ function selectOption(option: PillGroupOption): void {
       :count="option.count"
       :active="isActive(option.value)"
       :size="resolvedSize.size as 'sm' | 'md' | 'lg'"
+      :icon-size="iconSize"
       :radius="radius"
       :material="material"
       :variant="variant"
@@ -118,6 +171,8 @@ function selectOption(option: PillGroupOption): void {
       :class-names="{ root: classNames?.item }"
       :styles="{ root: styles?.item }"
       @click="selectOption(option)"
+      @focus="onFocus"
+      @blur="onBlur"
     />
   </div>
 </template>

@@ -49,7 +49,7 @@ describe("component coverage smoke", () => {
   it("renders Badge variants and dot", () => {
     track(
       mount(Badge, {
-        props: { variant: "success", size: "lg", pill: true, dot: true },
+        props: { variant: "success", size: "lg", radius: "full", dot: true },
         slots: { default: "Ready" },
       }),
     )
@@ -122,8 +122,8 @@ describe("component coverage smoke", () => {
   it("renders FormRow interactions", async () => {
     const wrapper = track(
       mount(FormRow, {
-        props: { label: "Dense", dense: true, clickable: true, labelFor: "dense-input" },
-        slots: { default: '<input id="dense-input" />' },
+        props: { label: "Compact", density: "compact", clickable: true, labelFor: "compact-input" },
+        slots: { default: '<input id="compact-input" />' },
       }),
     )
     await wrapper.trigger("click")

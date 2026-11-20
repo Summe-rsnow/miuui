@@ -202,12 +202,9 @@ describe("v0.2.0 Muyu prep enhancements & FormRow deprecation drill", () => {
     expect(truncate.classes()).toContain("miu-truncate--expanded")
   })
 
-  it("warns in DEV for deprecated FormRow.dense while preserving compact density fallback", () => {
-    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined)
-    const row = track(mount(FormRow, { props: { label: "Compact", dense: true } }))
+  it("applies compact density on FormRow via density='compact'", () => {
+    const row = track(mount(FormRow, { props: { label: "Compact", density: "compact" } }))
     expect(row.attributes("data-density")).toBe("compact")
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining("`dense` is deprecated"))
-    warn.mockRestore()
   })
 
   it("loads icons via @xcmm1543/miuui-icons/dynamic, exposes @xcmm1543/miuui-icons/brand, and renders new media icons", async () => {

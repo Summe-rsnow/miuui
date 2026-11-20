@@ -1,29 +1,34 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
-import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { AvatarProps } from "../types"
+import { useControlSize } from "../composables/useControlSize"
+import { mergeStyle } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<AvatarProps>(), {
-  size: "md",
   radius: "full",
   shape: "circle",
   bordered: false,
   clickable: false,
+  disabled: false,
 })
 
-const emit = defineEmits<{ click: [event: MouseEvent] }>()
+const emit = defineEmits<{ click: [event: MouseEvent | KeyboardEvent] }>()
 
 const failed = ref(false)
-const semanticSize = computed(() => (typeof props.size === "number" ? "md" : props.size))
-const resolvedSize = computed(() => resolveControlSize(semanticSize.value, CONTROL_SIZES))
+const { resolvedSize } = useControlSize({
+  size: () => (typeof props.size === "number" ? "md" : props.size),
+  componentName: "Avatar",
+})
+const isInteractive = computed(() => props.clickable && !props.disabled)
 const resolvedRadius = computed(() => {
   if (props.shape === "circle") return "full"
   if (props.shape === "squircle") {
     if (props.radius !== "full") return props.radius
     if (typeof props.size === "number") return "lg"
-    if (props.size === "xs" || props.size === "sm") return "sm"
-    if (props.size === "md" || props.size === "lg") return "md"
+    if (resolvedSize.value.size === "xs" || resolvedSize.value.size === "sm") return "sm"
+    if (resolvedSize.value.size === "md" || resolvedSize.value.size === "lg") return "md"
     return "lg"
   }
   return props.radius === "full" ? "md" : props.radius
@@ -32,23 +37,14 @@ const rootStyle = computed(() => {
   const base = regionStyle(props, "root")
   if (typeof props.size !== "number") return base
   const dim = `${props.size}px`
-  if (typeof base === "string") {
-    return `${base};inline-size:${dim};block-size:${dim}`
-  }
-  return {
-    ...base,
+  return mergeStyle(base, {
     inlineSize: dim,
     blockSize: dim,
-  }
+  })
 })
 const fallbackIconSize = computed(() =>
   typeof props.size === "number" ? Math.round(props.size * 0.5) : undefined,
 )
-if (import.meta.env.DEV && resolvedSize.value.fallback) {
-  console.warn(
-    `[μui] Avatar: unsupported size "${props.size}", fell back to "${resolvedSize.value.size}".`,
-  )
-}
 const fallbackText = computed(() => {
   if (props.fallback) return props.fallback
   return Array.from(props.alt)[0] ?? ""
@@ -59,6 +55,22 @@ watch(
     failed.value = false
   },
 )
+
+function onClick(event: MouseEvent): void {
+  if (!isInteractive.value) {
+    if (props.disabled) event.preventDefault()
+    return
+  }
+  emit("click", event)
+}
+
+function onKeydown(event: KeyboardEvent): void {
+  if (!isInteractive.value) return
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault()
+    emit("click", event)
+  }
+}
 </script>
 
 <template>
@@ -73,6 +85,7 @@ watch(
         {
           'miu-avatar--bordered': bordered,
           'miu-avatar--clickable': clickable,
+          'miu-avatar--disabled': disabled,
         },
       )
     "
@@ -80,11 +93,13 @@ watch(
     :data-miu-size="typeof size === 'number' ? undefined : resolvedSize.size"
     :data-miu-radius="resolvedRadius"
     :data-shape="shape"
+    :data-disabled="disabled || undefined"
     :role="clickable ? 'button' : 'img'"
-    :tabindex="clickable ? 0 : undefined"
+    :tabindex="isInteractive ? 0 : undefined"
+    :aria-disabled="clickable && disabled ? 'true' : undefined"
     :aria-label="alt"
-    @click="clickable && emit('click', $event)"
-    @keydown.enter="clickable && ($event.currentTarget as HTMLElement | null)?.click()"
+    @click="onClick"
+    @keydown="onKeydown"
   >
     <img
       v-if="src && !failed"

@@ -3,21 +3,26 @@ import { computed } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { EmptyStateProps } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<EmptyStateProps>(), {
   iconSize: "xl",
+  radius: "default",
 })
 const { t } = useMiuI18n()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "EmptyState")
 const title = computed(() => props.title ?? t("emptyState.title"))
 </script>
 
 <template>
   <div
     :class="regionClass(props, 'root', 'miu-empty-state')"
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-icon-size="iconSize"
+    :data-miu-radius="radius"
     :data-density="density"
+    :data-material="materialName"
   >
     <div
       v-if="icon || $slots.icon"
@@ -25,7 +30,7 @@ const title = computed(() => props.title ?? t("emptyState.title"))
       :style="regionStyle(props, 'icon')"
     >
       <slot name="icon">
-        <Icon v-if="icon" :name="icon" />
+        <Icon v-if="icon" :name="icon" :size="iconSize" />
       </slot>
     </div>
     <p

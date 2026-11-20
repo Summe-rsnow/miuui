@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, useSlots } from "vue"
 import {
   DialogClose,
   DialogContent,
@@ -15,42 +15,78 @@ import type { DialogProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
+
 const props = withDefaults(defineProps<DialogProps>(), {
   open: undefined,
   size: "md",
   radius: "lg",
   hideHeader: false,
+  modal: true,
+  closeOnOverlayClick: true,
+  closeOnEsc: true,
+  showClose: true,
+  lockScroll: true,
 })
 
 const emit = defineEmits<{ "update:open": [value: boolean] }>()
 
+const slots = useSlots()
 const theme = useMiuTheme()
 const { t } = useMiuI18n()
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Dialog")
+
+const hasDescription = computed(
+  () => !props.hideHeader && Boolean(props.description || slots.description),
+)
+
 const contentStyle = computed(() => {
   const custom = mergeStyle(regionStyle(props, "content"), materialTokens.value)
   if (!props.width) return custom
   return [custom, { width: props.width }]
 })
+
+function onEscapeKeyDown(event: KeyboardEvent): void {
+  if (!props.closeOnEsc) event.preventDefault()
+}
+
+function onOutsideDismiss(event: Event): void {
+  if (!props.closeOnOverlayClick) event.preventDefault()
+}
 </script>
 
 <template>
-  <DialogRoot :open="open" @update:open="emit('update:open', $event)">
+  <DialogRoot
+    v-slot="{ open: isOpen }"
+    :open="open"
+    :modal="modal"
+    @update:open="emit('update:open', $event)"
+  >
     <DialogTrigger v-if="$slots.trigger" as-child>
       <slot name="trigger" />
     </DialogTrigger>
     <DialogPortal :to="theme.portalTarget.value">
       <DialogOverlay
-        :class="regionClass(props, 'overlay', 'miu-dialog__overlay')"
+        v-if="modal && lockScroll"
+        :class="regionClass(props, 'overlay', 'miu-overlay-backdrop', 'miu-dialog__overlay')"
+        :style="regionStyle(props, 'overlay')"
+      />
+      <div
+        v-else-if="modal && isOpen"
+        data-state="open"
+        :class="regionClass(props, 'overlay', 'miu-overlay-backdrop', 'miu-dialog__overlay')"
         :style="regionStyle(props, 'overlay')"
       />
       <DialogContent
+        v-bind="hasDescription ? undefined : { 'aria-describedby': undefined }"
         :class="regionClass(props, 'content', 'miu-dialog__content')"
         :style="contentStyle"
         :data-size="size"
         :data-miu-radius="radius"
         :data-material="materialName"
         :aria-label="ariaLabel"
+        @escape-key-down="onEscapeKeyDown"
+        @pointer-down-outside="onOutsideDismiss"
+        @interact-outside="onOutsideDismiss"
       >
         <DialogTitle v-if="hideHeader" class="miu-sr-only">
           {{ title ?? ariaLabel ?? t("dialog.title") }}
@@ -68,6 +104,7 @@ const contentStyle = computed(() => {
               <slot name="title">{{ title ?? t("dialog.title") }}</slot>
             </DialogTitle>
             <DialogClose
+              v-if="showClose"
               :class="regionClass(props, 'close', 'miu-dialog__close')"
               :style="regionStyle(props, 'close')"
               :aria-label="closeLabel ?? t('dialog.close')"

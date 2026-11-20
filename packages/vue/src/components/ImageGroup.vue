@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ImageGroupProps, ImagePreviewItem } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
@@ -12,20 +12,32 @@ const props = withDefaults(defineProps<ImageGroupProps>(), {
   radius: "md",
 })
 
+const emit = defineEmits<{ error: [index: number, event: Event] }>()
+
 const { t } = useMiuI18n()
 const previewOpen = ref(false)
 const previewIndex = ref(0)
+const failedIndices = ref(new Set<number>())
+
+watch(
+  () => props.images,
+  () => {
+    failedIndices.value = new Set()
+  },
+)
 
 const normalizedImages = computed<ImagePreviewItem[]>(() =>
   props.images
     .map((entry, idx) => {
       if (typeof entry === "string") {
-        return { src: entry, thumb: entry, alt: `${idx + 1}` }
+        const src = entry.trim()
+        return { src, thumb: src, alt: `${idx + 1}` }
       }
-      const src = entry.src ?? entry.thumb ?? ""
+      const src = (entry.src ?? entry.thumb ?? "").trim()
+      const thumb = (entry.thumb ?? src).trim()
       return {
         src,
-        thumb: entry.thumb ?? src,
+        thumb: thumb || src,
         alt: entry.alt ?? `${idx + 1}`,
       }
     })
@@ -45,6 +57,13 @@ function openPreview(index: number): void {
   previewIndex.value = index
   previewOpen.value = true
 }
+
+function onImageError(index: number, event: Event): void {
+  const next = new Set(failedIndices.value)
+  next.add(index)
+  failedIndices.value = next
+  emit("error", index, event)
+}
 </script>
 
 <template>
@@ -58,21 +77,30 @@ function openPreview(index: number): void {
       v-for="(item, idx) in displayList"
       :key="`${item.src}-${idx}`"
       type="button"
-      :class="regionClass(props, 'item', 'miu-image-group__item')"
+      :class="
+        regionClass(props, 'item', 'miu-image-group__item', {
+          'miu-image-group__item--error': failedIndices.has(idx),
+        })
+      "
       :style="regionStyle(props, 'item')"
+      :data-error="failedIndices.has(idx) || undefined"
       :aria-label="item.alt"
       @click.stop="openPreview(idx)"
     >
       <Image
         :src="item.thumb ?? item.src"
+        :fallback-src="item.thumb && item.thumb !== item.src ? item.src : undefined"
         :alt="item.alt"
-        cover
+        fit="cover"
+        width="100%"
+        height="100%"
         :radius="radius"
         :class-names="{ root: 'miu-image-group__image', img: regionClass(props, 'img') }"
         :styles="{ img: regionStyle(props, 'img') }"
+        @error="onImageError(idx, $event)"
       />
       <span
-        v-if="idx === maxDisplay - 1 && remainingCount > 0"
+        v-if="idx === displayList.length - 1 && remainingCount > 0"
         :class="regionClass(props, 'more', 'miu-image-group__more')"
         :style="regionStyle(props, 'more')"
         :title="t('imagePreview.moreImages', { count: remainingCount })"

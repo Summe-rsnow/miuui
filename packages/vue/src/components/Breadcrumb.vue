@@ -6,6 +6,7 @@ import { useMiuI18n } from "../composables/useMiu"
 const props = withDefaults(defineProps<BreadcrumbProps>(), {
   items: () => [],
   size: "md",
+  radius: "sm",
 })
 
 const emit = defineEmits<{ select: [item: BreadcrumbItem, event: MouseEvent] }>()
@@ -15,9 +16,11 @@ const { t } = useMiuI18n()
 
 <template>
   <nav
+    v-if="items.length > 0"
     :class="regionClass(props, 'root', 'miu-breadcrumb')"
     :style="regionStyle(props, 'root')"
     :data-miu-size="size"
+    :data-miu-radius="radius"
     :aria-label="ariaLabel ?? t('breadcrumb.label')"
   >
     <ol

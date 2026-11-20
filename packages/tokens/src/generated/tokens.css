@@ -185,18 +185,15 @@
     --miu-motion-loop-duration: 1200ms;
     --miu-focus-ring-width: 2px;
     --miu-focus-ring-offset: 2px;
-    --miu-z-dropdown: 1000;
+    --miu-opacity-disabled: 0.5;
+    --miu-z-dropdown: 1060;
     --miu-z-sticky: 1020;
     --miu-z-modal-backdrop: 1040;
     --miu-z-modal: 1050;
     --miu-z-popover: 1060;
     --miu-z-tooltip: 1070;
+    --miu-z-loading: 1075;
     --miu-z-toast: 1080;
-    --miu-shadow-1: 0px 1px 2px 0px oklch(0 0 0 / 0.06);
-    --miu-shadow-2: 0px 2px 8px 0px oklch(0 0 0 / 0.08);
-    --miu-shadow-3: 0px 8px 24px 0px oklch(0 0 0 / 0.1);
-    --miu-shadow-4: 0px 16px 40px 0px oklch(0 0 0 / 0.14);
-    --miu-shadow-5: 0px 24px 64px 0px oklch(0 0 0 / 0.18);
     --miu-radius-default: var(--miu-radius-md);
   }
 
@@ -212,7 +209,7 @@
     --miu-color-text-secondary: var(--miu-gray-700);
     --miu-color-text-muted: var(--miu-gray-700);
     --miu-color-text-inverse: var(--miu-white);
-    --miu-color-text-on-primary: #FFFFFF;
+    --miu-color-text-on-primary: var(--miu-white);
     --miu-color-border-subtle: oklch(0.2 0.015 305 / 0.09);
     --miu-color-border-default: oklch(0.2 0.015 305 / 0.15);
     --miu-color-border-strong: var(--miu-gray-600);
@@ -243,9 +240,9 @@
     --miu-color-selection: var(--miu-violet-200);
     --miu-color-overlay: oklch(0.15 0.02 305 / 0.45);
     --miu-color-surface-solid-bg: var(--miu-white);
-    --miu-color-surface-mica-bg: oklch(0.99 0.004 305 / 0.84);
-    --miu-color-surface-glass-bg: oklch(0.99 0.004 305 / 0.62);
-    --miu-color-surface-glass-border: oklch(0.2 0.015 305 / 0.12);
+    --miu-color-surface-mica-bg: oklch(0.985 0.008 305 / 0.78);
+    --miu-color-surface-glass-bg: oklch(0.99 0.006 305 / 0.44);
+    --miu-color-surface-glass-border: oklch(0.2 0.015 305 / 0.14);
     --miu-color-surface-glass-highlight: oklch(1 0 0 / 0.85);
     --miu-glass-filter-micro: blur(8px) saturate(160%);
     --miu-glass-filter-thin: blur(18px) saturate(140%);
@@ -253,10 +250,10 @@
     --miu-glass-filter-thick: blur(40px) saturate(190%);
     --miu-glass-surface-ultra-thin: oklch(1 0 305 / 0.56);
     --miu-glass-surface-thin: oklch(1 0 305 / 0.72);
-    --miu-glass-surface-regular: oklch(0.99 0.004 305 / 0.62);
+    --miu-glass-surface-regular: oklch(0.99 0.006 305 / 0.44);
     --miu-glass-surface-thick: oklch(0.99 0.004 305 / 0.82);
     --miu-glass-surface-elevated: oklch(1 0 305 / 0.92);
-    --miu-glass-hairline: oklch(0.2 0.015 305 / 0.12);
+    --miu-glass-hairline: oklch(0.2 0.015 305 / 0.14);
     --miu-glass-specular: inset 0 1px 0 oklch(1 0 0 / 0.85);
     --miu-glass-sheen: linear-gradient(180deg, oklch(1 0 0 / 0.65) 0%, oklch(1 0 0 / 0.2) 45%, oklch(1 0 0 / 0) 100%);
     --miu-glass-well-bg: oklch(0.2 0.015 305 / 0.06);
@@ -285,7 +282,7 @@
     --miu-color-text-secondary: var(--miu-gray-300);
     --miu-color-text-muted: var(--miu-gray-400);
     --miu-color-text-inverse: var(--miu-gray-950);
-    --miu-color-text-on-primary: #0B0B0F;
+    --miu-color-text-on-primary: var(--miu-ink);
     --miu-color-border-subtle: oklch(1 0 0 / 0.08);
     --miu-color-border-default: oklch(1 0 0 / 0.15);
     --miu-color-border-strong: var(--miu-gray-600);

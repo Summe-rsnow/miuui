@@ -5,6 +5,7 @@ import { useMiuI18n } from "../composables/useMiu"
 
 const props = withDefaults(defineProps<TocProps>(), {
   items: () => [],
+  radius: "sm",
 })
 
 const emit = defineEmits<{ select: [item: TocItem, event: MouseEvent] }>()
@@ -14,8 +15,10 @@ const { t } = useMiuI18n()
 
 <template>
   <nav
+    v-if="items.length > 0"
     :class="regionClass(props, 'root', 'miu-toc')"
     :style="regionStyle(props, 'root')"
+    :data-miu-radius="radius"
     :data-density="density"
     :aria-label="ariaLabel ?? t('toc.title')"
   >

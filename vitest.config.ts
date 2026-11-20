@@ -20,7 +20,6 @@ export default defineConfig({
       ),
       "@xcmm1543/miuui-motions": fileURLToPath(new URL("./packages/motions/src", import.meta.url)),
       "@xcmm1543/miuui-vue": fileURLToPath(new URL("./packages/vue/src", import.meta.url)),
-      "@xcmm1543/miuui-codemod": fileURLToPath(new URL("./packages/codemod/src", import.meta.url)),
     },
   },
   test: {
@@ -36,7 +35,6 @@ export default defineConfig({
         "packages/tokens/src/**/*.ts",
         "packages/vue/src/**/*.ts",
         "packages/vue/src/**/*.vue",
-        "packages/codemod/src/**/*.ts",
       ],
       exclude: ["**/*.test.ts", "**/generated/**", "**/index.ts"],
       thresholds: {

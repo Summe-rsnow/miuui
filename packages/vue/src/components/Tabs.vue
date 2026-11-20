@@ -1,59 +1,67 @@
 <script setup lang="ts">
-import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-  type ComponentPublicInstance,
-} from "vue"
+import { computed, nextTick, ref, watch, type ComponentPublicInstance } from "vue"
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from "reka-ui"
-import {
-  CONTROL_SIZES,
-  regionClass,
-  regionStyle,
-  resolveControlSize,
-  resolveIconSize,
-} from "@xcmm1543/miuui-core"
-import type { TabsProps } from "../types"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
+import type { TabsItem, TabsProps } from "../types"
 import Icon from "./Icon.vue"
 import Skeleton from "./Skeleton.vue"
-import { useMiuSizeHint } from "../composables/useSizeHint"
+import { useControlSize } from "../composables/useControlSize"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
+import { useSlidingIndicator } from "../composables/useSlidingIndicator"
 
 const props = withDefaults(defineProps<TabsProps>(), {
   variant: "underline",
   radius: "default",
   align: "start",
   loading: false,
+  disabled: false,
 })
 
 const emit = defineEmits<{
   "update:modelValue": [value: string]
   change: [value: string]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
 }>()
 
-const sizeHint = useMiuSizeHint()
-const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
-const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
+const { resolvedSize, resolvedIconSize } = useControlSize({
+  size: () => props.size,
+  iconSize: () => props.iconSize,
+  componentName: "Tabs",
+})
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Tabs")
 const useSurfaceMaterial = computed(
   () => props.variant === "segmented" || props.material !== undefined,
 )
 
-if (import.meta.env.DEV && resolvedSize.value.fallback) {
-  console.warn(
-    `[μui] Tabs: unsupported size "${size.value}", fell back to "${resolvedSize.value.size}".`,
-  )
-}
-
 const listRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
-const itemElements = new Map<string, HTMLElement>()
-const indicatorMetrics = ref<{ x: number; y: number; width: number; height: number } | null>(null)
-const indicatorAnimated = ref(false)
-let resizeObserver: ResizeObserver | null = null
+const lastValue = ref<string | undefined>(props.modelValue)
+
+watch(
+  () => props.modelValue,
+  (next) => {
+    lastValue.value = next
+  },
+)
+
+const { setItemRef, indicatorMetrics, indicatorAnimated, indicatorStyle, measure } =
+  useSlidingIndicator({
+    containerRef: listRef,
+    activeKey: () => props.modelValue,
+    enabled: () => !props.loading,
+    axis: () =>
+      props.variant === "pills" || props.variant === "segmented" ? "both" : "horizontal",
+    fallbackSelector: '.miu-tabs__trigger[data-state="active"]',
+    watchSources: () => [
+      props.modelValue,
+      props.items,
+      props.variant,
+      props.size,
+      props.align,
+      props.loading,
+    ],
+    baseStyle: () => regionStyle(props, "indicator"),
+  })
 
 function unwrapElement(node: unknown): HTMLElement | null {
   if (!node) return null
@@ -62,82 +70,53 @@ function unwrapElement(node: unknown): HTMLElement | null {
   return maybeComp.$el instanceof HTMLElement ? maybeComp.$el : null
 }
 
-function setItemRef(value: string, node: unknown): void {
-  const el = unwrapElement(node)
-  if (el) itemElements.set(value, el)
-  else itemElements.delete(value)
-}
-
-function measureIndicator(): void {
-  const listEl = unwrapElement(listRef.value)
-  const activeEl =
-    (props.modelValue ? itemElements.get(props.modelValue) : null) ??
-    listEl?.querySelector<HTMLElement>('.miu-tabs__trigger[data-state="active"]') ??
-    null
-  if (!activeEl || activeEl.offsetWidth <= 0 || activeEl.offsetHeight <= 0) {
-    indicatorMetrics.value = null
-    return
-  }
-  indicatorMetrics.value = {
-    x: activeEl.offsetLeft,
-    y: activeEl.offsetTop,
-    width: activeEl.offsetWidth,
-    height: activeEl.offsetHeight,
-  }
-  if (!indicatorAnimated.value && typeof requestAnimationFrame === "function") {
-    requestAnimationFrame(() => {
-      indicatorAnimated.value = true
-    })
-  }
-}
-
-const indicatorStyle = computed(() => {
-  const base = regionStyle(props, "indicator")
-  const m = indicatorMetrics.value
-  if (!m) return base
-  const geom: Record<string, string> =
-    props.variant === "pills" || props.variant === "segmented"
-      ? {
-          width: `${m.width}px`,
-          height: `${m.height}px`,
-          transform: `translate3d(${m.x}px, ${m.y}px, 0)`,
-        }
-      : {
-          width: `${m.width}px`,
-          transform: `translate3d(${m.x}px, 0, 0)`,
-        }
-  return mergeStyle(base, geom)
-})
-
-onMounted(async () => {
-  await nextTick()
-  measureIndicator()
-  const listEl = unwrapElement(listRef.value)
-  if (listEl && typeof ResizeObserver !== "undefined") {
-    resizeObserver = new ResizeObserver(() => measureIndicator())
-    resizeObserver.observe(listEl)
-  }
-})
-
-onBeforeUnmount(() => {
-  resizeObserver?.disconnect()
-  resizeObserver = null
-})
-
-watch(
-  () => [props.modelValue, props.items, props.variant, props.size, props.align] as const,
-  async () => {
-    await nextTick()
-    measureIndicator()
-  },
-  { flush: "post", deep: true },
-)
-
 function onUpdate(value: string): void {
+  if (props.disabled || props.loading) return
+  if (lastValue.value === value) return
+  lastValue.value = value
   emit("update:modelValue", value)
   emit("change", value)
-  void nextTick().then(() => measureIndicator())
+  void nextTick().then(() => measure())
 }
+
+function onTriggerClick(item: TabsItem): void {
+  if (props.disabled || props.loading || item.disabled) return
+  onUpdate(item.value)
+}
+
+function onFocus(event: FocusEvent): void {
+  const listEl = unwrapElement(listRef.value)
+  const from = event.relatedTarget as Node | null
+  if (from && listEl?.contains(from)) return
+  emit("focus", event)
+}
+
+function onBlur(event: FocusEvent): void {
+  const listEl = unwrapElement(listRef.value)
+  const to = event.relatedTarget as Node | null
+  if (to && listEl?.contains(to)) return
+  emit("blur", event)
+}
+
+function focus(): void {
+  const listEl = unwrapElement(listRef.value)
+  if (!listEl) return
+  const target =
+    listEl.querySelector<HTMLElement>('.miu-tabs__trigger[data-state="active"]:not(:disabled)') ??
+    listEl.querySelector<HTMLElement>(".miu-tabs__trigger:not(:disabled)")
+  target?.focus()
+}
+
+function blur(): void {
+  const listEl = unwrapElement(listRef.value)
+  if (!listEl) return
+  const active = typeof document !== "undefined" ? document.activeElement : null
+  if (active instanceof HTMLElement && listEl.contains(active)) {
+    active.blur()
+  }
+}
+
+defineExpose({ focus, blur, listRef })
 </script>
 
 <template>
@@ -151,7 +130,10 @@ function onUpdate(value: string): void {
     :data-align="align"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
+    :data-miu-icon-size="resolvedIconSize.size"
     :data-material="useSurfaceMaterial ? materialName : undefined"
+    :data-disabled="disabled || undefined"
+    aria-busy="true"
   >
     <div :class="regionClass(props, 'list', 'miu-tabs__list')" :style="regionStyle(props, 'list')">
       <Skeleton
@@ -161,13 +143,7 @@ function onUpdate(value: string): void {
         :key="item.value ?? index"
         variant="rect"
         :class="regionClass(props, 'trigger', 'miu-tabs__skeleton-item')"
-        :style="{
-          '--miu-tabs-skeleton-chars': String(
-            'label' in item && item.label
-              ? item.label.length + ('icon' in item && item.icon ? 2 : 0)
-              : 4,
-          ),
-        }"
+        :style="regionStyle(props, 'trigger')"
       />
     </div>
   </div>
@@ -177,6 +153,7 @@ function onUpdate(value: string): void {
     :class="
       regionClass(props, 'root', 'miu-tabs', `miu-tabs--${resolvedSize.size}`, {
         'miu-tabs--has-indicator': Boolean(indicatorMetrics),
+        'miu-tabs--disabled': disabled,
       })
     "
     :style="mergeStyle(regionStyle(props, 'root'), useSurfaceMaterial ? materialTokens : undefined)"
@@ -186,6 +163,7 @@ function onUpdate(value: string): void {
     :data-miu-radius="radius"
     :data-miu-icon-size="resolvedIconSize.size"
     :data-material="useSurfaceMaterial ? materialName : undefined"
+    :data-disabled="disabled || undefined"
     @update:model-value="onUpdate"
   >
     <TabsList
@@ -209,10 +187,12 @@ function onUpdate(value: string): void {
         :key="item.value"
         :ref="(el) => setItemRef(item.value, el)"
         :value="item.value"
-        :disabled="item.disabled"
+        :disabled="disabled || item.disabled"
         :class="regionClass(props, 'trigger', 'miu-tabs__trigger')"
         :style="regionStyle(props, 'trigger')"
-        @click="!item.disabled && modelValue !== item.value && onUpdate(item.value)"
+        @click="onTriggerClick(item)"
+        @focus="onFocus"
+        @blur="onBlur"
       >
         <slot name="trigger" :item="item" :active="item.value === modelValue">
           <Icon v-if="item.icon" :name="item.icon" />

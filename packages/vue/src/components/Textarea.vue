@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue"
-import { CONTROL_SIZES, regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { TextareaProps } from "../types"
-import { useMiuFormField } from "../composables/useFormField"
-import { useMiuSizeHint } from "../composables/useSizeHint"
+import { useControlSize } from "../composables/useControlSize"
+import { useFormFieldBinding } from "../composables/useFormField"
+import { useMiuI18n } from "../composables/useMiu"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
+import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<TextareaProps>(), {
   rows: 3,
@@ -12,35 +14,59 @@ const props = withDefaults(defineProps<TextareaProps>(), {
   disabled: false,
   readonly: false,
   invalid: false,
+  clearable: false,
   showCount: false,
   autoResize: false,
 })
 
-const emit = defineEmits<{ "update:modelValue": [value: string] }>()
+const emit = defineEmits<{
+  "update:modelValue": [value: string]
+  change: [value: string]
+  clear: []
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+}>()
 
-const autoId = useId()
-const formField = useMiuFormField()
+const { t } = useMiuI18n()
+const rootRef = ref<HTMLElement>()
 const textareaRef = ref<HTMLTextAreaElement>()
 
-const sizeHint = useMiuSizeHint()
-const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
+const { resolvedSize, resolvedIconSize } = useControlSize({
+  size: () => props.size,
+  iconSize: () => props.iconSize,
+  componentName: "Textarea",
+})
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Textarea")
-const textareaId = computed(() => props.id ?? formField?.id.value ?? autoId)
-const describedBy = computed(() => formField?.describedBy.value)
-const invalid = computed(() => props.invalid || formField?.invalid.value || false)
-const required = computed(() => formField?.required.value || false)
-const disabled = computed(() => props.disabled || formField?.disabled.value || false)
+const field = useFormFieldBinding({
+  id: () => props.id,
+  disabled: () => props.disabled,
+  readonly: () => props.readonly,
+  invalid: () => props.invalid,
+})
 
-if (import.meta.env.DEV && resolvedSize.value.fallback) {
-  console.warn(
-    `[μui] Textarea: unsupported size "${size.value}", fell back to "${resolvedSize.value.size}".`,
-  )
+function emitValue(value: string): void {
+  emit("update:modelValue", value)
+  emit("change", value)
 }
+
 const model = computed({
   get: () => props.modelValue ?? "",
-  set: (value: string) => emit("update:modelValue", value),
+  set: (value: string) => emitValue(value),
 })
+
+const canShowClear = computed(
+  () => props.clearable && model.value.length > 0 && !field.disabled.value && !field.readonly.value,
+)
+const canManualResize = computed(
+  () => !props.autoResize && !field.disabled.value && !field.readonly.value,
+)
+
+function clear(): void {
+  if (field.disabled.value || field.readonly.value) return
+  emitValue("")
+  emit("clear")
+  focus()
+}
 
 function resize(): void {
   const element = textareaRef.value
@@ -79,7 +105,7 @@ function stopManualResize(): void {
 
 function startManualResize(event: MouseEvent): void {
   const element = textareaRef.value
-  if (!element || props.autoResize || disabled.value) return
+  if (!element || !canManualResize.value) return
   event.preventDefault()
   dragging = true
   dragStartY = event.clientY
@@ -97,62 +123,101 @@ onMounted(resize)
 onBeforeUnmount(stopManualResize)
 watch(model, () => nextTick(resize))
 
+function onFocus(event: FocusEvent): void {
+  const from = event.relatedTarget as Node | null
+  if (from && rootRef.value?.contains(from)) return
+  emit("focus", event)
+}
+
+function onBlur(event: FocusEvent): void {
+  const to = event.relatedTarget as Node | null
+  if (to && rootRef.value?.contains(to)) return
+  emit("blur", event)
+}
+
 function focus(): void {
   textareaRef.value?.focus()
 }
 
-defineExpose({ focus, textareaRef })
+function blur(): void {
+  textareaRef.value?.blur()
+}
+
+defineExpose({ focus, blur, textareaRef })
 </script>
 
 <template>
   <div
+    ref="rootRef"
     :class="
       regionClass(props, 'root', 'miu-textarea', `miu-textarea--${resolvedSize.size}`, {
-        'miu-textarea--disabled': disabled,
-        'miu-textarea--invalid': invalid,
+        'miu-textarea--disabled': field.disabled.value,
+        'miu-textarea--readonly': field.readonly.value,
+        'miu-textarea--invalid': field.invalid.value,
+        'miu-textarea--clearable': canShowClear,
       })
     "
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
+    :data-miu-icon-size="resolvedIconSize.size"
     :data-material="materialName"
-    :data-invalid="invalid || undefined"
-    :data-disabled="disabled || undefined"
+    :data-invalid="field.invalid.value || undefined"
+    :data-disabled="field.disabled.value || undefined"
+    :data-readonly="field.readonly.value || undefined"
   >
     <textarea
       ref="textareaRef"
       v-model="model"
-      :id="textareaId"
+      :id="field.id.value"
       :name="name"
       :rows="rows"
       :placeholder="placeholder"
-      :disabled="disabled"
-      :readonly="readonly"
+      :disabled="field.disabled.value"
+      :readonly="field.readonly.value"
       :maxlength="maxlength"
       :autocomplete="autocomplete"
       :aria-label="ariaLabel"
-      :aria-describedby="describedBy"
-      :aria-invalid="invalid || undefined"
-      :aria-required="required || undefined"
+      :aria-describedby="field.describedBy.value"
+      :aria-invalid="field.invalid.value || undefined"
+      :aria-required="field.required.value || undefined"
+      :aria-readonly="field.readonly.value || undefined"
       :class="regionClass(props, 'textarea', 'miu-textarea__control')"
       :style="regionStyle(props, 'textarea')"
+      @focus="onFocus"
+      @blur="onBlur"
     />
+    <button
+      v-if="canShowClear"
+      type="button"
+      :class="regionClass(props, 'clear', 'miu-textarea__clear')"
+      :style="regionStyle(props, 'clear')"
+      :aria-label="t('input.clear')"
+      @click="clear"
+      @focus="onFocus"
+      @blur="onBlur"
+    >
+      <Icon name="close" :size="resolvedIconSize.size" />
+    </button>
     <div
-      v-if="$slots.footer || (showCount && maxlength)"
-      class="miu-textarea__footer"
+      v-if="$slots.footer || showCount"
       :class="[
-        regionClass(props, 'footer'),
-        { 'miu-textarea__footer--resizable': !autoResize && !disabled },
+        regionClass(props, 'footer', 'miu-textarea__footer'),
+        { 'miu-textarea__footer--resizable': canManualResize },
       ]"
       :style="regionStyle(props, 'footer')"
     >
       <slot name="footer" />
-      <span v-if="showCount && maxlength" class="miu-textarea__count">
-        {{ model.length }} / {{ maxlength }}
+      <span
+        v-if="showCount"
+        :class="regionClass(props, 'count', 'miu-textarea__count')"
+        :style="regionStyle(props, 'count')"
+      >
+        {{ maxlength ? `${model.length} / ${maxlength}` : model.length }}
       </span>
     </div>
     <span
-      v-if="!autoResize && !disabled"
+      v-if="canManualResize"
       class="miu-textarea__resizer"
       aria-hidden="true"
       @pointerdown="startManualResize"

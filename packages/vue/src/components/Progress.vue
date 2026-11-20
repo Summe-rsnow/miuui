@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { ProgressIndicator, ProgressRoot } from "reka-ui"
-import { regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ProgressProps } from "../types"
-import { useMiuSizeHint } from "../composables/useSizeHint"
+import { useControlSize } from "../composables/useControlSize"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 
 const props = withDefaults(defineProps<ProgressProps>(), {
   modelValue: 0,
@@ -14,15 +15,13 @@ const props = withDefaults(defineProps<ProgressProps>(), {
   showValue: false,
 })
 
-const sizeHint = useMiuSizeHint()
-const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const resolvedSize = computed(() => resolveControlSize(size.value, ["sm", "md", "lg"], "md"))
-
-if (import.meta.env.DEV && resolvedSize.value.fallback) {
-  console.warn(
-    `[μui] Progress: unsupported size "${size.value}", fell back to "${resolvedSize.value.size}".`,
-  )
-}
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Progress")
+const { resolvedSize } = useControlSize({
+  size: () => props.size,
+  supported: ["sm", "md", "lg"],
+  defaultSize: "md",
+  componentName: "Progress",
+})
 const safeMax = computed(() => (props.max > 0 ? props.max : 100))
 const clampedValue = computed(() => Math.min(safeMax.value, Math.max(0, props.modelValue ?? 0)))
 const percentage = computed(() => {
@@ -33,9 +32,9 @@ const indicatorStyle = computed(() => {
   const base = regionStyle(props, "indicator")
   if (props.indeterminate) return base
   const offset = 100 - percentage.value
-  const transform = { transform: offset <= 0 ? "translateX(0%)" : `translateX(-${offset}%)` }
-  if (typeof base === "string") return [transform, base]
-  return base ? { ...base, ...transform } : transform
+  return mergeStyle(base, {
+    transform: offset <= 0 ? "translateX(0%)" : `translateX(-${offset}%)`,
+  })
 })
 </script>
 
@@ -50,9 +49,10 @@ const indicatorStyle = computed(() => {
         `miu-progress--${variant}`,
       )
     "
-    :style="regionStyle(props, 'root')"
+    :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
+    :data-material="materialName"
     :data-variant="variant"
   >
     <ProgressRoot

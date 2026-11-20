@@ -11,6 +11,9 @@ const props = withDefaults(defineProps<ConfirmDialogProps>(), {
   radius: "lg",
   danger: false,
   loading: false,
+  closeOnOverlayClick: true,
+  closeOnEsc: true,
+  showClose: true,
 })
 
 const emit = defineEmits<{
@@ -24,8 +27,20 @@ const confirmLabel = computed(() => props.confirmLabel ?? t("common.confirm"))
 const cancelLabel = computed(() => props.cancelLabel ?? t("common.cancel"))
 
 function cancel(): void {
+  if (props.loading) return
   emit("cancel")
   emit("update:open", false)
+}
+
+function confirmAction(): void {
+  if (props.loading) return
+  emit("confirm")
+}
+
+function onDialogUpdateOpen(next: boolean): void {
+  if (!next && props.loading) return
+  if (!next) emit("cancel")
+  emit("update:open", next)
 }
 </script>
 
@@ -37,9 +52,13 @@ function cancel(): void {
     :size="size"
     :radius="radius"
     :material="material"
+    :close-on-overlay-click="!loading && closeOnOverlayClick"
+    :close-on-esc="!loading && closeOnEsc"
+    :show-close="!loading && showClose"
+    :close-label="closeLabel"
     :class-names="classNames"
     :styles="styles"
-    @update:open="emit('update:open', $event)"
+    @update:open="onDialogUpdateOpen"
   >
     <template v-if="$slots.default" #default><slot /></template>
     <template #footer>
@@ -57,7 +76,7 @@ function cancel(): void {
         :loading="loading"
         :class-names="{ root: classNames?.confirm }"
         :styles="{ root: styles?.confirm }"
-        @click="emit('confirm')"
+        @click="confirmAction"
       >
         {{ confirmLabel }}
       </Button>

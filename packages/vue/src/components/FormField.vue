@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, provide, useId } from "vue"
+import { computed, provide, useId, useSlots } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { FormFieldProps } from "../types"
 import { MIU_FORM_FIELD_KEY } from "../composables/useFormField"
@@ -8,22 +8,33 @@ import { MIU_SIZE_HINT_KEY } from "../composables/useSizeHint"
 const props = withDefaults(defineProps<FormFieldProps>(), {
   required: false,
   disabled: false,
+  readonly: false,
+  invalid: false,
   hideLabel: false,
 })
 
+const slots = useSlots()
 const autoId = useId()
 const fieldId = computed(() => props.id ?? autoId)
+const labelId = computed(() => `${fieldId.value}-label`)
 const descriptionId = computed(() => `${fieldId.value}-description`)
 const hintId = computed(() => `${fieldId.value}-hint`)
 const errorId = computed(() => `${fieldId.value}-error`)
 
-const invalid = computed(() => Boolean(props.error))
+const hasLabel = computed(() => Boolean(props.label || slots.label))
+const hasDescription = computed(() => Boolean(props.description || slots.description))
+const hasError = computed(() => Boolean(props.error || slots.error))
+const hasHint = computed(() => Boolean(props.hint || slots.hint))
+
+const invalid = computed(() => hasError.value || props.invalid)
+const readonly = computed(() => props.readonly)
+const exposedLabelId = computed(() => (hasLabel.value ? labelId.value : undefined))
 const describedBy = computed(() => {
-  if (props.error) return errorId.value
-  if (props.description && props.hint) return `${descriptionId.value} ${hintId.value}`
-  if (props.description) return descriptionId.value
-  if (props.hint) return hintId.value
-  return undefined
+  const ids: string[] = []
+  if (hasDescription.value) ids.push(descriptionId.value)
+  if (hasError.value) ids.push(errorId.value)
+  else if (hasHint.value) ids.push(hintId.value)
+  return ids.length > 0 ? ids.join(" ") : undefined
 })
 
 provide(
@@ -32,10 +43,12 @@ provide(
 )
 provide(MIU_FORM_FIELD_KEY, {
   id: fieldId,
+  labelId: exposedLabelId,
   describedBy,
   invalid,
   required: computed(() => props.required),
   disabled: computed(() => props.disabled),
+  readonly,
 })
 </script>
 
@@ -45,15 +58,18 @@ provide(MIU_FORM_FIELD_KEY, {
       regionClass(props, 'root', 'miu-form-field', {
         'miu-form-field--invalid': invalid,
         'miu-form-field--disabled': disabled,
+        'miu-form-field--readonly': readonly,
       })
     "
     :style="regionStyle(props, 'root')"
     :data-density="density"
     :data-invalid="invalid || undefined"
     :data-disabled="disabled || undefined"
+    :data-readonly="readonly || undefined"
   >
     <label
-      v-if="label"
+      v-if="hasLabel"
+      :id="labelId"
       :for="fieldId"
       :class="
         regionClass(props, 'label', 'miu-form-field__label', {
@@ -62,16 +78,16 @@ provide(MIU_FORM_FIELD_KEY, {
       "
       :style="regionStyle(props, 'label')"
     >
-      {{ label }}
+      <slot name="label">{{ label }}</slot>
       <span v-if="required" class="miu-form-field__required" aria-hidden="true">*</span>
     </label>
     <p
-      v-if="description"
+      v-if="hasDescription"
       :id="descriptionId"
       :class="regionClass(props, 'description', 'miu-form-field__description')"
       :style="regionStyle(props, 'description')"
     >
-      {{ description }}
+      <slot name="description">{{ description }}</slot>
     </p>
     <div
       :class="regionClass(props, 'control', 'miu-form-field__control')"
@@ -80,21 +96,21 @@ provide(MIU_FORM_FIELD_KEY, {
       <slot />
     </div>
     <p
-      v-if="error"
+      v-if="hasError"
       :id="errorId"
       :class="regionClass(props, 'error', 'miu-form-field__error')"
       :style="regionStyle(props, 'error')"
       role="alert"
     >
-      {{ error }}
+      <slot name="error">{{ error }}</slot>
     </p>
     <p
-      v-else-if="hint"
+      v-else-if="hasHint"
       :id="hintId"
       :class="regionClass(props, 'hint', 'miu-form-field__hint')"
       :style="regionStyle(props, 'hint')"
     >
-      {{ hint }}
+      <slot name="hint">{{ hint }}</slot>
     </p>
   </div>
 </template>

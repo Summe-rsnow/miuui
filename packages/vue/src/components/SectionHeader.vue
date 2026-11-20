@@ -16,14 +16,14 @@ const props = defineProps<SectionHeaderProps>()
         :class="regionClass(props, 'title', 'miu-section-header__title')"
         :style="regionStyle(props, 'title')"
       >
-        {{ title }}
+        <slot name="title">{{ title }}</slot>
       </h2>
       <p
-        v-if="description"
+        v-if="description || $slots.description"
         :class="regionClass(props, 'description', 'miu-section-header__description')"
         :style="regionStyle(props, 'description')"
       >
-        {{ description }}
+        <slot name="description">{{ description }}</slot>
       </p>
     </div>
     <div

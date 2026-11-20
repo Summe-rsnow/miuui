@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, nextTick, ref, watch } from "vue"
 import { PopoverArrow, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from "reka-ui"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { PopconfirmProps } from "../types"
@@ -15,6 +15,10 @@ const props = withDefaults(defineProps<PopconfirmProps>(), {
   radius: "default",
   danger: false,
   loading: false,
+  disabled: false,
+  modal: false,
+  closeOnClickOutside: true,
+  closeOnEsc: true,
 })
 
 const emit = defineEmits<{
@@ -35,7 +39,10 @@ watch(
   },
 )
 
-const isOpen = computed(() => (props.open !== undefined ? props.open : internalOpen.value))
+const isOpen = computed(() => {
+  if (props.disabled) return false
+  return props.open !== undefined ? props.open : internalOpen.value
+})
 const confirmText = computed(() => props.confirmLabel ?? t("common.confirm"))
 const cancelText = computed(() => props.cancelLabel ?? t("common.cancel"))
 
@@ -44,20 +51,42 @@ function setOpen(next: boolean): void {
   emit("update:open", next)
 }
 
+function handleRootOpenChange(next: boolean): void {
+  if (next && props.disabled) return
+  if (!next && props.loading) return
+  if (!next && isOpen.value) {
+    emit("cancel")
+  }
+  setOpen(next)
+}
+
 function onCancel(): void {
+  if (props.loading) return
   emit("cancel")
   setOpen(false)
 }
 
-function onConfirm(): void {
+async function onConfirm(): Promise<void> {
+  if (props.loading || props.disabled) return
   emit("confirm")
-  if (!props.loading) setOpen(false)
+  await nextTick()
+  if (props.open === undefined && !props.loading) {
+    setOpen(false)
+  }
+}
+
+function onEscapeKeyDown(event: KeyboardEvent): void {
+  if (props.loading || !props.closeOnEsc) event.preventDefault()
+}
+
+function onOutsideDismiss(event: Event): void {
+  if (props.loading || !props.closeOnClickOutside) event.preventDefault()
 }
 </script>
 
 <template>
-  <PopoverRoot :open="isOpen" @update:open="setOpen">
-    <PopoverTrigger as-child>
+  <PopoverRoot :open="isOpen" :modal="modal" @update:open="handleRootOpenChange">
+    <PopoverTrigger as-child :disabled="disabled || undefined">
       <slot name="trigger" />
     </PopoverTrigger>
     <PopoverPortal :to="theme.portalTarget.value">
@@ -69,6 +98,9 @@ function onConfirm(): void {
         :side="side"
         :align="align"
         :side-offset="sideOffset"
+        @escape-key-down="onEscapeKeyDown"
+        @pointer-down-outside="onOutsideDismiss"
+        @interact-outside="onOutsideDismiss"
       >
         <div
           :class="regionClass(props, 'body', 'miu-popconfirm__body')"
@@ -102,7 +134,10 @@ function onConfirm(): void {
             {{ confirmText }}
           </Button>
         </div>
-        <PopoverArrow class="miu-popover__arrow" />
+        <PopoverArrow
+          :class="regionClass(props, 'arrow', 'miu-popover__arrow')"
+          :style="regionStyle(props, 'arrow')"
+        />
       </PopoverContent>
     </PopoverPortal>
   </PopoverRoot>

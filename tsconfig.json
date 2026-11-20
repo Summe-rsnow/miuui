@@ -24,8 +24,7 @@
       "@xcmm1543/miuui-icons": ["./packages/icons/src/index.ts"],
       "@xcmm1543/miuui-materials": ["./packages/materials/src/index.ts"],
       "@xcmm1543/miuui-motions": ["./packages/motions/src/index.ts"],
-      "@xcmm1543/miuui-vue": ["./packages/vue/src/index.ts"],
-      "@xcmm1543/miuui-codemod": ["./packages/codemod/src/index.ts"]
+      "@xcmm1543/miuui-vue": ["./packages/vue/src/index.ts"]
     }
   },
   "include": ["env.d.ts", "packages/**/*.ts", "packages/**/*.vue", "vitest.config.ts"],

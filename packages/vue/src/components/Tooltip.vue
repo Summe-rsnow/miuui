@@ -33,11 +33,16 @@ const contentStyle = computed(() => {
     Object.keys(tokens).length > 0 ? tokens : undefined,
   )
 })
+
+function onUpdateOpen(next: boolean): void {
+  if (next && props.disabled) return
+  emit("update:open", next)
+}
 </script>
 
 <template>
   <TooltipProvider :delay-duration="delayDuration">
-    <TooltipRoot :open="open" :disabled="disabled" @update:open="emit('update:open', $event)">
+    <TooltipRoot :open="disabled ? false : open" :disabled="disabled" @update:open="onUpdateOpen">
       <TooltipTrigger as-child>
         <slot name="trigger" />
       </TooltipTrigger>

@@ -38,20 +38,9 @@ export {
 
 export type { ControlSize, Density, IconSize, MaterialName, MotionTier, Radius }
 
-export interface SemanticRegionMap {
-  [region: string]: string | undefined
-}
-
 export interface ComponentSemanticProps<Region extends string> {
   classNames?: Partial<Record<Region, string>>
   styles?: Partial<Record<Region, string | Record<string, string>>>
-}
-
-export interface SizeContext {
-  size?: ControlSize
-  density?: Density
-  radius?: Radius | "default"
-  iconSize?: IconSize
 }
 
 export interface ResolvedIconSize {

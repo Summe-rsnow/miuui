@@ -223,7 +223,7 @@ describe("FormField + Input", () => {
 
     const input = wrapper.get("input")
     expect(input.attributes("id")).toBe("name")
-    expect(input.attributes("aria-describedby")).toBe("name-error")
+    expect(input.attributes("aria-describedby")).toBe("name-description name-error")
     expect(input.attributes("aria-invalid")).toBe("true")
     expect(input.attributes("aria-required")).toBe("true")
     expect(wrapper.get("label").attributes("for")).toBe("name")

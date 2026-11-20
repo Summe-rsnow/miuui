@@ -140,11 +140,6 @@ export function formatOklch(color: Oklch, alpha?: number): string {
   return alpha === undefined ? `${base})` : `${base} / ${alpha})`
 }
 
-export function withAlpha(hex: string, alpha: number): string {
-  const [r, g, b] = hexToRgb(hex)
-  return `rgb(${Math.round(r * 255)} ${Math.round(g * 255)} ${Math.round(b * 255)} / ${alpha})`
-}
-
 /** WCAG 2.1 relative luminance for an sRGB hex color. */
 export function relativeLuminance(hex: string): number {
   const [r, g, b] = hexToRgb(normalizeHex(hex)).map(srgbToLinear) as [number, number, number]

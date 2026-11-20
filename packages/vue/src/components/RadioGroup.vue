@@ -1,20 +1,12 @@
 <script setup lang="ts">
-import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  useId,
-  watch,
-  type ComponentPublicInstance,
-} from "vue"
+import { computed, nextTick, ref, useId, type ComponentPublicInstance } from "vue"
 import { RadioGroupIndicator, RadioGroupItem, RadioGroupRoot } from "reka-ui"
-import { regionClass, regionStyle, resolveControlSize } from "@xcmm1543/miuui-core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { RadioGroupOption, RadioGroupProps } from "../types"
-import { useMiuFormField } from "../composables/useFormField"
+import { useControlSize } from "../composables/useControlSize"
+import { useFormFieldBinding } from "../composables/useFormField"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
-import { useMiuSizeHint } from "../composables/useSizeHint"
+import { useSlidingIndicator } from "../composables/useSlidingIndicator"
 
 const props = withDefaults(defineProps<RadioGroupProps>(), {
   options: () => [],
@@ -22,28 +14,33 @@ const props = withDefaults(defineProps<RadioGroupProps>(), {
   variant: "radio",
   radius: "default",
   disabled: false,
+  readonly: false,
   invalid: false,
 })
 
-const emit = defineEmits<{ "update:modelValue": [value: string | number] }>()
+const emit = defineEmits<{
+  "update:modelValue": [value: string | number]
+  change: [value: string | number]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+}>()
 
 const autoId = useId()
-const formField = useMiuFormField()
-const sizeHint = useMiuSizeHint()
-const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const resolvedSize = computed(() => resolveControlSize(size.value, ["sm", "md", "lg"], "md"))
+const rootRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
 
-if (import.meta.env.DEV && resolvedSize.value.fallback) {
-  console.warn(
-    `[μui] RadioGroup: unsupported size "${size.value}", fell back to "${resolvedSize.value.size}".`,
-  )
-}
-
+const { resolvedSize, resolvedIconSize } = useControlSize({
+  size: () => props.size,
+  supported: ["sm", "md", "lg"],
+  defaultSize: "md",
+  iconSize: () => props.iconSize,
+  componentName: "RadioGroup",
+})
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "RadioGroup")
-const disabled = computed(() => props.disabled || formField?.disabled.value || false)
-const invalid = computed(() => props.invalid || formField?.invalid.value || false)
-const required = computed(() => formField?.required.value || false)
-const describedBy = computed(() => formField?.describedBy.value)
+const field = useFormFieldBinding({
+  disabled: () => props.disabled,
+  readonly: () => props.readonly,
+  invalid: () => props.invalid,
+})
 
 const normalizedOptions = computed<RadioGroupOption[]>(() =>
   props.options.map((entry) =>
@@ -51,11 +48,21 @@ const normalizedOptions = computed<RadioGroupOption[]>(() =>
   ),
 )
 
-const rootRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
-const itemElements = new Map<string, HTMLElement>()
-const indicatorMetrics = ref<{ x: number; y: number; width: number; height: number } | null>(null)
-const indicatorAnimated = ref(false)
-let resizeObserver: ResizeObserver | null = null
+const { setItemRef, indicatorMetrics, indicatorAnimated, indicatorStyle, measure } =
+  useSlidingIndicator({
+    containerRef: rootRef,
+    activeKey: () => props.modelValue,
+    enabled: () => props.variant === "button",
+    fallbackSelector: '.miu-radio-group__item[data-state="checked"]',
+    watchSources: () => [
+      props.modelValue,
+      props.options,
+      props.variant,
+      props.size,
+      props.orientation,
+    ],
+    baseStyle: () => regionStyle(props, "indicator"),
+  })
 
 function unwrapElement(node: unknown): HTMLElement | null {
   if (!node) return null
@@ -64,80 +71,72 @@ function unwrapElement(node: unknown): HTMLElement | null {
   return maybeComp.$el instanceof HTMLElement ? maybeComp.$el : null
 }
 
-function setItemRef(value: string | number, node: unknown): void {
-  const key = String(value)
-  const el = unwrapElement(node)
-  if (el) itemElements.set(key, el)
-  else itemElements.delete(key)
-}
-
-function measureIndicator(): void {
-  if (props.variant !== "button") {
-    indicatorMetrics.value = null
-    return
-  }
-  const rootEl = unwrapElement(rootRef.value)
-  const activeEl =
-    (props.modelValue !== undefined ? itemElements.get(String(props.modelValue)) : null) ??
-    rootEl?.querySelector<HTMLElement>('.miu-radio-group__item[data-state="checked"]') ??
-    null
-  if (!activeEl || activeEl.offsetWidth <= 0 || activeEl.offsetHeight <= 0) {
-    indicatorMetrics.value = null
-    return
-  }
-  indicatorMetrics.value = {
-    x: activeEl.offsetLeft,
-    y: activeEl.offsetTop,
-    width: activeEl.offsetWidth,
-    height: activeEl.offsetHeight,
-  }
-  if (!indicatorAnimated.value && typeof requestAnimationFrame === "function") {
-    requestAnimationFrame(() => {
-      indicatorAnimated.value = true
-    })
-  }
-}
-
-const slidingIndicatorStyle = computed(() => {
-  const m = indicatorMetrics.value
-  if (!m) return undefined
-  return {
-    width: `${m.width}px`,
-    height: `${m.height}px`,
-    transform: `translate3d(${m.x}px, ${m.y}px, 0)`,
-  }
-})
-
-onMounted(async () => {
-  await nextTick()
-  measureIndicator()
-  const rootEl = unwrapElement(rootRef.value)
-  if (rootEl && typeof ResizeObserver !== "undefined") {
-    resizeObserver = new ResizeObserver(() => measureIndicator())
-    resizeObserver.observe(rootEl)
-  }
-})
-
-onBeforeUnmount(() => {
-  resizeObserver?.disconnect()
-  resizeObserver = null
-})
-
-watch(
-  () => [props.modelValue, props.options, props.variant, props.size, props.orientation] as const,
-  async () => {
-    await nextTick()
-    measureIndicator()
-  },
-  { flush: "post", deep: true },
-)
-
 function onUpdate(value: unknown): void {
+  if (field.disabled.value || field.readonly.value) return
   if (typeof value === "string" || typeof value === "number") {
     emit("update:modelValue", value)
-    void nextTick().then(() => measureIndicator())
+    emit("change", value)
+    void nextTick().then(() => measure())
   }
 }
+
+const READONLY_BLOCKED_KEYS = new Set([
+  " ",
+  "Enter",
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+])
+
+function onReadonlyClick(event: MouseEvent): void {
+  if (field.readonly.value) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+}
+
+function onReadonlyKeydown(event: KeyboardEvent): void {
+  if (field.readonly.value && READONLY_BLOCKED_KEYS.has(event.key)) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+}
+
+function onFocus(event: FocusEvent): void {
+  const rootEl = unwrapElement(rootRef.value)
+  const from = event.relatedTarget as Node | null
+  if (from && rootEl?.contains(from)) return
+  emit("focus", event)
+}
+
+function onBlur(event: FocusEvent): void {
+  const rootEl = unwrapElement(rootRef.value)
+  const to = event.relatedTarget as Node | null
+  if (to && rootEl?.contains(to)) return
+  emit("blur", event)
+}
+
+function focus(): void {
+  const rootEl = unwrapElement(rootRef.value)
+  if (!rootEl) return
+  const target =
+    rootEl.querySelector<HTMLElement>(
+      '.miu-radio-group__item[data-state="checked"]:not(:disabled)',
+    ) ?? rootEl.querySelector<HTMLElement>(".miu-radio-group__item:not(:disabled)")
+  target?.focus()
+}
+
+function blur(): void {
+  const rootEl = unwrapElement(rootRef.value)
+  if (!rootEl) return
+  const active = typeof document !== "undefined" ? document.activeElement : null
+  if (active instanceof HTMLElement && rootEl.contains(active)) {
+    active.blur()
+  }
+}
+
+defineExpose({ focus, blur, rootRef })
 </script>
 
 <template>
@@ -145,12 +144,14 @@ function onUpdate(value: unknown): void {
     ref="rootRef"
     :model-value="modelValue"
     :orientation="orientation"
-    :disabled="disabled"
-    :required="required"
+    :disabled="field.disabled.value"
+    :required="field.required.value"
     :name="name"
     :aria-label="ariaLabel"
-    :aria-describedby="describedBy"
-    :aria-invalid="invalid || undefined"
+    :aria-labelledby="ariaLabel ? undefined : field.labelId?.value"
+    :aria-describedby="field.describedBy.value"
+    :aria-invalid="field.invalid.value || undefined"
+    :aria-readonly="field.readonly.value || undefined"
     :class="
       regionClass(
         props,
@@ -160,8 +161,9 @@ function onUpdate(value: unknown): void {
         `miu-radio-group--${variant}`,
         `miu-radio-group--${resolvedSize.size}`,
         {
-          'miu-radio-group--disabled': disabled,
-          'miu-radio-group--invalid': invalid,
+          'miu-radio-group--disabled': field.disabled.value,
+          'miu-radio-group--readonly': field.readonly.value,
+          'miu-radio-group--invalid': field.invalid.value,
           'miu-radio-group--has-indicator': variant === 'button' && Boolean(indicatorMetrics),
         },
       )
@@ -169,35 +171,42 @@ function onUpdate(value: unknown): void {
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
+    :data-miu-icon-size="resolvedIconSize.size"
     :data-material="materialName"
     :data-variant="variant"
     :data-orientation="orientation"
-    :data-invalid="invalid || undefined"
-    :data-disabled="disabled || undefined"
+    :data-invalid="field.invalid.value || undefined"
+    :data-disabled="field.disabled.value || undefined"
+    :data-readonly="field.readonly.value || undefined"
+    @click.capture="onReadonlyClick"
+    @keydown.capture="onReadonlyKeydown"
     @update:model-value="onUpdate"
   >
     <span
       v-if="variant === 'button' && indicatorMetrics"
       aria-hidden="true"
-      :class="[
-        'miu-radio-group__sliding-indicator',
-        { 'miu-radio-group__sliding-indicator--animated': indicatorAnimated },
-      ]"
-      :style="slidingIndicatorStyle"
+      :class="
+        regionClass(props, 'indicator', 'miu-radio-group__sliding-indicator', {
+          'miu-radio-group__sliding-indicator--animated': indicatorAnimated,
+        })
+      "
+      :style="indicatorStyle"
     />
     <div
       v-for="(option, index) in normalizedOptions"
       :key="option.value"
       class="miu-radio-group__entry"
-      :data-disabled="option.disabled || disabled || undefined"
+      :data-disabled="option.disabled || field.disabled.value || undefined"
     >
       <RadioGroupItem
         :id="`${autoId}-item-${index}`"
         :ref="(el) => setItemRef(option.value, el)"
         :value="option.value"
-        :disabled="option.disabled || disabled"
+        :disabled="option.disabled || field.disabled.value"
         :class="regionClass(props, 'item', 'miu-radio-group__item')"
         :style="regionStyle(props, 'item')"
+        @focus="onFocus"
+        @blur="onBlur"
       >
         <template v-if="variant === 'button'">
           <span>{{ option.label }}</span>

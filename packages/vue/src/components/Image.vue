@@ -2,12 +2,13 @@
 import { computed, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ImageProps } from "../types"
-import Dialog from "./Dialog.vue"
+import { useMiuI18n } from "../composables/useMiu"
+import { mergeStyle } from "../composables/usePluginResolution"
+import ImagePreview from "./ImagePreview.vue"
 
 const props = withDefaults(defineProps<ImageProps>(), {
   alt: "",
   fit: "cover",
-  cover: false,
   radius: "default",
   previewable: false,
   pixelated: false,
@@ -19,6 +20,7 @@ const emit = defineEmits<{
   load: [event: Event]
 }>()
 
+const { t } = useMiuI18n()
 const usedFallbackSrc = ref(false)
 const loadFailed = ref(false)
 const showPreview = ref(false)
@@ -39,20 +41,12 @@ const activeSrc = computed(() => {
 const rootStyle = computed(() => {
   const base = regionStyle(props, "root")
   const dims: Record<string, string> = {}
-  if (props.cover) {
-    dims.width = props.width ?? "100%"
-    dims.height = props.height ?? "100%"
-  } else {
-    if (props.width) dims.width = props.width
-    if (props.height) dims.height = props.height
-  }
-  return Object.keys(dims).length > 0 ? [base, dims] : base
+  if (props.width) dims.width = props.width
+  if (props.height) dims.height = props.height
+  return mergeStyle(base, Object.keys(dims).length > 0 ? dims : undefined)
 })
 
-const imgStyle = computed(() => [
-  regionStyle(props, "img"),
-  { objectFit: props.cover ? "cover" : props.fit },
-])
+const imgStyle = computed(() => mergeStyle(regionStyle(props, "img"), { objectFit: props.fit }))
 
 const canPreview = computed(() =>
   Boolean(props.previewable && activeSrc.value && !loadFailed.value),
@@ -64,6 +58,7 @@ function onError(event: Event): void {
     return
   }
   loadFailed.value = true
+  showPreview.value = false
   emit("error", event)
 }
 
@@ -87,7 +82,7 @@ function openPreview(): void {
     :data-miu-radius="radius"
     :role="canPreview ? 'button' : undefined"
     :tabindex="canPreview ? 0 : undefined"
-    :aria-label="canPreview ? alt || 'Preview image' : undefined"
+    :aria-label="canPreview ? alt || t('commandPalette.open') : undefined"
     @click="openPreview"
     @keydown.enter="openPreview"
     @keydown.space.prevent="openPreview"
@@ -131,34 +126,18 @@ function openPreview(): void {
       </slot>
     </div>
 
-    <Dialog
+    <ImagePreview
       v-if="previewable"
       :open="showPreview"
-      hide-header
-      width="auto"
+      :src="activeSrc"
+      :alt="alt"
       material="glass"
-      :aria-label="alt || 'Preview'"
-      :styles="{
-        content: {
-          background: 'transparent',
-          border: 'none',
-          boxShadow: 'none',
-          backdropFilter: 'none',
-          maxWidth: '90vw',
-          padding: '0',
-        },
-        body: { padding: '0', overflow: 'visible' },
+      :class-names="{
+        img: pixelated
+          ? 'miu-image__lightbox-img miu-image__img--pixelated'
+          : 'miu-image__lightbox-img',
       }"
-      @update:open="(v: boolean) => !v && (showPreview = false)"
-    >
-      <div class="miu-image__lightbox" @click="showPreview = false">
-        <img
-          v-if="activeSrc"
-          :src="activeSrc"
-          :alt="alt"
-          :class="['miu-image__lightbox-img', { 'miu-image__img--pixelated': pixelated }]"
-        />
-      </div>
-    </Dialog>
+      @update:open="showPreview = $event"
+    />
   </div>
 </template>

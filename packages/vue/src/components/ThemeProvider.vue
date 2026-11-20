@@ -6,56 +6,25 @@ import {
   DEFAULT_FALLBACK_LOCALE,
   DEFAULT_LOCALE,
   themeAttributes,
-  type Density,
-  type LocaleCode,
-  type MaterialName,
-  type MiuMessageTree,
-  type MotionTier,
-  type Radius,
-  type ThemeMode,
 } from "@xcmm1543/miuui-core"
-import type { ToastPosition, ToastStyleVariant } from "../types"
+import type { ThemeProviderProps } from "../types"
 import { semanticTokensForSeed } from "@xcmm1543/miuui-tokens"
-import {
-  MIU_ICONS_KEY,
-  MIU_THEME_KEY,
-  type IconRegistry,
-  type MiuThemeContext,
-} from "../composables/useMiu"
+import { MIU_ICONS_KEY, MIU_THEME_KEY, type MiuThemeContext } from "../composables/useMiu"
 import { resolveMaterialValue, resolveMotionValue } from "../composables/usePluginResolution"
 import { useConfirm } from "../composables/useConfirm"
 import ConfirmDialog from "./ConfirmDialog.vue"
 import ToastViewport from "./ToastViewport.vue"
 
-const props = withDefaults(
-  defineProps<{
-    theme?: ThemeMode
-    density?: Density
-    radius?: Radius
-    material?: MaterialName
-    motionTier?: MotionTier
-    accentSeed?: string
-    locale?: LocaleCode
-    fallbackLocale?: LocaleCode
-    messages?: Record<LocaleCode, MiuMessageTree>
-    toastPosition?: ToastPosition
-    toastMaterial?: MaterialName
-    toastStyleVariant?: ToastStyleVariant
-    toastMax?: number
-    icons?: IconRegistry
-    as?: string
-  }>(),
-  {
-    theme: "light",
-    density: "default",
-    radius: "md",
-    material: "solid",
-    motionTier: "full",
-    locale: DEFAULT_LOCALE,
-    fallbackLocale: DEFAULT_FALLBACK_LOCALE,
-    as: "div",
-  },
-)
+const props = withDefaults(defineProps<ThemeProviderProps>(), {
+  theme: "light",
+  density: "default",
+  radius: "md",
+  material: "solid",
+  motionTier: "full",
+  locale: DEFAULT_LOCALE,
+  fallbackLocale: DEFAULT_FALLBACK_LOCALE,
+  as: "div",
+})
 
 const systemDark = ref(false)
 let mediaQuery: MediaQueryList | undefined
@@ -64,16 +33,32 @@ function syncSystemTheme(event?: MediaQueryListEvent): void {
   systemDark.value = event ? event.matches : Boolean(mediaQuery?.matches)
 }
 
-onMounted(() => {
-  if (props.theme !== "system" || typeof window === "undefined") return
+function attachMediaQuery(): void {
+  if (typeof window === "undefined" || mediaQuery) return
   mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
   syncSystemTheme()
   mediaQuery.addEventListener("change", syncSystemTheme)
+}
+
+function detachMediaQuery(): void {
+  if (!mediaQuery) return
+  mediaQuery.removeEventListener("change", syncSystemTheme)
+  mediaQuery = undefined
+}
+
+onMounted(() => {
+  if (props.theme === "system") attachMediaQuery()
 })
 
-onBeforeUnmount(() => {
-  mediaQuery?.removeEventListener("change", syncSystemTheme)
-})
+watch(
+  () => props.theme,
+  (next) => {
+    if (next === "system") attachMediaQuery()
+    else detachMediaQuery()
+  },
+)
+
+onBeforeUnmount(detachMediaQuery)
 
 const resolvedTheme = computed<"light" | "dark">(() => {
   if (props.theme === "system") return systemDark.value ? "dark" : "light"
@@ -135,7 +120,17 @@ const providerStyle = computed<Record<string, string> | undefined>(() => {
 
 const isRootProvider = inject(MIU_THEME_KEY, null) === null
 
-const { currentConfirm, resolveConfirm } = useConfirm()
+const { currentConfirm, loading: confirmLoading, resolveConfirm } = useConfirm()
+
+function handleConfirmAccept(): void {
+  void Promise.resolve(resolveConfirm(true)).catch(() => undefined)
+}
+
+function handleConfirmCancel(): void {
+  if (!confirmLoading.value) {
+    resolveConfirm(false)
+  }
+}
 const context: MiuThemeContext = {
   theme: resolvedTheme,
   density: computed(() => props.density),
@@ -209,11 +204,12 @@ const attrs = computed(() =>
       :size="currentConfirm.size"
       :radius="currentConfirm.radius"
       :material="currentConfirm.material"
-      @confirm="resolveConfirm(true)"
-      @cancel="resolveConfirm(false)"
+      :loading="confirmLoading"
+      @confirm="handleConfirmAccept"
+      @cancel="handleConfirmCancel"
       @update:open="
         (open) => {
-          if (!open) resolveConfirm(false)
+          if (!open && !confirmLoading) handleConfirmCancel()
         }
       "
     />

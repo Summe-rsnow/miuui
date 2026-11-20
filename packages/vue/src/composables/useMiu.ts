@@ -1,5 +1,4 @@
 import { computed, inject, ref, type ComputedRef, type InjectionKey, type Ref } from "vue"
-import type { IconDefinition } from "@xcmm1543/miuui-icons"
 import {
   createMiuI18n,
   DEFAULT_FALLBACK_LOCALE,
@@ -7,10 +6,13 @@ import {
   type Density,
   type LocaleCode,
   type MaterialName,
+  type MiuI18n,
   type MiuMessageParams,
   type MotionTier,
   type Radius,
 } from "@xcmm1543/miuui-core"
+
+export { MIU_ICONS_KEY, useMiuIcons, type IconOverride, type IconRegistry } from "./useMiuIcons"
 
 export interface MiuI18nContext {
   locale: Ref<LocaleCode>
@@ -34,55 +36,62 @@ export interface MiuThemeContext {
 
 export const MIU_THEME_KEY: InjectionKey<MiuThemeContext> = Symbol("miu-theme")
 
-const fallbackLocale = ref(DEFAULT_LOCALE)
-const fallbackI18n = createMiuI18n({ locale: fallbackLocale.value })
+let fallbackLocaleRef: Ref<LocaleCode> | undefined
+let fallbackLocaleFallbackRef: Ref<LocaleCode> | undefined
+let fallbackPortalRef: Ref<HTMLElement | undefined> | undefined
+let fallbackI18n: MiuI18n | undefined
+let fallbackTheme: MiuThemeContext | undefined
 
-const fallbackTheme: MiuThemeContext = {
-  theme: computed(() => "light"),
-  density: computed(() => "default"),
-  radius: computed(() => "md"),
-  material: computed(() => "solid"),
-  motionTier: computed(() => "full"),
-  i18n: {
-    locale: fallbackLocale,
-    fallbackLocale: ref(DEFAULT_FALLBACK_LOCALE),
-    availableLocales: [DEFAULT_LOCALE, DEFAULT_FALLBACK_LOCALE],
-    t: (key, params) => {
-      void fallbackLocale.value
-      return fallbackI18n.t(key, params)
+function getFallbackI18n(): MiuI18n {
+  const loc = (fallbackLocaleRef ??= ref(DEFAULT_LOCALE))
+  if (!fallbackI18n) {
+    fallbackI18n = createMiuI18n({ locale: loc.value })
+  }
+  return fallbackI18n
+}
+
+function getFallbackTheme(): MiuThemeContext {
+  if (fallbackTheme) return fallbackTheme
+  const loc = (fallbackLocaleRef ??= ref(DEFAULT_LOCALE))
+  const fallbackLoc = (fallbackLocaleFallbackRef ??= ref(DEFAULT_FALLBACK_LOCALE))
+  const portal = (fallbackPortalRef ??= ref<HTMLElement>())
+
+  fallbackTheme = {
+    theme: computed(() => "light"),
+    density: computed(() => "default"),
+    radius: computed(() => "md"),
+    material: computed(() => "solid"),
+    motionTier: computed(() => "full"),
+    i18n: {
+      locale: loc,
+      fallbackLocale: fallbackLoc,
+      availableLocales: [DEFAULT_LOCALE, DEFAULT_FALLBACK_LOCALE],
+      t: (key, params) => {
+        void loc.value
+        return getFallbackI18n().t(key, params)
+      },
+      setLocale: (locale) => {
+        loc.value = locale
+        getFallbackI18n().setLocale(locale)
+      },
+      formatNumber: (value, options) => {
+        void loc.value
+        return getFallbackI18n().formatNumber(value, options)
+      },
+      formatDate: (value, options) => {
+        void loc.value
+        return getFallbackI18n().formatDate(value, options)
+      },
     },
-    setLocale: (locale) => {
-      fallbackLocale.value = locale
-      fallbackI18n.setLocale(locale)
-    },
-    formatNumber: (value, options) => {
-      void fallbackLocale.value
-      return fallbackI18n.formatNumber(value, options)
-    },
-    formatDate: (value, options) => {
-      void fallbackLocale.value
-      return fallbackI18n.formatDate(value, options)
-    },
-  },
-  portalTarget: ref<HTMLElement>(),
+    portalTarget: portal,
+  }
+  return fallbackTheme
 }
 
 export function useMiuTheme(): MiuThemeContext {
-  return inject(MIU_THEME_KEY, fallbackTheme)
+  return inject(MIU_THEME_KEY, null) ?? getFallbackTheme()
 }
 
 export function useMiuI18n(): MiuI18nContext {
   return useMiuTheme().i18n
-}
-
-export type IconOverride = IconDefinition | string
-export type IconRegistry = Record<string, IconOverride>
-
-export const MIU_ICONS_KEY: InjectionKey<ComputedRef<IconRegistry | undefined>> =
-  Symbol("miu-icons")
-
-const emptyIcons = computed<IconRegistry | undefined>(() => undefined)
-
-export function useMiuIcons(): ComputedRef<IconRegistry | undefined> {
-  return inject(MIU_ICONS_KEY, emptyIcons)
 }

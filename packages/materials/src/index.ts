@@ -1,7 +1,7 @@
 import type { MaterialPlugin, ThemeContext } from "@xcmm1543/miuui-core"
 import { semanticTokens } from "@xcmm1543/miuui-tokens"
 
-function tokensFor(theme: ThemeContext, _motionTier: string): Record<string, string> {
+function solidTokens(theme: ThemeContext): Record<string, string> {
   const semantic = semanticTokens(theme.theme)
   return {
     "--miu-material-surface": semantic["--miu-color-surface-solid-bg"] ?? "",
@@ -9,25 +9,30 @@ function tokensFor(theme: ThemeContext, _motionTier: string): Record<string, str
     "--miu-material-backdrop": "none",
     "--miu-material-highlight": "none",
     "--miu-material-gloss": "none",
-    "--miu-glass-filter-micro": "none",
-    "--miu-glass-filter-thin": "none",
-    "--miu-glass-filter-regular": "none",
-    "--miu-glass-filter-thick": "none",
-    "--miu-glass-surface-ultra-thin": semantic["--miu-color-bg-muted"] ?? "",
-    "--miu-glass-surface-thin": semantic["--miu-color-bg-surface"] ?? "",
-    "--miu-glass-surface-regular": semantic["--miu-color-surface-solid-bg"] ?? "",
-    "--miu-glass-surface-thick": semantic["--miu-color-bg-elevated"] ?? "",
-    "--miu-glass-surface-elevated": semantic["--miu-color-bg-overlay"] ?? "",
-    "--miu-glass-hairline": semantic["--miu-color-border-subtle"] ?? "",
-    "--miu-glass-specular": "none",
-    "--miu-glass-sheen": "none",
+  }
+}
+
+function glassBaseTokens(semantic: Record<string, string>): Record<string, string> {
+  return {
+    "--miu-glass-filter-micro": semantic["--miu-glass-filter-micro"] ?? "",
+    "--miu-glass-filter-thin": semantic["--miu-glass-filter-thin"] ?? "",
+    "--miu-glass-filter-regular": semantic["--miu-glass-filter-regular"] ?? "",
+    "--miu-glass-filter-thick": semantic["--miu-glass-filter-thick"] ?? "",
+    "--miu-glass-surface-ultra-thin": semantic["--miu-glass-surface-ultra-thin"] ?? "",
+    "--miu-glass-surface-thin": semantic["--miu-glass-surface-thin"] ?? "",
+    "--miu-glass-surface-regular": semantic["--miu-glass-surface-regular"] ?? "",
+    "--miu-glass-surface-thick": semantic["--miu-glass-surface-thick"] ?? "",
+    "--miu-glass-surface-elevated": semantic["--miu-glass-surface-elevated"] ?? "",
+    "--miu-glass-hairline": semantic["--miu-glass-hairline"] ?? "",
+    "--miu-glass-specular": semantic["--miu-glass-specular"] ?? "",
+    "--miu-glass-sheen": semantic["--miu-glass-sheen"] ?? "",
   }
 }
 
 export const solidMaterial: MaterialPlugin = {
   name: "solid",
   fallback: null,
-  generateTokens: tokensFor,
+  generateTokens: solidTokens,
 }
 
 export const micaMaterial: MaterialPlugin = {
@@ -37,6 +42,7 @@ export const micaMaterial: MaterialPlugin = {
   generateTokens(theme, motionTier) {
     const semantic = semanticTokens(theme.theme)
     return {
+      ...glassBaseTokens(semantic),
       "--miu-material-surface": semantic["--miu-color-surface-mica-bg"] ?? "",
       "--miu-material-border": semantic["--miu-glass-hairline"] ?? "",
       "--miu-material-backdrop": semantic["--miu-glass-filter-thin"] ?? "",
@@ -53,6 +59,7 @@ export const glassMaterial: MaterialPlugin = {
   generateTokens(theme, motionTier) {
     const semantic = semanticTokens(theme.theme)
     return {
+      ...glassBaseTokens(semantic),
       "--miu-material-surface": semantic["--miu-glass-surface-regular"] ?? "",
       "--miu-material-border": semantic["--miu-glass-hairline"] ?? "",
       "--miu-material-backdrop": semantic["--miu-glass-filter-regular"] ?? "",
@@ -67,5 +74,3 @@ export const materialPlugins = {
   mica: micaMaterial,
   glass: glassMaterial,
 } as const
-
-export { tokensFor }

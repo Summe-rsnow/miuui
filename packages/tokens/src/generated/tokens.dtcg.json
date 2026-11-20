@@ -327,7 +327,7 @@
       },
       "text-on-primary": {
         "$type": "color",
-        "$value": "#FFFFFF"
+        "$value": "{color.white}"
       },
       "border-subtle": {
         "$type": "color",
@@ -451,15 +451,15 @@
       },
       "surface-mica-bg": {
         "$type": "color",
-        "$value": "oklch(0.99 0.004 305 / 0.84)"
+        "$value": "oklch(0.985 0.008 305 / 0.78)"
       },
       "surface-glass-bg": {
         "$type": "color",
-        "$value": "oklch(0.99 0.004 305 / 0.62)"
+        "$value": "oklch(0.99 0.006 305 / 0.44)"
       },
       "surface-glass-border": {
         "$type": "color",
-        "$value": "oklch(0.2 0.015 305 / 0.12)"
+        "$value": "oklch(0.2 0.015 305 / 0.14)"
       },
       "surface-glass-highlight": {
         "$type": "color",
@@ -748,10 +748,6 @@
     }
   },
   "z": {
-    "dropdown": {
-      "$type": "number",
-      "$value": 1000
-    },
     "sticky": {
       "$type": "number",
       "$value": 1020
@@ -764,6 +760,10 @@
       "$type": "number",
       "$value": 1050
     },
+    "dropdown": {
+      "$type": "number",
+      "$value": 1060
+    },
     "popover": {
       "$type": "number",
       "$value": 1060
@@ -771,6 +771,10 @@
     "tooltip": {
       "$type": "number",
       "$value": 1070
+    },
+    "loading": {
+      "$type": "number",
+      "$value": 1075
     },
     "toast": {
       "$type": "number",

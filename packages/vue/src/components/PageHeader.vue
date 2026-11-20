@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<PageHeaderProps>(), {
   iconSize: "md",
 })
 
-const emit = defineEmits<{ back: [] }>()
+const emit = defineEmits<{ back: [event: MouseEvent] }>()
 const { t } = useMiuI18n()
 const backLabel = computed(() => props.backLabel ?? t("common.back"))
 </script>
@@ -33,11 +33,11 @@ const backLabel = computed(() => props.backLabel ?? t("common.back"))
         :class="regionClass(props, 'back')"
         :style="regionStyle(props, 'back')"
         :aria-label="backLabel"
-        @click="emit('back')"
+        @click="emit('back', $event)"
       >
         <Icon name="chevron" :rotate="90" />
       </button>
-      <div>
+      <div class="miu-page-header__text">
         <div class="miu-page-header__title-row">
           <h1
             :class="regionClass(props, 'title', 'miu-page-header__title')"

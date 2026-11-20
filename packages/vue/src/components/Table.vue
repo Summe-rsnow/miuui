@@ -25,7 +25,7 @@ provide(
 )
 
 const hasActions = computed(() => Boolean(slots["row-actions"]))
-const columnCount = computed(() => props.columns.length + (hasActions.value ? 1 : 0))
+const columnCount = computed(() => Math.max(1, props.columns.length + (hasActions.value ? 1 : 0)))
 
 function rowKey(row: TableRow, index: number): string | number {
   const value = row[props.rowKey]
@@ -55,12 +55,20 @@ function alignClass(column: TableColumn): string | undefined {
     :data-miu-radius="radius"
     :data-material="materialName"
     :data-loading="loading || undefined"
+    :aria-busy="loading || undefined"
   >
     <table
       :class="regionClass(props, 'table', 'miu-table__table')"
       :style="regionStyle(props, 'table')"
     >
-      <thead :class="regionClass(props, 'header', 'miu-table__header')">
+      <caption v-if="loading" class="miu-sr-only">
+        {{ t("table.loading") }}
+      </caption>
+      <thead
+        v-if="columns.length > 0 || hasActions"
+        :class="regionClass(props, 'header', 'miu-table__header')"
+        :style="regionStyle(props, 'header')"
+      >
         <tr>
           <th
             v-for="column in columns"
@@ -87,7 +95,11 @@ function alignClass(column: TableColumn): string | undefined {
           </tr>
         </template>
         <tr v-else-if="rows.length === 0" class="miu-table__row">
-          <td :colspan="columnCount" class="miu-table__cell miu-table__empty">
+          <td
+            :colspan="columnCount"
+            :class="regionClass(props, 'empty', 'miu-table__cell', 'miu-table__empty')"
+            :style="regionStyle(props, 'empty')"
+          >
             <slot name="empty">{{ emptyText ?? t("table.empty") }}</slot>
           </td>
         </tr>
@@ -114,7 +126,11 @@ function alignClass(column: TableColumn): string | undefined {
                 {{ cellValue(row, column) }}
               </slot>
             </td>
-            <td v-if="hasActions" class="miu-table__cell miu-table__cell--actions">
+            <td
+              v-if="hasActions"
+              :class="regionClass(props, 'cell', 'miu-table__cell', 'miu-table__cell--actions')"
+              :style="regionStyle(props, 'cell')"
+            >
               <slot name="row-actions" :row="row" :index="index" />
             </td>
           </tr>

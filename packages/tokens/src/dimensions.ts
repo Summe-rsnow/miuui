@@ -76,12 +76,6 @@ export const ICON_SIZE_BY_CONTROL: Record<ControlSize, IconSize> = {
   "2xl": "lg",
 }
 
-export const CONTROL_HEIGHT_BY_DENSITY: Record<Density, ControlSize> = {
-  compact: "sm",
-  default: "md",
-  comfortable: "lg",
-}
-
 export const DIALOG_WIDTH_VALUES = {
   sm: "360px",
   md: "480px",
@@ -115,12 +109,13 @@ export const FOCUS_RING = {
 } as const
 
 export const Z_INDEX = {
-  dropdown: 1000,
   sticky: 1020,
   modalBackdrop: 1040,
   modal: 1050,
+  dropdown: 1060,
   popover: 1060,
   tooltip: 1070,
+  loading: 1075,
   toast: 1080,
 } as const
 
@@ -138,10 +133,6 @@ export const SHADOW_VALUES: Record<1 | 2 | 3 | 4 | 5, ShadowSpec> = {
   3: { color: "oklch(0 0 0 / 0.1)", offsetX: "0px", offsetY: "8px", blur: "24px", spread: "0px" },
   4: { color: "oklch(0 0 0 / 0.14)", offsetX: "0px", offsetY: "16px", blur: "40px", spread: "0px" },
   5: { color: "oklch(0 0 0 / 0.18)", offsetX: "0px", offsetY: "24px", blur: "64px", spread: "0px" },
-}
-
-export function shadowToCss(shadow: ShadowSpec): string {
-  return `${shadow.offsetX} ${shadow.offsetY} ${shadow.blur} ${shadow.spread} ${shadow.color}`
 }
 
 export const TYPOGRAPHY = {

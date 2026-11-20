@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, useAttrs } from "vue"
+import { computed, ref, useAttrs } from "vue"
 import type { ControlSize } from "@xcmm1543/miuui-core"
 import type { IconButtonProps } from "../types"
+import { useControlSize } from "../composables/useControlSize"
 import Button from "./Button.vue"
 import Icon from "./Icon.vue"
 
 const props = withDefaults(defineProps<IconButtonProps>(), {
   variant: "ghost",
-  shape: "circle",
   active: false,
   loading: false,
   disabled: false,
@@ -18,12 +18,16 @@ const props = withDefaults(defineProps<IconButtonProps>(), {
 defineEmits<{ click: [event: MouseEvent] }>()
 
 const attrs = useAttrs()
-const resolvedRadius = computed(() => {
-  if (props.radius) return props.radius
-  return props.shape === "circle" ? "full" : "default"
+const buttonCompRef = ref<InstanceType<typeof Button>>()
+
+const { resolvedSize } = useControlSize({
+  size: () => (typeof props.size === "number" ? "md" : props.size),
+  componentName: "IconButton",
 })
+
+const resolvedRadius = computed(() => props.radius ?? "full")
 const semanticButtonSize = computed<ControlSize | undefined>(() =>
-  typeof props.size === "number" ? undefined : props.size,
+  typeof props.size === "number" ? undefined : resolvedSize.value.size,
 )
 const customRootStyle = computed<string | Record<string, string> | undefined>(() => {
   if (typeof props.size !== "number") return props.styles?.root
@@ -33,12 +37,12 @@ const customRootStyle = computed<string | Record<string, string> | undefined>(()
     return `${base};inline-size:${dim};block-size:${dim};min-inline-size:${dim};min-block-size:${dim};padding-inline:0`
   }
   return {
-    ...base,
     inlineSize: dim,
     blockSize: dim,
     minInlineSize: dim,
     minBlockSize: dim,
     paddingInline: "0",
+    ...base,
   }
 })
 const mergedStyles = computed(() => {
@@ -61,10 +65,17 @@ const resolvedAriaLabel = computed(() => {
     (typeof external === "string" ? external : "")
   )
 })
+
+defineExpose({
+  focus: () => buttonCompRef.value?.focus(),
+  blur: () => buttonCompRef.value?.blur(),
+  buttonRef: computed(() => buttonCompRef.value?.buttonRef),
+})
 </script>
 
 <template>
   <Button
+    ref="buttonCompRef"
     :variant="variant"
     :size="semanticButtonSize"
     :radius="resolvedRadius"

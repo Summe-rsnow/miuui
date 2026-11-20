@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, useAttrs } from "vue"
-import {
-  CONTROL_SIZES,
-  regionClass,
-  regionStyle,
-  resolveControlSize,
-  resolveIconSize,
-} from "@xcmm1543/miuui-core"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ButtonProps } from "../types"
+import { useControlSize } from "../composables/useControlSize"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
-import { useMiuSizeHint } from "../composables/useSizeHint"
 import Icon from "./Icon.vue"
 import Spinner from "./Spinner.vue"
 
@@ -21,22 +15,18 @@ const attrs = useAttrs()
 const buttonRef = ref<HTMLButtonElement>()
 
 const variant = computed(() => props.variant ?? "solid")
-const sizeHint = useMiuSizeHint()
-const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const radius = computed(() => (props.pill ? "full" : (props.radius ?? "default")))
+const { resolvedSize, resolvedIconSize } = useControlSize({
+  size: () => props.size,
+  iconSize: () => props.iconSize,
+  componentName: "Button",
+})
+const radius = computed(() => props.radius ?? "default")
 const loading = computed(() => props.loading ?? false)
 const disabled = computed(() => props.disabled ?? false)
 const block = computed(() => props.block ?? false)
 const iconOnly = computed(() => props.iconOnly ?? false)
 const type = computed(() => props.type ?? "button")
 
-const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
-const resolvedIconSize = computed(() =>
-  resolveIconSize(
-    resolvedSize.value.size,
-    typeof props.iconSize === "number" ? undefined : props.iconSize,
-  ),
-)
 const forwardedIconSize = computed(() =>
   typeof props.iconSize === "number" ? props.iconSize : undefined,
 )
@@ -49,15 +39,8 @@ const accessibleLabel = computed(() => {
   )
 })
 
-if (import.meta.env.DEV) {
-  if (iconOnly.value && !accessibleLabel.value) {
-    console.warn("[μui] Button: icon-only mode requires `aria-label` or `ariaLabel`.")
-  }
-  if (resolvedSize.value.fallback) {
-    console.warn(
-      `[μui] Button: unsupported size "${size.value}", fell back to "${resolvedSize.value.size}".`,
-    )
-  }
+if (import.meta.env.DEV && iconOnly.value && !accessibleLabel.value) {
+  console.warn("[μui] Button: icon-only mode requires `aria-label` or `ariaLabel`.")
 }
 
 function onClick(event: MouseEvent): void {
@@ -70,6 +53,7 @@ function onClick(event: MouseEvent): void {
 
 defineExpose({
   focus: () => buttonRef.value?.focus(),
+  blur: () => buttonRef.value?.blur(),
   buttonRef,
 })
 </script>
@@ -98,7 +82,7 @@ defineExpose({
     :data-miu-icon-size="resolvedIconSize.size"
     :data-material="materialName"
     :disabled="disabled || loading"
-    :aria-label="accessibleLabel"
+    :aria-label="accessibleLabel || undefined"
     :aria-busy="loading || undefined"
     @click="onClick"
   >
@@ -127,10 +111,13 @@ defineExpose({
       <slot />
     </span>
     <span
-      v-if="!iconOnly && iconRight && !loading"
-      class="miu-button__icon miu-button__icon--right"
+      v-if="!iconOnly && (iconRight || $slots['icon-right']) && !loading"
+      :class="regionClass(props, 'icon', 'miu-button__icon', 'miu-button__icon--right')"
+      :style="regionStyle(props, 'icon')"
     >
-      <Icon :name="iconRight" :size="forwardedIconSize" />
+      <slot name="icon-right">
+        <Icon v-if="iconRight" :name="iconRight" :size="forwardedIconSize" />
+      </slot>
     </span>
   </button>
 </template>

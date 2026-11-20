@@ -1,30 +1,17 @@
 <script setup lang="ts">
-import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-  type ComponentPublicInstance,
-} from "vue"
+import { computed, nextTick, ref, type ComponentPublicInstance } from "vue"
 import { ToggleGroupItem, ToggleGroupRoot } from "reka-ui"
-import {
-  CONTROL_SIZES,
-  regionClass,
-  regionStyle,
-  resolveControlSize,
-  resolveIconSize,
-} from "@xcmm1543/miuui-core"
-import type { SegmentedControlProps } from "../types"
+import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
+import type { SegmentedControlProps, SegmentedOption } from "../types"
 import Icon from "./Icon.vue"
-import { useMiuSizeHint } from "../composables/useSizeHint"
+import { useControlSize } from "../composables/useControlSize"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
+import { useSlidingIndicator } from "../composables/useSlidingIndicator"
 
 const props = withDefaults(defineProps<SegmentedControlProps>(), {
   radius: "default",
-  pill: false,
   disabled: false,
+  readonly: false,
   iconOnly: false,
   block: false,
   clearable: false,
@@ -33,23 +20,30 @@ const props = withDefaults(defineProps<SegmentedControlProps>(), {
 const emit = defineEmits<{
   "update:modelValue": [value: string]
   change: [value: string]
+  clear: []
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
 }>()
 
-const sizeHint = useMiuSizeHint()
-const size = computed(() => props.size ?? sizeHint.value ?? "md")
-const resolvedSize = computed(() => resolveControlSize(size.value, CONTROL_SIZES))
-const resolvedRadius = computed(() => (props.pill ? "full" : props.radius))
-const resolvedIconSize = computed(() => resolveIconSize(resolvedSize.value.size, props.iconSize))
+const { resolvedSize, resolvedIconSize } = useControlSize({
+  size: () => props.size,
+  iconSize: () => props.iconSize,
+  componentName: "SegmentedControl",
+})
 const { materialName, materialTokens } = useResolvedMaterial(
   () => props.material,
   "SegmentedControl",
 )
 
 const rootRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
-const itemElements = new Map<string, HTMLElement>()
-const indicatorMetrics = ref<{ x: number; y: number; width: number; height: number } | null>(null)
-const indicatorAnimated = ref(false)
-let resizeObserver: ResizeObserver | null = null
+const { setItemRef, indicatorMetrics, indicatorAnimated, indicatorStyle, measure } =
+  useSlidingIndicator({
+    containerRef: rootRef,
+    activeKey: () => props.modelValue,
+    enabled: () => Boolean(props.modelValue),
+    watchSources: () => [props.modelValue, props.options, props.size, props.iconOnly, props.block],
+    baseStyle: () => regionStyle(props, "indicator"),
+  })
 
 function unwrapElement(node: unknown): HTMLElement | null {
   if (!node) return null
@@ -58,81 +52,72 @@ function unwrapElement(node: unknown): HTMLElement | null {
   return maybeComp.$el instanceof HTMLElement ? maybeComp.$el : null
 }
 
-function setItemRef(value: string, node: unknown): void {
-  const el = unwrapElement(node)
-  if (el) itemElements.set(value, el)
-  else itemElements.delete(value)
-}
-
-function measureIndicator(): void {
-  const activeValue = props.modelValue
-  if (!activeValue) {
-    indicatorMetrics.value = null
-    return
-  }
-  const activeEl = itemElements.get(activeValue)
-  if (!activeEl || activeEl.offsetWidth <= 0 || activeEl.offsetHeight <= 0) {
-    indicatorMetrics.value = null
-    return
-  }
-  indicatorMetrics.value = {
-    x: activeEl.offsetLeft,
-    y: activeEl.offsetTop,
-    width: activeEl.offsetWidth,
-    height: activeEl.offsetHeight,
-  }
-  if (!indicatorAnimated.value && typeof requestAnimationFrame === "function") {
-    requestAnimationFrame(() => {
-      indicatorAnimated.value = true
-    })
-  }
-}
-
-const indicatorStyle = computed(() => {
-  const base = regionStyle(props, "indicator")
-  const m = indicatorMetrics.value
-  if (!m) return base
-  const geom = {
-    width: `${m.width}px`,
-    height: `${m.height}px`,
-    transform: `translate3d(${m.x}px, ${m.y}px, 0)`,
-  }
-  return mergeStyle(base, geom)
-})
-
-onMounted(async () => {
-  await nextTick()
-  measureIndicator()
-  const rootEl = unwrapElement(rootRef.value)
-  if (rootEl && typeof ResizeObserver !== "undefined") {
-    resizeObserver = new ResizeObserver(() => measureIndicator())
-    resizeObserver.observe(rootEl)
-  }
-})
-
-onBeforeUnmount(() => {
-  resizeObserver?.disconnect()
-  resizeObserver = null
-})
-
-watch(
-  () => [props.modelValue, props.options, props.size, props.iconOnly, props.block] as const,
-  async () => {
-    await nextTick()
-    measureIndicator()
-  },
-  { flush: "post", deep: true },
-)
-
 function onUpdate(value: unknown): void {
+  if (props.disabled || props.readonly) return
   if (typeof value === "string" && value.length > 0) {
     emit("update:modelValue", value)
     emit("change", value)
+    void nextTick().then(() => measure())
   } else if (props.clearable) {
     emit("update:modelValue", "")
     emit("change", "")
+    emit("clear")
+    void nextTick().then(() => measure())
   }
 }
+
+function onItemClick(event: MouseEvent, option: SegmentedOption): void {
+  if (props.disabled || option.disabled) return
+  if (props.readonly) {
+    event.preventDefault()
+    event.stopPropagation()
+    return
+  }
+  if (option.value === props.modelValue && !props.clearable) {
+    event.preventDefault()
+  }
+}
+
+function onReadonlyKeydown(event: KeyboardEvent): void {
+  if (props.readonly && (event.key === " " || event.key === "Enter")) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+}
+
+function onFocus(event: FocusEvent): void {
+  const rootEl = unwrapElement(rootRef.value)
+  const from = event.relatedTarget as Node | null
+  if (from && rootEl?.contains(from)) return
+  emit("focus", event)
+}
+
+function onBlur(event: FocusEvent): void {
+  const rootEl = unwrapElement(rootRef.value)
+  const to = event.relatedTarget as Node | null
+  if (to && rootEl?.contains(to)) return
+  emit("blur", event)
+}
+
+function focus(): void {
+  const rootEl = unwrapElement(rootRef.value)
+  if (!rootEl) return
+  const target =
+    rootEl.querySelector<HTMLElement>('.miu-segmented__item[data-state="on"]:not(:disabled)') ??
+    rootEl.querySelector<HTMLElement>(".miu-segmented__item:not(:disabled)")
+  target?.focus()
+}
+
+function blur(): void {
+  const rootEl = unwrapElement(rootRef.value)
+  if (!rootEl) return
+  const active = typeof document !== "undefined" ? document.activeElement : null
+  if (active instanceof HTMLElement && rootEl.contains(active)) {
+    active.blur()
+  }
+}
+
+defineExpose({ focus, blur, rootRef })
 </script>
 
 <template>
@@ -142,19 +127,26 @@ function onUpdate(value: unknown): void {
     :model-value="modelValue"
     :disabled="disabled"
     :aria-label="ariaLabel"
+    :aria-disabled="disabled || undefined"
+    :aria-readonly="readonly || undefined"
     :class="
       regionClass(props, 'root', 'miu-segmented', `miu-segmented--${resolvedSize.size}`, {
         'miu-segmented--has-indicator': Boolean(indicatorMetrics),
         'miu-segmented--block': block,
+        'miu-segmented--disabled': disabled,
+        'miu-segmented--readonly': readonly,
       })
     "
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-size="resolvedSize.size"
-    :data-miu-radius="resolvedRadius"
+    :data-miu-radius="radius"
     :data-miu-icon-size="resolvedIconSize.size"
     :data-icon-only="iconOnly || undefined"
     :data-block="block || undefined"
     :data-material="materialName"
+    :data-disabled="disabled || undefined"
+    :data-readonly="readonly || undefined"
+    @keydown.capture="onReadonlyKeydown"
     @update:model-value="onUpdate"
   >
     <span
@@ -172,11 +164,14 @@ function onUpdate(value: unknown): void {
       :key="option.value"
       :ref="(el) => setItemRef(option.value, el)"
       :value="option.value"
-      :disabled="option.disabled"
+      :disabled="disabled || option.disabled"
       :title="option.title ?? (iconOnly ? option.label : undefined)"
       :aria-label="option.ariaLabel ?? (iconOnly ? option.label : undefined)"
       :class="regionClass(props, 'item', 'miu-segmented__item')"
       :style="regionStyle(props, 'item')"
+      @click="onItemClick($event, option)"
+      @focus="onFocus"
+      @blur="onBlur"
     >
       <slot name="item" :option="option" :active="option.value === modelValue" :index="index">
         <span

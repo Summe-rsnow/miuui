@@ -13,16 +13,32 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   radius: "default",
   arrow: false,
   modal: false,
+  disabled: false,
+  closeOnClickOutside: true,
+  closeOnEsc: true,
 })
 
 const emit = defineEmits<{ "update:open": [value: boolean] }>()
 const theme = useMiuTheme()
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Popover")
+
+function onUpdateOpen(next: boolean): void {
+  if (next && props.disabled) return
+  emit("update:open", next)
+}
+
+function onEscapeKeyDown(event: KeyboardEvent): void {
+  if (!props.closeOnEsc) event.preventDefault()
+}
+
+function onOutsideDismiss(event: Event): void {
+  if (!props.closeOnClickOutside) event.preventDefault()
+}
 </script>
 
 <template>
-  <PopoverRoot :open="open" :modal="modal" @update:open="emit('update:open', $event)">
-    <PopoverTrigger as-child>
+  <PopoverRoot :open="disabled ? false : open" :modal="modal" @update:open="onUpdateOpen">
+    <PopoverTrigger as-child :disabled="disabled || undefined">
       <slot name="trigger" />
     </PopoverTrigger>
     <PopoverPortal :to="theme.portalTarget.value">
@@ -34,6 +50,9 @@ const { materialName, materialTokens } = useResolvedMaterial(() => props.materia
         :side="side"
         :align="align"
         :side-offset="sideOffset"
+        @escape-key-down="onEscapeKeyDown"
+        @pointer-down-outside="onOutsideDismiss"
+        @interact-outside="onOutsideDismiss"
       >
         <slot />
         <PopoverArrow

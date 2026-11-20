@@ -19,6 +19,7 @@ const { materialName, materialTokens } = useResolvedMaterial(() => props.materia
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-variant="variant"
     :data-miu-radius="radius"
+    :data-miu-icon-size="iconSize"
     :data-material="materialName"
     role="note"
   >
@@ -28,7 +29,7 @@ const { materialName, materialTokens } = useResolvedMaterial(() => props.materia
       :style="regionStyle(props, 'icon')"
     >
       <slot name="icon">
-        <Icon v-if="icon" :name="icon" />
+        <Icon v-if="icon" :name="icon" :size="iconSize" />
       </slot>
     </span>
     <div class="miu-alert__body">

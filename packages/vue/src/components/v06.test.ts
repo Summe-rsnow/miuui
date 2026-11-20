@@ -33,16 +33,17 @@ afterEach(() => {
 })
 
 describe("v0.6.0 Muyu migration extensions & new primitives", () => {
-  it("supports Button pill, IconButton active/shape, and Avatar squircle/clickable", async () => {
-    const btn = track(mount(Button, { props: { pill: true }, slots: { default: "Play" } }))
+  it("supports Button radius='full', IconButton active/radius, and Avatar squircle/clickable", async () => {
+    const btn = track(mount(Button, { props: { radius: "full" }, slots: { default: "Play" } }))
     expect(btn.attributes("data-miu-radius")).toBe("full")
 
     const iconBtn = track(
       mount(IconButton, {
-        props: { icon: "sparkles", active: true, shape: "squircle", title: "Effects" },
+        props: { icon: "sparkles", active: true, radius: "default", title: "Effects" },
       }),
     )
     expect(iconBtn.attributes("aria-pressed")).toBe("true")
+    expect(iconBtn.attributes("data-miu-radius")).toBe("default")
     expect(iconBtn.classes()).toContain("miu-icon-button--active")
 
     const onAvatarClick = vi.fn()
@@ -105,7 +106,7 @@ describe("v0.6.0 Muyu migration extensions & new primitives", () => {
       mount(MessageComposer, {
         props: {
           modelValue: "Hello Muyu",
-          compact: true,
+          density: "compact",
           showCancel: true,
           onSend,
           onCancel,
@@ -256,7 +257,7 @@ describe("v0.6.0 Muyu migration extensions & new primitives", () => {
     expect(avatar.find("svg path").attributes("d")).toBe("M12 2L22 12L12 22L2 12Z")
   })
 
-  it("supports Tabs segmented variant and SegmentedControl pill prop", () => {
+  it("supports Tabs segmented variant and SegmentedControl radius='full'", () => {
     const segTabs = track(
       mount(Tabs, {
         props: {
@@ -294,7 +295,7 @@ describe("v0.6.0 Muyu migration extensions & new primitives", () => {
       mount(SegmentedControl, {
         props: {
           modelValue: "a",
-          pill: true,
+          radius: "full",
           options: [
             { value: "a", label: "A" },
             { value: "b", label: "B" },
@@ -374,8 +375,10 @@ describe("v0.6.0 Muyu migration extensions & new primitives", () => {
       motionTier: "full",
     } as const
     const solidTokens = solidMaterial.generateTokens(ctx, "full")
-    expect(solidTokens["--miu-glass-filter-regular"]).toBe("none")
-    expect(solidTokens["--miu-glass-sheen"]).toBe("none")
+    expect(solidTokens["--miu-material-backdrop"]).toBe("none")
+    expect(solidTokens["--miu-material-highlight"]).toBe("none")
+    expect(solidTokens["--miu-glass-filter-regular"]).toBeUndefined()
+    expect(solidTokens["--miu-glass-sheen"]).toBeUndefined()
     const glassTokens = glassMaterial.generateTokens(ctx, "full")
     expect(glassTokens["--miu-material-backdrop"]).toContain("blur(")
   })

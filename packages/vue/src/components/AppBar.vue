@@ -16,6 +16,7 @@ const { materialName, materialTokens } = useResolvedMaterial(() => props.materia
   <header
     :class="regionClass(props, 'root', 'miu-app-bar')"
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
+    :data-miu-radius="radius"
     :data-sticky="sticky || undefined"
     :data-blurred="blurred || undefined"
     :data-material="materialName"

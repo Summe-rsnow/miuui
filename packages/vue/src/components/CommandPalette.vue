@@ -11,13 +11,17 @@ import { computed, nextTick, ref, useId, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { CommandItem, CommandPaletteProps } from "../types"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
+import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 import Input from "./Input.vue"
 import Kbd from "./Kbd.vue"
+
 const props = withDefaults(defineProps<CommandPaletteProps>(), {
   open: false,
   radius: "lg",
   items: () => [],
+  closeOnOverlayClick: true,
+  closeOnEsc: true,
 })
 
 const emit = defineEmits<{
@@ -27,6 +31,7 @@ const emit = defineEmits<{
 
 const theme = useMiuTheme()
 const { t } = useMiuI18n()
+const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "CommandPalette")
 const listId = useId()
 const query = ref("")
 const activeIndex = ref(0)
@@ -57,6 +62,9 @@ const grouped = computed(() => {
 
 const emptyLabel = computed(() => props.emptyText ?? t("commandPalette.empty"))
 const placeholder = computed(() => props.placeholder ?? t("commandPalette.placeholder"))
+const activeOptionId = computed(() =>
+  filtered.value.length > 0 ? optionId(activeIndex.value) : undefined,
+)
 
 watch(
   () => props.open,
@@ -94,6 +102,14 @@ function selectActive(): void {
   if (item) selectItem(item)
 }
 
+function onEscapeKeyDown(event: KeyboardEvent): void {
+  if (!props.closeOnEsc) event.preventDefault()
+}
+
+function onOutsideDismiss(event: Event): void {
+  if (!props.closeOnOverlayClick) event.preventDefault()
+}
+
 function onKeydown(event: KeyboardEvent): void {
   switch (event.key) {
     case "ArrowDown":
@@ -124,14 +140,19 @@ function onKeydown(event: KeyboardEvent): void {
   <DialogRoot :open="open" @update:open="emit('update:open', $event)">
     <DialogPortal :to="theme.portalTarget.value">
       <DialogOverlay
-        :class="regionClass(props, 'overlay', 'miu-command-palette__overlay')"
+        :class="
+          regionClass(props, 'overlay', 'miu-overlay-backdrop', 'miu-command-palette__overlay')
+        "
         :style="regionStyle(props, 'overlay')"
       />
       <DialogContent
         :class="regionClass(props, 'content', 'miu-command-palette')"
-        :style="regionStyle(props, 'content')"
+        :style="mergeStyle(regionStyle(props, 'content'), materialTokens)"
         :data-miu-radius="radius"
-        :data-material="material"
+        :data-material="materialName"
+        @escape-key-down="onEscapeKeyDown"
+        @pointer-down-outside="onOutsideDismiss"
+        @interact-outside="onOutsideDismiss"
         @keydown="onKeydown"
       >
         <DialogTitle class="miu-sr-only">{{ t("commandPalette.title") }}</DialogTitle>
@@ -158,6 +179,7 @@ function onKeydown(event: KeyboardEvent): void {
           class="miu-command-palette__results"
           role="listbox"
           :aria-label="t('commandPalette.title')"
+          :aria-activedescendant="activeOptionId"
         >
           <div
             v-for="group in grouped"
@@ -171,7 +193,7 @@ function onKeydown(event: KeyboardEvent): void {
             <button
               v-for="entry in group.items"
               :id="optionId(entry.index)"
-              :key="entry.item.link"
+              :key="`${entry.item.link}-${entry.index}`"
               type="button"
               role="option"
               :aria-selected="entry.index === activeIndex"

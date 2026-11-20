@@ -4,15 +4,19 @@ import type { CollapseProps } from "../types"
 
 const props = withDefaults(defineProps<CollapseProps>(), {
   open: false,
+  disabled: false,
 })
 </script>
 
 <template>
   <div
-    :class="regionClass(props, 'root', 'miu-collapse')"
+    :class="regionClass(props, 'root', 'miu-collapse', { 'miu-collapse--disabled': disabled })"
     :style="regionStyle(props, 'root')"
     :data-open="open ? 'true' : 'false'"
+    :data-disabled="disabled || undefined"
+    :aria-disabled="disabled ? 'true' : undefined"
     :aria-hidden="!open || undefined"
+    :inert="!open || disabled || undefined"
   >
     <div
       :class="regionClass(props, 'content', 'miu-collapse__inner')"

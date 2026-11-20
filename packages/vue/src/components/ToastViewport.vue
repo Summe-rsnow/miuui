@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue"
+import { computed, onBeforeUnmount, onMounted } from "vue"
 import type { IconDefinition, IconName } from "@xcmm1543/miuui-icons"
 import { regionClass, regionStyle, type MaterialName } from "@xcmm1543/miuui-core"
 import type { ToastPosition, ToastStyleVariant, ToastViewportProps } from "../types"
+import { useMounted } from "../composables/useMounted"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
 import { mergeStyle, resolveMaterialValue } from "../composables/usePluginResolution"
 import {
@@ -38,13 +39,12 @@ const props = withDefaults(defineProps<ToastViewportProps>(), {
 const { toasts, toastDefaults, dismiss } = useToast()
 const theme = useMiuTheme()
 const { t } = useMiuI18n()
-const mounted = ref(false)
+const mounted = useMounted()
 const viewportId = Symbol("miu-toast-viewport")
 const isPrimary = computed(() => isPrimaryToastViewport(viewportId))
 
 onMounted(() => {
   registerToastViewport(viewportId)
-  mounted.value = true
 })
 
 onBeforeUnmount(() => {
@@ -65,27 +65,26 @@ const visibleToasts = computed(() => {
   return list
 })
 
-const groupedByPosition = computed(() => {
-  const map = new Map<ToastPosition, ToastItem[]>()
-  for (const item of visibleToasts.value) {
-    const pos = item.position ?? basePosition.value
-    const bucket = map.get(pos)
-    if (bucket) bucket.push(item)
-    else map.set(pos, [item])
-  }
-  if (map.size === 0) {
-    map.set(basePosition.value, [])
-  }
-  return Array.from(map.entries())
-})
+interface ResolvedToastEntry {
+  item: ToastItem
+  styleVariant: ToastStyleVariant
+  radius: string
+  materialName: MaterialName
+  style: ReturnType<typeof mergeStyle>
+  closable: boolean
+  dismissOnClick: boolean
+}
 
-function resolveItemMaterial(item: ToastItem): {
-  name: MaterialName
-  tokens: Record<string, string> | undefined
-} {
-  const requested = item.material ?? toastDefaults.value.material ?? props.material
-  const resolved = resolveMaterialValue(
-    requested,
+function resolveEntry(item: ToastItem): ResolvedToastEntry {
+  const styleVariant =
+    item.styleVariant ?? toastDefaults.value.styleVariant ?? props.styleVariant ?? "accent"
+  const radius =
+    styleVariant === "pill"
+      ? "full"
+      : (item.radius ?? toastDefaults.value.radius ?? props.radius ?? "default")
+  const requestedMaterial = item.material ?? toastDefaults.value.material ?? props.material
+  const mat = resolveMaterialValue(
+    requestedMaterial,
     {
       theme: theme.theme.value,
       density: theme.density.value,
@@ -95,37 +94,35 @@ function resolveItemMaterial(item: ToastItem): {
     },
     "ToastViewport",
   )
-  return { name: resolved.name, tokens: resolved.tokens }
+  return {
+    item,
+    styleVariant,
+    radius,
+    materialName: mat.name,
+    style: mergeStyle(regionStyle(props, "toast"), mat.tokens),
+    closable: item.closable ?? styleVariant !== "pill",
+    dismissOnClick: item.dismissOnClick ?? styleVariant === "pill",
+  }
 }
 
-function resolveItemStyleVariant(item: ToastItem): ToastStyleVariant {
-  return item.styleVariant ?? toastDefaults.value.styleVariant ?? props.styleVariant ?? "accent"
-}
+const groupedByPosition = computed(() => {
+  const map = new Map<ToastPosition, ResolvedToastEntry[]>()
+  for (const item of visibleToasts.value) {
+    const pos = item.position ?? basePosition.value
+    const bucket = map.get(pos)
+    const entry = resolveEntry(item)
+    if (bucket) bucket.push(entry)
+    else map.set(pos, [entry])
+  }
+  if (map.size === 0) {
+    map.set(basePosition.value, [])
+  }
+  return Array.from(map.entries())
+})
 
-function resolveItemRadius(item: ToastItem): string {
-  const variant = resolveItemStyleVariant(item)
-  if (variant === "pill") return "full"
-  return item.radius ?? toastDefaults.value.radius ?? props.radius ?? "default"
-}
-
-function isClosable(item: ToastItem): boolean {
-  if (item.closable !== undefined) return item.closable
-  return resolveItemStyleVariant(item) !== "pill"
-}
-
-function isDismissOnClick(item: ToastItem): boolean {
-  if (item.dismissOnClick !== undefined) return item.dismissOnClick
-  return resolveItemStyleVariant(item) === "pill"
-}
-
-function toastStyleFor(item: ToastItem) {
-  const mat = resolveItemMaterial(item)
-  return mergeStyle(regionStyle(props, "toast"), mat.tokens)
-}
-
-function onToastClick(item: ToastItem): void {
-  if (isDismissOnClick(item)) {
-    dismiss(item.id)
+function onToastClick(entry: ResolvedToastEntry): void {
+  if (entry.dismissOnClick) {
+    dismiss(entry.item.id)
   }
 }
 
@@ -148,33 +145,40 @@ function onAction(item: ToastItem): void {
       aria-atomic="false"
     >
       <div
-        v-for="item in list"
-        :key="item.id"
+        v-for="entry in list"
+        :key="entry.item.id"
         :class="regionClass(props, 'toast', 'miu-toast')"
-        :style="toastStyleFor(item)"
-        :data-variant="item.variant"
-        :data-style-variant="resolveItemStyleVariant(item)"
-        :data-material="resolveItemMaterial(item).name"
-        :data-miu-radius="resolveItemRadius(item)"
-        :data-clickable="isDismissOnClick(item) || undefined"
-        :role="item.variant === 'error' ? 'alert' : 'status'"
-        @click="onToastClick(item)"
+        :style="entry.style"
+        :data-variant="entry.item.variant"
+        :data-style-variant="entry.styleVariant"
+        :data-material="entry.materialName"
+        :data-miu-radius="entry.radius"
+        :data-clickable="entry.dismissOnClick || undefined"
+        :role="entry.item.variant === 'error' ? 'alert' : 'status'"
+        @click="onToastClick(entry)"
       >
-        <slot name="toast" :toast="item" :dismiss="() => dismiss(item.id)">
+        <slot name="toast" :toast="entry.item" :dismiss="() => dismiss(entry.item.id)">
           <span
-            v-if="item.icon !== false && ($slots.icon || item.icon || item.variant !== 'default')"
+            v-if="
+              entry.item.icon !== false &&
+              ($slots.icon || entry.item.icon || entry.item.variant !== 'default')
+            "
             :class="regionClass(props, 'icon', 'miu-toast__icon')"
             :style="regionStyle(props, 'icon')"
             aria-hidden="true"
           >
-            <slot name="icon" :toast="item">
+            <slot name="icon" :toast="entry.item">
               <Icon
-                v-if="typeof item.icon === 'string' || isIconDefinition(item.icon)"
-                :name="item.icon"
+                v-if="typeof entry.item.icon === 'string' || isIconDefinition(entry.item.icon)"
+                :name="entry.item.icon"
                 size="md"
               />
-              <component :is="item.icon" v-else-if="item.icon" class="miu-toast__custom-icon" />
-              <Icon v-else :name="defaultIconName(item.variant)" size="md" />
+              <component
+                :is="entry.item.icon"
+                v-else-if="entry.item.icon"
+                class="miu-toast__custom-icon"
+              />
+              <Icon v-else :name="defaultIconName(entry.item.variant)" size="md" />
             </slot>
           </span>
 
@@ -186,37 +190,37 @@ function onAction(item: ToastItem): void {
               :class="regionClass(props, 'title', 'miu-toast__title')"
               :style="regionStyle(props, 'title')"
             >
-              <slot name="title" :toast="item">{{ item.title }}</slot>
+              <slot name="title" :toast="entry.item">{{ entry.item.title }}</slot>
             </p>
             <p
-              v-if="item.description || $slots.description"
+              v-if="entry.item.description || $slots.description"
               :class="regionClass(props, 'description', 'miu-toast__description')"
               :style="regionStyle(props, 'description')"
             >
-              <slot name="description" :toast="item">{{ item.description }}</slot>
+              <slot name="description" :toast="entry.item">{{ entry.item.description }}</slot>
             </p>
-            <div v-if="item.action || $slots.actions" class="miu-toast__actions">
-              <slot name="actions" :toast="item">
+            <div v-if="entry.item.action || $slots.actions" class="miu-toast__actions">
+              <slot name="actions" :toast="entry.item">
                 <button
-                  v-if="item.action"
+                  v-if="entry.item.action"
                   type="button"
                   :class="regionClass(props, 'action', 'miu-toast__action')"
                   :style="regionStyle(props, 'action')"
-                  @click.stop="onAction(item)"
+                  @click.stop="onAction(entry.item)"
                 >
-                  {{ item.action.label }}
+                  {{ entry.item.action.label }}
                 </button>
               </slot>
             </div>
           </div>
 
           <button
-            v-if="isClosable(item)"
+            v-if="entry.closable"
             type="button"
             :class="regionClass(props, 'close', 'miu-toast__close')"
             :style="regionStyle(props, 'close')"
             :aria-label="t('toast.dismiss')"
-            @click.stop="dismiss(item.id)"
+            @click.stop="dismiss(entry.item.id)"
           >
             <Icon name="close" size="sm" />
           </button>

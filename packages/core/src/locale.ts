@@ -47,6 +47,7 @@ export const zhCN: MiuMessageTree = {
     search: "搜索",
     clear: "清空",
     menu: "菜单",
+    select: "选择",
   },
   dialog: {
     close: "关闭对话框",
@@ -108,6 +109,13 @@ export const zhCN: MiuMessageTree = {
     open: "打开",
     close: "关闭",
   },
+  truncate: {
+    expand: "展开",
+    collapse: "收起",
+  },
+  pillGroup: {
+    all: "全部",
+  },
 }
 
 export const enUS: MiuMessageTree = {
@@ -121,6 +129,7 @@ export const enUS: MiuMessageTree = {
     search: "Search",
     clear: "Clear",
     menu: "Menu",
+    select: "Select",
   },
   dialog: {
     close: "Close dialog",
@@ -181,6 +190,13 @@ export const enUS: MiuMessageTree = {
     navigate: "Navigate",
     open: "Open",
     close: "Close",
+  },
+  truncate: {
+    expand: "Expand",
+    collapse: "Collapse",
+  },
+  pillGroup: {
+    all: "All",
   },
 }
 
