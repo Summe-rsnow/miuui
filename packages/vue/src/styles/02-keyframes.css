@@ -108,6 +108,20 @@
   }
 }
 
+@keyframes miu-image-preview-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--miu-motion-scale-enter));
+  }
+}
+
+@keyframes miu-image-preview-out {
+  to {
+    opacity: 0;
+    transform: scale(var(--miu-motion-scale-enter));
+  }
+}
+
 @keyframes miu-check-pop {
   from {
     opacity: 0;

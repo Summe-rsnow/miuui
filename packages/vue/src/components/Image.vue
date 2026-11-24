@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
-import type { ImageProps } from "../types"
+import type { ImagePreviewOriginRect, ImageProps } from "../types"
+import { captureOriginRect } from "../composables/useOriginRect"
 import { useMiuI18n } from "../composables/useMiu"
 import { mergeStyle } from "../composables/usePluginResolution"
 import ImagePreview from "./ImagePreview.vue"
@@ -24,6 +25,8 @@ const { t } = useMiuI18n()
 const usedFallbackSrc = ref(false)
 const loadFailed = ref(false)
 const showPreview = ref(false)
+const rootRef = ref<HTMLElement | null>(null)
+const previewOriginRect = ref<ImagePreviewOriginRect | null>(null)
 
 watch(
   () => [props.src, props.fallbackSrc] as const,
@@ -67,12 +70,16 @@ function onLoad(event: Event): void {
 }
 
 function openPreview(): void {
-  if (canPreview.value) showPreview.value = true
+  if (canPreview.value) {
+    previewOriginRect.value = captureOriginRect(rootRef.value)
+    showPreview.value = true
+  }
 }
 </script>
 
 <template>
   <div
+    ref="rootRef"
     :class="
       regionClass(props, 'root', 'miu-image', {
         'miu-image--previewable': canPreview,
@@ -131,6 +138,7 @@ function openPreview(): void {
       :open="showPreview"
       :src="activeSrc"
       :alt="alt"
+      :origin-rect="previewOriginRect"
       material="glass"
       :class-names="{
         img: pixelated

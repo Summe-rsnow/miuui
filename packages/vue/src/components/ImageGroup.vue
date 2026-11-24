@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
-import type { ImageGroupProps, ImagePreviewItem } from "../types"
+import type { ImageGroupProps, ImagePreviewItem, ImagePreviewOriginRect } from "../types"
+import { captureOriginRect } from "../composables/useOriginRect"
 import { useMiuI18n } from "../composables/useMiu"
 import Image from "./Image.vue"
 import ImagePreview from "./ImagePreview.vue"
@@ -17,6 +18,7 @@ const emit = defineEmits<{ error: [index: number, event: Event] }>()
 const { t } = useMiuI18n()
 const previewOpen = ref(false)
 const previewIndex = ref(0)
+const previewOriginRect = ref<ImagePreviewOriginRect | null>(null)
 const failedIndices = ref(new Set<number>())
 
 watch(
@@ -53,8 +55,9 @@ const layoutType = computed<"single" | "quad" | "grid-3">(() => {
   return "grid-3"
 })
 
-function openPreview(index: number): void {
+function openPreview(index: number, event?: MouseEvent): void {
   previewIndex.value = index
+  previewOriginRect.value = captureOriginRect(event?.currentTarget)
   previewOpen.value = true
 }
 
@@ -85,7 +88,7 @@ function onImageError(index: number, event: Event): void {
       :style="regionStyle(props, 'item')"
       :data-error="failedIndices.has(idx) || undefined"
       :aria-label="item.alt"
-      @click.stop="openPreview(idx)"
+      @click.stop="openPreview(idx, $event)"
     >
       <Image
         :src="item.thumb ?? item.src"
@@ -113,6 +116,7 @@ function onImageError(index: number, event: Event): void {
       v-model:open="previewOpen"
       :images="normalizedImages"
       :initial-index="previewIndex"
+      :origin-rect="previewOriginRect"
     >
       <template v-if="$slots.actions" #actions="slotProps">
         <slot name="actions" v-bind="slotProps" />

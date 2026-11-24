@@ -20,6 +20,7 @@ import EmptyState from "./EmptyState.vue"
 import FormField from "./FormField.vue"
 import FormRow from "./FormRow.vue"
 import HelpTooltip from "./HelpTooltip.vue"
+import HeroHeader from "./HeroHeader.vue"
 import Icon from "./Icon.vue"
 import IconButton from "./IconButton.vue"
 import Image from "./Image.vue"
@@ -28,6 +29,7 @@ import Kbd from "./Kbd.vue"
 import List from "./List.vue"
 import ListItem from "./ListItem.vue"
 import LoadingOverlay from "./LoadingOverlay.vue"
+import MediaCard from "./MediaCard.vue"
 import MessageComposer from "./MessageComposer.vue"
 import NavMenu from "./NavMenu.vue"
 import PageHeader from "./PageHeader.vue"
@@ -36,8 +38,10 @@ import Pagination from "./Pagination.vue"
 import Pill from "./Pill.vue"
 import Popconfirm from "./Popconfirm.vue"
 import Popover from "./Popover.vue"
+import PopupPanel from "./PopupPanel.vue"
 import Progress from "./Progress.vue"
 import RadioGroup from "./RadioGroup.vue"
+import Scrollbar from "./Scrollbar.vue"
 import SectionHeader from "./SectionHeader.vue"
 import SegmentedControl from "./SegmentedControl.vue"
 import Select from "./Select.vue"
@@ -51,6 +55,7 @@ import ThemeProvider from "./ThemeProvider.vue"
 import Toc from "./Toc.vue"
 import Tooltip from "./Tooltip.vue"
 import TruncateText from "./TruncateText.vue"
+import VerticalSlider from "./VerticalSlider.vue"
 
 afterEach(() => {
   document.body.innerHTML = ""
@@ -143,6 +148,12 @@ describe("SSR rendering and client hydration consistency", () => {
             h(HelpTooltip, { text: "Helpful info" }),
             h(TruncateText, { text: "Long text", lines: 2 }),
             h(Progress, { modelValue: 45, showValue: true, ariaLabel: "Progress" }),
+            h(Progress, { shape: "circle", modelValue: 75, showValue: true, ariaLabel: "Ring" }),
+            h(HeroHeader, { title: "Hero", tag: "Tag", description: "Hero desc" }),
+            h(MediaCard, { title: "Card", subtitle: "Artist", interactive: true }),
+            h(PopupPanel, { title: "Panel", closable: true }, () => "Body"),
+            h(Scrollbar, { container: null }),
+            h(VerticalSlider, { modelValue: 0, mode: "continuous", centerZero: true, ariaLabel: "EQ" }),
             h(RadioGroup, {
               modelValue: "a",
               options: ["a", "b"],
@@ -206,6 +217,8 @@ describe("SSR rendering and client hydration consistency", () => {
             columns: [{ key: "name", label: "Component" }],
             rows: [{ id: "btn", name: "Button" }],
           }),
+          h(MediaCard, { title: "Album", subtitle: "Artist", interactive: true }),
+          h(Progress, { shape: "circle", modelValue: 40, showValue: true, ariaLabel: "Progress" }),
           h(Alert, { variant: "info", title: "Ready", icon: "check" }, () => "Hydrated"),
         ]),
     })

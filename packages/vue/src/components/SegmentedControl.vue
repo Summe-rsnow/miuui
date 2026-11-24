@@ -36,8 +36,14 @@ const { materialName, materialTokens } = useResolvedMaterial(
 )
 
 const rootRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
-const { setItemRef, indicatorMetrics, indicatorAnimated, indicatorStyle, measure } =
-  useSlidingIndicator({
+const {
+  setItemRef,
+  setIndicatorRef,
+  indicatorMetrics,
+  indicatorAnimated,
+  indicatorStyle,
+  measure,
+} = useSlidingIndicator({
     containerRef: rootRef,
     activeKey: () => props.modelValue,
     enabled: () => Boolean(props.modelValue),
@@ -151,6 +157,7 @@ defineExpose({ focus, blur, rootRef })
   >
     <span
       v-if="indicatorMetrics"
+      :ref="setIndicatorRef"
       aria-hidden="true"
       :class="
         regionClass(props, 'indicator', 'miu-segmented__indicator', {

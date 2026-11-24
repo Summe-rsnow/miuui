@@ -7,7 +7,8 @@
   inset: 0;
   z-index: var(--miu-z-modal-backdrop);
   background: var(--miu-color-overlay);
-  backdrop-filter: blur(var(--miu-space-2));
+  backdrop-filter: var(--miu-overlay-backdrop-filter, blur(var(--miu-space-2)));
+  -webkit-backdrop-filter: var(--miu-overlay-backdrop-filter, blur(var(--miu-space-2)));
 }
 
 .miu-overlay-backdrop[data-state="open"] {
@@ -156,6 +157,11 @@
   padding: var(--miu-space-2);
 }
 
+.miu-popover[data-auto-max-height] {
+  max-block-size: calc(var(--reka-popover-content-available-height, 100vh) - var(--miu-space-4));
+  overflow-y: auto;
+}
+
 .miu-popover[data-state="open"],
 .miu-menu[data-state="open"] {
   animation: miu-popover-in-bottom var(--miu-motion-duration-base) var(--miu-motion-ease-spring);
@@ -268,7 +274,7 @@
 .miu-menu {
   z-index: var(--miu-z-dropdown);
   min-width: var(--miu-dialog-width-sm);
-  padding: var(--miu-space-1);
+  padding: var(--miu-space-2);
 }
 
 .miu-menu__item {
@@ -302,6 +308,15 @@
 .miu-menu__item[data-disabled] {
   opacity: 0.45;
   pointer-events: none;
+}
+
+.miu-menu__sub-trigger {
+  justify-content: space-between;
+}
+
+.miu-menu__sub-arrow {
+  margin-inline-start: auto;
+  color: var(--miu-color-text-muted);
 }
 
 .miu-menu__separator {
@@ -1022,6 +1037,21 @@
   animation: miu-fade-out var(--miu-motion-duration-fast) var(--miu-motion-ease-in) forwards;
 }
 
+.miu-overlay-backdrop[data-motion-waapi="true"],
+.miu-image-preview[data-motion-waapi="true"],
+.miu-image-preview[data-motion-waapi="true"] .miu-image-preview__img {
+  animation: none;
+}
+
+.miu-overlay-backdrop[data-closing="true"],
+.miu-image-preview[data-closing="true"] {
+  pointer-events: none;
+}
+
+.miu-image-preview__img[data-pending="true"] {
+  opacity: 0;
+}
+
 .miu-image-preview__topbar {
   position: absolute;
   inset-block-start: var(--miu-space-6);
@@ -1074,7 +1104,12 @@
   object-fit: contain;
   border-radius: var(--miu-radius-lg);
   box-shadow: var(--miu-shadow-4);
-  animation: miu-pop-in var(--miu-motion-duration-base) var(--miu-motion-ease-spring);
+  animation: miu-image-preview-in var(--miu-motion-duration-base) var(--miu-motion-ease-spring);
+}
+
+.miu-image-preview[data-state="closed"] .miu-image-preview__img {
+  animation: miu-image-preview-out var(--miu-motion-duration-fast) var(--miu-motion-ease-in)
+    forwards;
 }
 
 .miu-image-preview__empty {

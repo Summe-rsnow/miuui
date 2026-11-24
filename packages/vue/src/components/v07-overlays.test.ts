@@ -378,6 +378,30 @@ describe("v0.7.0 overlay & floating components", () => {
     )
     await flushPromises()
     expect(lockedPop.emitted("update:open")).toBeUndefined()
+
+    const inputEl = document.createElement("input")
+    document.body.appendChild(inputEl)
+    inputEl.focus()
+    expect(document.activeElement).toBe(inputEl)
+
+    const anchorPopOpen = ref(false)
+    const AnchorPopHost = defineComponent({
+      components: { Popover },
+      setup() {
+        return { anchorPopOpen, reference: inputEl }
+      },
+      template: `
+        <Popover :open="anchorPopOpen" :reference="reference" :auto-focus="false">
+          <button id="pop-focus-btn" type="button">Hot item</button>
+        </Popover>
+      `,
+    })
+    track(mount(AnchorPopHost, { attachTo: document.body }))
+    anchorPopOpen.value = true
+    await flushPromises()
+    await nextTick()
+    expect(document.querySelector("#pop-focus-btn")).not.toBeNull()
+    expect(document.activeElement).toBe(inputEl)
   })
 
   it("Popconfirm avoids premature close when controlled or async loading, wires arrow region, and supports disabled", async () => {

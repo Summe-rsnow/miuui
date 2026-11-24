@@ -21,6 +21,7 @@ import EmptyState from "./components/EmptyState.vue"
 import FormField from "./components/FormField.vue"
 import FormRow from "./components/FormRow.vue"
 import HelpTooltip from "./components/HelpTooltip.vue"
+import HeroHeader from "./components/HeroHeader.vue"
 import Icon from "./components/Icon.vue"
 import IconButton from "./components/IconButton.vue"
 import Image from "./components/Image.vue"
@@ -31,6 +32,7 @@ import Kbd from "./components/Kbd.vue"
 import List from "./components/List.vue"
 import ListItem from "./components/ListItem.vue"
 import LoadingOverlay from "./components/LoadingOverlay.vue"
+import MediaCard from "./components/MediaCard.vue"
 import MessageComposer from "./components/MessageComposer.vue"
 import NavMenu from "./components/NavMenu.vue"
 import NumberInput from "./components/NumberInput.vue"
@@ -41,8 +43,10 @@ import Pill from "./components/Pill.vue"
 import PillGroup from "./components/PillGroup.vue"
 import Popconfirm from "./components/Popconfirm.vue"
 import Popover from "./components/Popover.vue"
+import PopupPanel from "./components/PopupPanel.vue"
 import Progress from "./components/Progress.vue"
 import RadioGroup from "./components/RadioGroup.vue"
+import Scrollbar from "./components/Scrollbar.vue"
 import SectionHeader from "./components/SectionHeader.vue"
 import SegmentedControl from "./components/SegmentedControl.vue"
 import Select from "./components/Select.vue"
@@ -58,6 +62,7 @@ import ToastViewport from "./components/ToastViewport.vue"
 import Toc from "./components/Toc.vue"
 import Tooltip from "./components/Tooltip.vue"
 import TruncateText from "./components/TruncateText.vue"
+import VerticalSlider from "./components/VerticalSlider.vue"
 
 export const components: Record<string, Component> = {
   MiuAlert: Alert,
@@ -82,6 +87,7 @@ export const components: Record<string, Component> = {
   MiuFormField: FormField,
   MiuFormRow: FormRow,
   MiuHelpTooltip: HelpTooltip,
+  MiuHeroHeader: HeroHeader,
   MiuIcon: Icon,
   MiuIconButton: IconButton,
   MiuImage: Image,
@@ -92,6 +98,7 @@ export const components: Record<string, Component> = {
   MiuList: List,
   MiuListItem: ListItem,
   MiuLoadingOverlay: LoadingOverlay,
+  MiuMediaCard: MediaCard,
   MiuMessageComposer: MessageComposer,
   MiuNavMenu: NavMenu,
   MiuNumberInput: NumberInput,
@@ -102,8 +109,10 @@ export const components: Record<string, Component> = {
   MiuPill: Pill,
   MiuPopconfirm: Popconfirm,
   MiuPopover: Popover,
+  MiuPopupPanel: PopupPanel,
   MiuProgress: Progress,
   MiuRadioGroup: RadioGroup,
+  MiuScrollbar: Scrollbar,
   MiuSectionHeader: SectionHeader,
   MiuSegmentedControl: SegmentedControl,
   MiuSelect: Select,
@@ -119,6 +128,7 @@ export const components: Record<string, Component> = {
   MiuToc: Toc,
   MiuTooltip: Tooltip,
   MiuTruncateText: TruncateText,
+  MiuVerticalSlider: VerticalSlider,
 }
 
 export const MiuUi: Plugin = {

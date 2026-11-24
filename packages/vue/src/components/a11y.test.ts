@@ -17,14 +17,18 @@ import DropdownMenu from "./DropdownMenu.vue"
 import EmptyState from "./EmptyState.vue"
 import FormField from "./FormField.vue"
 import FormRow from "./FormRow.vue"
+import HeroHeader from "./HeroHeader.vue"
 import IconButton from "./IconButton.vue"
 import Input from "./Input.vue"
+import MediaCard from "./MediaCard.vue"
 import MessageComposer from "./MessageComposer.vue"
 import NavMenu from "./NavMenu.vue"
 import PageHeader from "./PageHeader.vue"
 import Pagination from "./Pagination.vue"
 import Pill from "./Pill.vue"
 import Popover from "./Popover.vue"
+import PopupPanel from "./PopupPanel.vue"
+import Progress from "./Progress.vue"
 import SegmentedControl from "./SegmentedControl.vue"
 import Select from "./Select.vue"
 import Switch from "./Switch.vue"
@@ -32,6 +36,7 @@ import Table from "./Table.vue"
 import Tabs from "./Tabs.vue"
 import Textarea from "./Textarea.vue"
 import Toc from "./Toc.vue"
+import VerticalSlider from "./VerticalSlider.vue"
 
 const mounted: VueWrapper[] = []
 
@@ -287,13 +292,19 @@ describe("axe-core accessibility gate", () => {
           ConfirmDialog,
           DropdownMenu,
           EmptyState,
+          HeroHeader,
+          IconButton,
+          MediaCard,
           MessageComposer,
           NavMenu,
           PageHeader,
           Pagination,
           Pill,
           Popover,
+          PopupPanel,
+          Progress,
           Toc,
+          VerticalSlider,
         },
         data: () => ({
           msg: "Draft message",
@@ -310,6 +321,15 @@ describe("axe-core accessibility gate", () => {
             <Toc :items="[{ id: 'api', text: 'API', level: 2 }]" active-id="api" />
             <Alert title="Notice" variant="info" icon="bell">Body text</Alert>
             <Card><Avatar alt="Ada Lovelace" /><Badge variant="success" dot>Ready</Badge><Pill label="Active" active removable /><Code variant="primary">@xcmm1543/miuui-vue</Code></Card>
+            <MediaCard title="Album" subtitle="Artist" interactive>
+              <template #action><IconButton icon="play" aria-label="Play Album" /></template>
+            </MediaCard>
+            <HeroHeader title="Featured Playlist" tag="Playlist" description="Hero description" previewable />
+            <PopupPanel title="Queue" closable>
+              <div>Queue body</div>
+            </PopupPanel>
+            <VerticalSlider :model-value="0" mode="continuous" center-zero aria-label="EQ Band" />
+            <Progress shape="circle" :model-value="60" show-value aria-label="Upload progress" />
             <MessageComposer v-model="msg" placeholder="Reply" />
             <Pagination :previous="{ text: 'Prev', link: '/prev' }" :next="{ text: 'Next', link: '/next' }" />
             <Popover open>

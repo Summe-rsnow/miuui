@@ -44,8 +44,14 @@ watch(
   },
 )
 
-const { setItemRef, indicatorMetrics, indicatorAnimated, indicatorStyle, measure } =
-  useSlidingIndicator({
+const {
+  setItemRef,
+  setIndicatorRef,
+  indicatorMetrics,
+  indicatorAnimated,
+  indicatorStyle,
+  measure,
+} = useSlidingIndicator({
     containerRef: listRef,
     activeKey: () => props.modelValue,
     enabled: () => !props.loading,
@@ -174,6 +180,7 @@ defineExpose({ focus, blur, listRef })
     >
       <span
         v-if="indicatorMetrics"
+        :ref="setIndicatorRef"
         aria-hidden="true"
         :class="
           regionClass(props, 'indicator', 'miu-tabs__indicator', {

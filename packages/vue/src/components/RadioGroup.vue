@@ -48,8 +48,14 @@ const normalizedOptions = computed<RadioGroupOption[]>(() =>
   ),
 )
 
-const { setItemRef, indicatorMetrics, indicatorAnimated, indicatorStyle, measure } =
-  useSlidingIndicator({
+const {
+  setItemRef,
+  setIndicatorRef,
+  indicatorMetrics,
+  indicatorAnimated,
+  indicatorStyle,
+  measure,
+} = useSlidingIndicator({
     containerRef: rootRef,
     activeKey: () => props.modelValue,
     enabled: () => props.variant === "button",
@@ -184,6 +190,7 @@ defineExpose({ focus, blur, rootRef })
   >
     <span
       v-if="variant === 'button' && indicatorMetrics"
+      :ref="setIndicatorRef"
       aria-hidden="true"
       :class="
         regionClass(props, 'indicator', 'miu-radio-group__sliding-indicator', {

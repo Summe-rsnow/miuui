@@ -2,6 +2,21 @@
 
 All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
+## [0.8.0] - 2026-11-24
+
+### 新增组件（New Components）
+
+- **`MediaCard`（`MiuMediaCard`）**：新增通用媒体展示卡片，支持 `vertical` / `horizontal` 布局、`square` / `video` / `circle` 比例、四角徽章插槽（`#top-start`、`#top-end`、`#bottom-start`、`#bottom-end`）、`#cover` 自定义封面与 `#action` 悬浮操作定位（`bottom-end` / `center`）、`lines` 标题截断、`loading` 骨架态及无障碍拉伸触发按钮。
+- **`HeroHeader` / `PopupPanel` / `Scrollbar` / `VerticalSlider`**：将详情页头图头部、轻量弹出面板容器、绑定式悬浮滚动条以及离散/连续双模式纵向滑块（支持 `centerZero` 双向居中刻度）正式纳入 `@xcmm1543/miuui-vue`。
+
+### 增强（Enhancements）
+
+- **`Progress` 环形进度形态**：`Progress` 新增 `shape?: "line" | "circle"` 与 `thickness?: number`，支持以 `ProgressRoot` 为无障碍语义核心的 SVG 环形进度指示器与中心 `#default` / `showValue` 展示。
+- **`Popover` 虚拟锚点、焦点控制与自适应高度**：`Popover` 新增 `reference?: PopoverReference | null`（基于 `PopoverAnchor` 支持 DOM 或虚拟参考坐标）、`alignOffset`、`collisionPadding`、`autoMaxHeight` 与 `autoFocus`，可省略 `#trigger` 插槽独立受控弹出。
+- **WAAPI FLIP 动效升级**：`ImagePreview` 新增 `originRect?: ImagePreviewOriginRect | null` 并配合新增辅助函数 `captureOriginRect()` 实现缩放收回动效（`Image` / `ImageGroup` / `HeroHeader` 自动采集原点）；`useSlidingIndicator` 升级为基于 WAAPI FLIP 的平滑滑块追踪并新增 `setIndicatorRef`。
+- **`DropdownMenu` / `ContextMenu` 子菜单支持**：`MenuItem` 新增可选 `children?: MenuItem[]`，自动渲染 Reka `SubTrigger` 与便携子菜单浮层。
+- **材质与视觉变体扩充**：`Button` / `IconButton` 新增 `aurora` 高对比度深色玻璃覆盖层材质（适配图片封面叠加按钮），`Badge` 新增高对比度 `media` 悬浮徽章变体；全局遮罩背景滤镜提取为 `--miu-overlay-backdrop-filter`（默认 `blur(var(--miu-space-2))`），便于上层主题按规范覆写。
+
 ## [0.7.0] - 2026-11-20
 
 ### 重构（Refactoring）

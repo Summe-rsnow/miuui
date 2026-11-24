@@ -32,6 +32,7 @@
   [data-motion-tier="reduced"] .miu-badge__dot,
   [data-motion-tier="reduced"] .miu-badge__dot--pulse::after,
   [data-motion-tier="reduced"] .miu-progress__indicator--indeterminate,
+  [data-motion-tier="reduced"] .miu-progress__circle-indicator--indeterminate,
   [data-motion-tier="reduced"] .miu-empty-state__icon {
     animation-play-state: paused;
   }
@@ -41,6 +42,7 @@
   [data-motion-tier="none"] .miu-badge__dot,
   [data-motion-tier="none"] .miu-badge__dot--pulse::after,
   [data-motion-tier="none"] .miu-progress__indicator--indeterminate,
+  [data-motion-tier="none"] .miu-progress__circle-indicator--indeterminate,
   [data-motion-tier="none"] .miu-empty-state__icon,
   [data-motion-tier="none"] .miu-button__spinner,
   [data-motion-tier="none"] .miu-input__clear,
@@ -134,7 +136,12 @@
   [data-motion-tier="none"] .miu-list-item,
   [data-motion-tier="none"] .miu-help-tooltip__trigger,
   [data-motion-tier="none"] .miu-image-preview__thumb,
-  [data-motion-tier="none"] .miu-image-group__item {
+  [data-motion-tier="none"] .miu-image-group__item,
+  [data-motion-tier="none"] .miu-media-card,
+  [data-motion-tier="none"] .miu-media-card__cover,
+  [data-motion-tier="none"] .miu-media-card__action,
+  [data-motion-tier="none"] .miu-vertical-slider__thumb,
+  [data-motion-tier="none"] .miu-vertical-slider__step-dot {
     transition-duration: 0.01ms;
   }
 
@@ -156,6 +163,7 @@
     .miu-badge__dot,
     .miu-badge__dot--pulse::after,
     .miu-progress__indicator--indeterminate,
+    .miu-progress__circle-indicator--indeterminate,
     .miu-empty-state__icon {
       animation-play-state: paused;
     }

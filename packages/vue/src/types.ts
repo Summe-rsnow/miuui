@@ -71,6 +71,7 @@ export type ButtonVariant =
   | "danger"
   | "glass"
   | "tonal"
+  | "aurora"
 
 /** 按钮语义区域。 */
 export type ButtonSemanticRegion = "root" | "icon" | "label" | "spinner"
@@ -527,6 +528,8 @@ export interface MenuItem {
   danger?: boolean
   /** 渲染为分割线。 */
   separator?: boolean
+  /** 子菜单项列表。 */
+  children?: MenuItem[]
 }
 
 /** 标签页项配置。 */
@@ -625,7 +628,14 @@ export interface SegmentedControlProps extends ComponentSemanticProps<SegmentedC
 }
 
 /** 徽标语义颜色变体。 */
-export type BadgeVariant = "neutral" | "primary" | "success" | "warning" | "danger" | "info"
+export type BadgeVariant =
+  | "neutral"
+  | "primary"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info"
+  | "media"
 
 /** 徽标尺寸。 */
 export type BadgeSize = "xs" | "sm" | "md" | "lg"
@@ -1251,16 +1261,27 @@ export interface AlertProps extends ComponentSemanticProps<"root" | "icon" | "ti
 /** 菜单组件共享语义区域。 */
 export type MenuSemanticRegion = "content" | "item" | "separator"
 
+/** 弹出气泡虚拟或 DOM 锚点。 */
+export type PopoverReference = HTMLElement | { getBoundingClientRect: () => DOMRect }
+
 /** 弹出气泡 Props。 */
 export interface PopoverProps extends ComponentSemanticProps<"content" | "arrow"> {
   /** 受控打开状态。 */
   open?: boolean
+  /** 外部锚点元素或虚拟参考对象（未提供 trigger 插槽或需要分离锚点时使用）。 */
+  reference?: PopoverReference | null
   /** 弹出方向。 */
   side?: "top" | "right" | "bottom" | "left"
   /** 对齐方式。 */
   align?: "start" | "center" | "end"
   /** 距触发器偏移（像素）。 */
   sideOffset?: number
+  /** 对齐轴偏移（像素）。 */
+  alignOffset?: number
+  /** 视口碰撞内边距（像素）。 */
+  collisionPadding?: number
+  /** 是否依据视口剩余空间自动限制最大高度。 */
+  autoMaxHeight?: boolean
   /** 显示指示箭头。 */
   arrow?: boolean
   /** 模态交互模式。 */
@@ -1275,6 +1296,8 @@ export interface PopoverProps extends ComponentSemanticProps<"content" | "arrow"
   closeOnClickOutside?: boolean
   /** 按下 ESC 键是否关闭。 */
   closeOnEsc?: boolean
+  /** 打开或关闭时是否自动转移焦点（外部输入框锚定等场景设为 `false`）。 */
+  autoFocus?: boolean
 }
 
 /** 文字提示气泡 Props。 */
@@ -1410,6 +1433,9 @@ export interface ToastViewportProps extends ComponentSemanticProps<
 /** 进度条语义变体。 */
 export type ProgressVariant = "primary" | "success" | "warning" | "danger"
 
+/** 进度指示器形态。 */
+export type ProgressShape = "line" | "circle"
+
 /** 进度条 Props。 */
 export interface ProgressProps extends ComponentSemanticProps<
   "root" | "track" | "indicator" | "label"
@@ -1418,8 +1444,12 @@ export interface ProgressProps extends ComponentSemanticProps<
   modelValue?: number
   /** 最大值。 */
   max?: number
+  /** 展示形态（线性条或环形）。 */
+  shape?: ProgressShape
   /** 尺寸。 */
   size?: "sm" | "md" | "lg"
+  /** 环形进度条描边宽度（viewBox 相对单位）。 */
+  thickness?: number
   /** 颜色变体。 */
   variant?: ProgressVariant
   /** 圆角尺寸。 */
@@ -1584,6 +1614,15 @@ export interface ImageProps extends ComponentSemanticProps<"root" | "img" | "fal
   referrerPolicy?: "no-referrer" | "origin" | "strict-origin-when-cross-origin" | "unsafe-url"
 }
 
+/** 图片预览触发源在视口中的几何区域（用于 FLIP 放大/关闭缩放动画）。 */
+export interface ImagePreviewOriginRect {
+  left: number
+  top: number
+  width: number
+  height: number
+  borderRadius?: string
+}
+
 /** 图片预览列表项。 */
 export interface ImagePreviewItem {
   /** 大图地址。 */
@@ -1608,6 +1647,8 @@ export interface ImagePreviewProps extends ComponentSemanticProps<
   images?: Array<string | ImagePreviewItem>
   /** 初始打开索引。 */
   initialIndex?: number
+  /** 触发放大预览的源图像几何信息（提供时开启 FLIP 从缩略图位置放大与收回动画）。 */
+  originRect?: ImagePreviewOriginRect | null
   /** 表面材质。 */
   material?: MaterialName
   /** 点击遮罩层是否关闭。 */
@@ -1849,5 +1890,207 @@ export interface HelpTooltipProps extends ComponentSemanticProps<"trigger" | "co
   /** 最大高度（CSS 长度）。 */
   maxHeight?: string
   /** 触发按钮无障碍标签。 */
+  ariaLabel?: string
+}
+
+/** 悬浮滚动条语义区域。 */
+export type ScrollbarSemanticRegion = "root" | "thumb"
+
+/** 悬浮滚动条 Props。 */
+export interface ScrollbarProps extends ComponentSemanticProps<ScrollbarSemanticRegion> {
+  /** 绑定的滚动容器元素。 */
+  container?: HTMLElement | null
+  /** 顶部偏移（像素）。 */
+  topOffset?: number
+  /** 底部偏移（像素）。 */
+  bottomOffset?: number
+  /** 停止滚动后自动淡出延迟（毫秒）。 */
+  autoHideDelay?: number
+  /** 滑块最小高度（像素）。 */
+  minThumbSize?: number
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+}
+
+/** 纵向滑块语义区域。 */
+export type VerticalSliderSemanticRegion = "root" | "header" | "track" | "fill" | "thumb" | "footer"
+
+/** 纵向滑块 Props。 */
+export interface VerticalSliderProps extends ComponentSemanticProps<VerticalSliderSemanticRegion> {
+  /** 绑定值（discrete 模式为步进索引，continuous 模式为数值）。 */
+  modelValue?: number
+  /** 滑块模式：分档步进或连续范围。 */
+  mode?: "discrete" | "continuous"
+  /** 分档模式下的标签列表。 */
+  steps?: (string | number)[]
+  /** 连续模式最小值。 */
+  min?: number
+  /** 连续模式最大值。 */
+  max?: number
+  /** 连续模式步长。 */
+  step?: number
+  /** 连续模式下是否以 0 为中心双向填充。 */
+  centerZero?: boolean
+  /** 轨道高度（数字按像素，或 CSS 长度字符串）。 */
+  height?: number | string
+  /** 顶部标签文案。 */
+  topLabel?: string
+  /** 底部标签文案。 */
+  bottomLabel?: string
+  /** 控件密度。 */
+  density?: Density
+  /** 禁用状态。 */
+  disabled?: boolean
+  /** 只读状态。 */
+  readonly?: boolean
+  /** 校验错误状态。 */
+  invalid?: boolean
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+  /** 控件 ID。 */
+  id?: string
+  /** 无障碍标签。 */
+  ariaLabel?: string
+}
+
+/** 弹出面板语义区域。 */
+export type PopupPanelSemanticRegion = "root" | "header" | "title" | "close" | "body" | "footer"
+
+/** 弹出面板 Props。 */
+export interface PopupPanelProps extends ComponentSemanticProps<PopupPanelSemanticRegion> {
+  /** 面板标题。 */
+  title?: string
+  /** 是否显示关闭按钮。 */
+  closable?: boolean
+  /** 关闭按钮无障碍标签。 */
+  closeLabel?: string
+  /** 内容区是否禁止内部滚动。 */
+  noScroll?: boolean
+  /** 裸容器模式（由外层 Popover 提供背景与圆角时使用）。 */
+  bare?: boolean
+  /** 非裸模式下是否显示边框。 */
+  bordered?: boolean
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 阴影层级。 */
+  shadow?: "sm" | "md" | "lg"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+}
+
+/** 详情头部骨架按钮预设。 */
+export type HeroSkeletonAction =
+  | "primary-xl"
+  | "secondary-xl"
+  | "icon-md"
+  | "pill-md"
+  | "primary-lg"
+  | "secondary-lg"
+  | "icon-lg"
+
+/** 详情头部语义区域。 */
+export type HeroHeaderSemanticRegion =
+  | "root"
+  | "backdrop"
+  | "overlay"
+  | "container"
+  | "cover"
+  | "info"
+  | "tag"
+  | "title"
+  | "description"
+  | "meta"
+  | "actions"
+  | "bottom"
+
+/** 详情头部 Props。 */
+export interface HeroHeaderProps extends ComponentSemanticProps<HeroHeaderSemanticRegion> {
+  /** 主标题。 */
+  title?: string
+  /** 封面图 URL。 */
+  cover?: string
+  /** 简介文案（超长自动折叠并支持悬浮展开）。 */
+  description?: string
+  /** 顶部标签文案。 */
+  tag?: string
+  /** 是否显示底部渐变遮罩。 */
+  overlay?: boolean
+  /** 点击封面是否可预览大图。 */
+  previewable?: boolean
+  /** 加载骨架态。 */
+  loading?: boolean
+  /** 封面形状。 */
+  coverShape?: "square" | "circle"
+  /** 封面圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+  /** 加载态是否显示标签骨架。 */
+  showTag?: boolean
+  /** 加载态是否显示简介骨架。 */
+  showDesc?: boolean
+  /** 加载态默认操作按钮骨架数量。 */
+  actionCount?: number
+  /** 加载态自定义操作按钮骨架类型列表。 */
+  skeletonActions?: HeroSkeletonAction[]
+  /** 简介最大折叠行数。 */
+  descriptionLines?: number
+}
+
+/** 媒体卡片布局模式。 */
+export type MediaCardLayout = "vertical" | "horizontal"
+
+/** 媒体封面比例/形状。 */
+export type MediaCardAspect = "square" | "video" | "circle"
+
+/** 媒体悬浮操作按钮定位。 */
+export type MediaCardActionPlacement = "bottom-end" | "center"
+
+/** 媒体卡片语义区域。 */
+export type MediaCardSemanticRegion =
+  | "root"
+  | "media"
+  | "cover"
+  | "body"
+  | "title"
+  | "subtitle"
+  | "meta"
+  | "action"
+
+/** 媒体卡片 Props。 */
+export interface MediaCardProps extends ComponentSemanticProps<MediaCardSemanticRegion> {
+  /** 卡片布局模式。 */
+  layout?: MediaCardLayout
+  /** 封面宽高比与形状。 */
+  aspect?: MediaCardAspect
+  /** 封面图片地址（传入 `#cover` 插槽时可覆盖）。 */
+  cover?: string
+  /** 封面替代文本。 */
+  alt?: string
+  /** 主标题。 */
+  title?: string
+  /** 副标题。 */
+  subtitle?: string
+  /** 标题最多展示行数。 */
+  lines?: number
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+  /** 信息密度。 */
+  density?: Density
+  /** 可交互点击（渲染语义按钮触发区域与悬停反馈）。 */
+  interactive?: boolean
+  /** 禁用交互状态。 */
+  disabled?: boolean
+  /** 骨架加载状态。 */
+  loading?: boolean
+  /** 悬浮操作按钮位置。 */
+  actionPlacement?: MediaCardActionPlacement
+  /** 交互按钮无障碍标签。 */
   ariaLabel?: string
 }
