@@ -44,12 +44,12 @@ const {
   indicatorStyle,
   measure,
 } = useSlidingIndicator({
-    containerRef: rootRef,
-    activeKey: () => props.modelValue,
-    enabled: () => Boolean(props.modelValue),
-    watchSources: () => [props.modelValue, props.options, props.size, props.iconOnly, props.block],
-    baseStyle: () => regionStyle(props, "indicator"),
-  })
+  containerRef: rootRef,
+  activeKey: () => props.modelValue,
+  enabled: () => Boolean(props.modelValue),
+  watchSources: () => [props.modelValue, props.options, props.size, props.iconOnly, props.block],
+  baseStyle: () => regionStyle(props, "indicator"),
+})
 
 function unwrapElement(node: unknown): HTMLElement | null {
   if (!node) return null

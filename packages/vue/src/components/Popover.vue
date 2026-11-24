@@ -58,7 +58,12 @@ function onCloseAutoFocus(event: Event): void {
 
 <template>
   <PopoverRoot :open="disabled ? false : open" :modal="modal" @update:open="onUpdateOpen">
-    <PopoverAnchor v-if="reference" :reference="reference" style="display: contents" aria-hidden="true" />
+    <PopoverAnchor
+      v-if="reference"
+      :reference="reference"
+      style="display: contents"
+      aria-hidden="true"
+    />
     <PopoverTrigger v-if="$slots.trigger" as-child :disabled="disabled || undefined">
       <slot name="trigger" />
     </PopoverTrigger>

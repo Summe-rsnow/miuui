@@ -153,7 +153,12 @@ describe("SSR rendering and client hydration consistency", () => {
             h(MediaCard, { title: "Card", subtitle: "Artist", interactive: true }),
             h(PopupPanel, { title: "Panel", closable: true }, () => "Body"),
             h(Scrollbar, { container: null }),
-            h(VerticalSlider, { modelValue: 0, mode: "continuous", centerZero: true, ariaLabel: "EQ" }),
+            h(VerticalSlider, {
+              modelValue: 0,
+              mode: "continuous",
+              centerZero: true,
+              ariaLabel: "EQ",
+            }),
             h(RadioGroup, {
               modelValue: "a",
               options: ["a", "b"],

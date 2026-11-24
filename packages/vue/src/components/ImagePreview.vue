@@ -373,7 +373,8 @@ async function runCloseAnimation(): Promise<void> {
         }),
       )
     } else {
-      const canReturnToOrigin = !hasMultiple.value || currentIndex.value === (props.initialIndex ?? 0)
+      const canReturnToOrigin =
+        !hasMultiple.value || currentIndex.value === (props.initialIndex ?? 0)
       const flip = computeFlipDelta(imgEl, canReturnToOrigin)
       const endTransform = `translate3d(${flip.dx}px, ${flip.dy}px, 0) scale(${flip.scale})`
       const closeRadius = flip.hasOrigin

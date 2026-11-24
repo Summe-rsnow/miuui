@@ -56,19 +56,19 @@ const {
   indicatorStyle,
   measure,
 } = useSlidingIndicator({
-    containerRef: rootRef,
-    activeKey: () => props.modelValue,
-    enabled: () => props.variant === "button",
-    fallbackSelector: '.miu-radio-group__item[data-state="checked"]',
-    watchSources: () => [
-      props.modelValue,
-      props.options,
-      props.variant,
-      props.size,
-      props.orientation,
-    ],
-    baseStyle: () => regionStyle(props, "indicator"),
-  })
+  containerRef: rootRef,
+  activeKey: () => props.modelValue,
+  enabled: () => props.variant === "button",
+  fallbackSelector: '.miu-radio-group__item[data-state="checked"]',
+  watchSources: () => [
+    props.modelValue,
+    props.options,
+    props.variant,
+    props.size,
+    props.orientation,
+  ],
+  baseStyle: () => regionStyle(props, "indicator"),
+})
 
 function unwrapElement(node: unknown): HTMLElement | null {
   if (!node) return null

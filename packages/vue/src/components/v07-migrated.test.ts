@@ -137,7 +137,9 @@ describe("migrated components (0.8.0)", () => {
     })
     expect(loadedWrapper.find(".miu-hero__title").text()).toBe("Playlist")
     expect(loadedWrapper.find(".miu-hero__tag").text()).toBe("歌单")
-    expect(loadedWrapper.find(".miu-hero__bg").attributes("style")).toContain('url("https://example.com/my (cover).jpg")')
+    expect(loadedWrapper.find(".miu-hero__bg").attributes("style")).toContain(
+      'url("https://example.com/my (cover).jpg")',
+    )
     const coverEl = loadedWrapper.get(".miu-hero__cover")
     expect(coverEl.attributes("role")).toBe("button")
     await coverEl.trigger("click")
@@ -157,7 +159,9 @@ describe("migrated components (0.8.0)", () => {
     })
     expect(loadingCard.find(".miu-media-card--loading").exists()).toBe(true)
     expect(loadingCard.attributes("data-miu-radius")).toBe("lg")
-    expect(loadingCard.find(".miu-media-card__skeleton-cover").attributes("data-miu-radius")).toBe("full")
+    expect(loadingCard.find(".miu-media-card__skeleton-cover").attributes("data-miu-radius")).toBe(
+      "full",
+    )
     loadingCard.unmount()
 
     const card = mount(MediaCard, {

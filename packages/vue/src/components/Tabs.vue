@@ -52,22 +52,21 @@ const {
   indicatorStyle,
   measure,
 } = useSlidingIndicator({
-    containerRef: listRef,
-    activeKey: () => props.modelValue,
-    enabled: () => !props.loading,
-    axis: () =>
-      props.variant === "pills" || props.variant === "segmented" ? "both" : "horizontal",
-    fallbackSelector: '.miu-tabs__trigger[data-state="active"]',
-    watchSources: () => [
-      props.modelValue,
-      props.items,
-      props.variant,
-      props.size,
-      props.align,
-      props.loading,
-    ],
-    baseStyle: () => regionStyle(props, "indicator"),
-  })
+  containerRef: listRef,
+  activeKey: () => props.modelValue,
+  enabled: () => !props.loading,
+  axis: () => (props.variant === "pills" || props.variant === "segmented" ? "both" : "horizontal"),
+  fallbackSelector: '.miu-tabs__trigger[data-state="active"]',
+  watchSources: () => [
+    props.modelValue,
+    props.items,
+    props.variant,
+    props.size,
+    props.align,
+    props.loading,
+  ],
+  baseStyle: () => regionStyle(props, "indicator"),
+})
 
 function unwrapElement(node: unknown): HTMLElement | null {
   if (!node) return null

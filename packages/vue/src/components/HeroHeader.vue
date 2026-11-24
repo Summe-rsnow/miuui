@@ -75,10 +75,7 @@ function onCoverClick(): void {
     :data-miu-radius="radius"
     :data-material="materialName"
   >
-    <div
-      :class="regionClass(props, 'backdrop', 'miu-hero__bg')"
-      :style="backdropStyle"
-    />
+    <div :class="regionClass(props, 'backdrop', 'miu-hero__bg')" :style="backdropStyle" />
     <div
       v-if="overlay"
       :class="regionClass(props, 'overlay', 'miu-hero__overlay')"
