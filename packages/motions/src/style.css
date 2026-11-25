@@ -146,7 +146,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    :root {
+    :root:not(:has([data-respect-reduced-motion="false"])) {
       --miu-motion-ease-spring: var(--miu-motion-ease-out);
       --miu-motion-translate-sm: 0px;
       --miu-motion-translate-md: 0px;
@@ -158,48 +158,48 @@
       --miu-motion-drawer-offset: 0%;
     }
 
-    .miu-spinner,
-    .miu-skeleton__shimmer,
-    .miu-badge__dot,
-    .miu-badge__dot--pulse::after,
-    .miu-progress__indicator--indeterminate,
-    .miu-progress__circle-indicator--indeterminate,
-    .miu-empty-state__icon {
+    .miu-spinner:not([data-respect-reduced-motion="false"] *),
+    .miu-skeleton__shimmer:not([data-respect-reduced-motion="false"] *),
+    .miu-badge__dot:not([data-respect-reduced-motion="false"] *),
+    .miu-badge__dot--pulse:not([data-respect-reduced-motion="false"] *)::after,
+    .miu-progress__indicator--indeterminate:not([data-respect-reduced-motion="false"] *),
+    .miu-progress__circle-indicator--indeterminate:not([data-respect-reduced-motion="false"] *),
+    .miu-empty-state__icon:not([data-respect-reduced-motion="false"] *) {
       animation-play-state: paused;
     }
 
-    .miu-button__spinner,
-    .miu-input__clear,
-    .miu-form-field__error,
-    .miu-checkbox__indicator,
-    .miu-select__content,
-    .miu-select__indicator,
-    .miu-menu,
-    .miu-tooltip,
-    .miu-tabs__panel,
-    .miu-avatar__image,
-    .miu-avatar__fallback,
-    .miu-empty-state,
-    .miu-truncate--expanded .miu-truncate__text,
-    .miu-dialog__overlay,
-    .miu-dialog__content,
-    .miu-alert,
-    .miu-command-palette__overlay,
-    .miu-command-palette,
-    .miu-drawer__overlay,
-    .miu-drawer__content,
-    .miu-radio-group__indicator,
-    .miu-image__img,
-    .miu-image__lightbox-img,
-    .miu-loading-overlay__content,
-    .miu-image-preview__img {
+    .miu-button__spinner:not([data-respect-reduced-motion="false"] *),
+    .miu-input__clear:not([data-respect-reduced-motion="false"] *),
+    .miu-form-field__error:not([data-respect-reduced-motion="false"] *),
+    .miu-checkbox__indicator:not([data-respect-reduced-motion="false"] *),
+    .miu-select__content:not([data-respect-reduced-motion="false"] *),
+    .miu-select__indicator:not([data-respect-reduced-motion="false"] *),
+    .miu-menu:not([data-respect-reduced-motion="false"] *),
+    .miu-tooltip:not([data-respect-reduced-motion="false"] *),
+    .miu-tabs__panel:not([data-respect-reduced-motion="false"] *),
+    .miu-avatar__image:not([data-respect-reduced-motion="false"] *),
+    .miu-avatar__fallback:not([data-respect-reduced-motion="false"] *),
+    .miu-empty-state:not([data-respect-reduced-motion="false"] *),
+    .miu-truncate--expanded .miu-truncate__text:not([data-respect-reduced-motion="false"] *),
+    .miu-dialog__overlay:not([data-respect-reduced-motion="false"] *),
+    .miu-dialog__content:not([data-respect-reduced-motion="false"] *),
+    .miu-alert:not([data-respect-reduced-motion="false"] *),
+    .miu-command-palette__overlay:not([data-respect-reduced-motion="false"] *),
+    .miu-command-palette:not([data-respect-reduced-motion="false"] *),
+    .miu-drawer__overlay:not([data-respect-reduced-motion="false"] *),
+    .miu-drawer__content:not([data-respect-reduced-motion="false"] *),
+    .miu-radio-group__indicator:not([data-respect-reduced-motion="false"] *),
+    .miu-image__img:not([data-respect-reduced-motion="false"] *),
+    .miu-image__lightbox-img:not([data-respect-reduced-motion="false"] *),
+    .miu-loading-overlay__content:not([data-respect-reduced-motion="false"] *),
+    .miu-image-preview__img:not([data-respect-reduced-motion="false"] *) {
       animation-duration: 0.01ms;
       animation-iteration-count: 1;
     }
 
-    .miu-tabs__indicator--animated,
-    .miu-segmented__indicator--animated,
-    .miu-radio-group__sliding-indicator--animated {
+    .miu-tabs__indicator--animated:not([data-respect-reduced-motion="false"] *),
+    .miu-segmented__indicator--animated:not([data-respect-reduced-motion="false"] *),
+    .miu-radio-group__sliding-indicator--animated:not([data-respect-reduced-motion="false"] *) {
       transition-duration: 0.01ms;
     }
   }

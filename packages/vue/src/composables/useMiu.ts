@@ -13,6 +13,13 @@ import {
 } from "@xcmm1543/miuui-core"
 
 export { MIU_ICONS_KEY, useMiuIcons, type IconOverride, type IconRegistry } from "./useMiuIcons"
+export {
+  MIU_IMAGE_RESOLVER_KEY,
+  useMiuImageResolver,
+  useResolvedImageSrc,
+  type ImageResolver,
+  type UseResolvedImageSrcOptions,
+} from "./useMiuImage"
 
 export interface MiuI18nContext {
   locale: Ref<LocaleCode>
@@ -30,6 +37,7 @@ export interface MiuThemeContext {
   radius: ComputedRef<Radius>
   material: ComputedRef<MaterialName>
   motionTier: ComputedRef<MotionTier>
+  respectReducedMotion: ComputedRef<boolean>
   i18n: MiuI18nContext
   portalTarget: Ref<HTMLElement | undefined>
 }
@@ -62,6 +70,7 @@ function getFallbackTheme(): MiuThemeContext {
     radius: computed(() => "md"),
     material: computed(() => "solid"),
     motionTier: computed(() => "full"),
+    respectReducedMotion: computed(() => true),
     i18n: {
       locale: loc,
       fallbackLocale: fallbackLoc,

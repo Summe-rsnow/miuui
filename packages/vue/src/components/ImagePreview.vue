@@ -13,10 +13,12 @@ import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ImagePreviewItem, ImagePreviewProps } from "../types"
 import { useDocumentKeydown } from "../composables/useDocumentKeydown"
 import { useMiuI18n, useMiuTheme } from "../composables/useMiu"
+import { useResolvedImageSrc } from "../composables/useMiuImage"
 import { scaleBorderRadius } from "../composables/useOriginRect"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 import IconButton from "./IconButton.vue"
+import Image from "./Image.vue"
 
 const props = withDefaults(defineProps<ImagePreviewProps>(), {
   open: false,
@@ -73,7 +75,11 @@ function canUseWaapi(): boolean {
 
 function getMotionMode(el: HTMLElement | null): "full" | "reduced" | "none" {
   if (typeof window === "undefined") return "none"
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return "none"
+  const respectOsReduced =
+    theme.respectReducedMotion.value && !el?.closest('[data-respect-reduced-motion="false"]')
+  if (respectOsReduced && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return "none"
+  }
   if (el?.closest('[data-motion-tier="none"]')) return "none"
   if (el?.closest('[data-motion-tier="reduced"]')) return "reduced"
   return "full"
@@ -120,6 +126,17 @@ const hasMultiple = computed(() => normalizedList.value.length > 1)
 const currentItem = computed(
   () => normalizedList.value[currentIndex.value] ?? normalizedList.value[0],
 )
+const { resolvedSrc: resolvedStageSrc } = useResolvedImageSrc(() =>
+  renderedOpen.value ? currentItem.value?.src : undefined,
+)
+const { resolvedSrc: resolvedStageThumb } = useResolvedImageSrc(() =>
+  renderedOpen.value &&
+  currentItem.value?.thumb &&
+  currentItem.value.thumb !== currentItem.value.src
+    ? currentItem.value.thumb
+    : undefined,
+)
+const stageSrc = computed(() => resolvedStageSrc.value || resolvedStageThumb.value)
 const navClassNames = computed(() => ({
   prev: { root: regionClass(props, "nav", "miu-image-preview__nav miu-image-preview__nav--prev") },
   next: { root: regionClass(props, "nav", "miu-image-preview__nav miu-image-preview__nav--next") },
@@ -592,18 +609,23 @@ onBeforeUnmount(() => {
           @click.self="onBackdropClick"
         >
           <img
-            v-if="currentItem?.src && !imageError"
-            :key="`${currentIndex}-${currentItem.src}`"
+            v-if="stageSrc && !imageError"
+            :key="`${currentIndex}-${currentItem?.src}`"
             ref="stageImgRef"
-            :src="currentItem.src"
-            :alt="currentItem.alt"
+            :src="stageSrc"
+            :alt="currentItem?.alt"
             :data-pending="waitingForDecode ? 'true' : undefined"
             :class="regionClass(props, 'img', 'miu-image-preview__img')"
             :style="regionStyle(props, 'img')"
             @error="imageError = true"
             @click.stop
           />
-          <div v-else class="miu-image-preview__empty" role="status" @click.stop>
+          <div
+            v-else-if="!currentItem?.src || imageError"
+            class="miu-image-preview__empty"
+            role="status"
+            @click.stop
+          >
             <Icon name="infoCircle" size="xl" />
             <span>{{ t("emptyState.title") }}</span>
           </div>
@@ -637,10 +659,14 @@ onBeforeUnmount(() => {
             :aria-pressed="idx === currentIndex"
             @click="selectIndex(idx)"
           >
-            <img
+            <Image
               :src="item.thumb ?? item.src"
+              :fallback-src="item.thumb && item.thumb !== item.src ? item.src : undefined"
               :alt="item.alt"
-              class="miu-image-preview__thumb-img"
+              fit="cover"
+              width="100%"
+              height="100%"
+              :class-names="{ root: 'miu-image-preview__thumb-img' }"
             />
           </button>
         </div>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { ImagePreviewOriginRect, ImageProps } from "../types"
 import { captureOriginRect } from "../composables/useOriginRect"
 import { useMiuI18n } from "../composables/useMiu"
+import { useMiuImageResolver, useResolvedImageSrc } from "../composables/useMiuImage"
 import { mergeStyle } from "../composables/usePluginResolution"
 import ImagePreview from "./ImagePreview.vue"
 
@@ -22,11 +23,54 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useMiuI18n()
+const imageResolver = useMiuImageResolver()
 const usedFallbackSrc = ref(false)
 const loadFailed = ref(false)
 const showPreview = ref(false)
 const rootRef = ref<HTMLElement | null>(null)
 const previewOriginRect = ref<ImagePreviewOriginRect | null>(null)
+const isVisible = ref(!props.lazy || typeof IntersectionObserver === "undefined")
+let observer: IntersectionObserver | null = null
+
+function disconnectObserver(): void {
+  observer?.disconnect()
+  observer = null
+}
+
+function setupObserver(): void {
+  disconnectObserver()
+  if (!props.lazy || !imageResolver.value || typeof IntersectionObserver === "undefined") {
+    isVisible.value = true
+    return
+  }
+  const el = rootRef.value
+  if (!el) return
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        isVisible.value = true
+        disconnectObserver()
+      }
+    },
+    { rootMargin: "25%" },
+  )
+  observer.observe(el)
+}
+
+onMounted(setupObserver)
+onBeforeUnmount(disconnectObserver)
+
+watch(
+  () => [props.lazy, imageResolver.value] as const,
+  ([lazy, fn]) => {
+    if (!lazy || !fn) {
+      isVisible.value = true
+      disconnectObserver()
+    } else if (!isVisible.value) {
+      setupObserver()
+    }
+  },
+)
 
 watch(
   () => [props.src, props.fallbackSrc] as const,
@@ -36,10 +80,16 @@ watch(
   },
 )
 
-const activeSrc = computed(() => {
+const rawActiveSrc = computed(() => {
   if (usedFallbackSrc.value) return props.fallbackSrc || null
   return props.src || props.fallbackSrc || null
 })
+
+const { resolvedSrc: activeSrc, isResolving } = useResolvedImageSrc(rawActiveSrc, {
+  enabled: isVisible,
+})
+
+const previewSrc = computed(() => rawActiveSrc.value || activeSrc.value)
 
 const rootStyle = computed(() => {
   const base = regionStyle(props, "root")
@@ -111,7 +161,7 @@ function openPreview(): void {
       @load="onLoad"
     />
     <div
-      v-else
+      v-else-if="!isResolving"
       :class="regionClass(props, 'fallback', 'miu-image__fallback')"
       :style="regionStyle(props, 'fallback')"
     >
@@ -132,11 +182,17 @@ function openPreview(): void {
         </svg>
       </slot>
     </div>
+    <div
+      v-else
+      :class="regionClass(props, 'fallback', 'miu-image__fallback')"
+      :style="regionStyle(props, 'fallback')"
+      aria-hidden="true"
+    />
 
     <ImagePreview
       v-if="previewable"
       :open="showPreview"
-      :src="activeSrc"
+      :src="previewSrc"
       :alt="alt"
       :origin-rect="previewOriginRect"
       material="glass"

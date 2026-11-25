@@ -12,6 +12,7 @@ import type {
 } from "@xcmm1543/miuui-core"
 import type { IconDefinition, IconName } from "@xcmm1543/miuui-icons"
 import type { IconRegistry } from "./composables/useMiuIcons"
+import type { ImageResolver } from "./composables/useMiuImage"
 
 /** 图标名称或自定义 SVG 图标定义对象。 */
 export type IconProp = IconName | IconDefinition
@@ -69,6 +70,10 @@ export interface ThemeProviderProps {
   toastMax?: number
   /** 全局图标覆盖映射表。 */
   icons?: IconRegistry
+  /** 全局图片地址解析钩子（可用于接入本地磁盘缓存或自定义签名 URL）。 */
+  imageResolver?: ImageResolver
+  /** 是否响应系统的 prefers-reduced-motion 设置（默认 true；桌面端显式托管 motionTier 时可设为 false）。 */
+  respectReducedMotion?: boolean
   /** 为所有内建浮层 `z-index` 令牌统一叠加偏移量（如桌面端存在自绘顶栏/全局播放栏时使用）。 */
   zIndexOffset?: number
   /** 按层级精确覆写内建 `--miu-z-*` 令牌值（优先级高于 `zIndexOffset`）。 */

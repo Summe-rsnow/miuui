@@ -9,7 +9,12 @@ import {
 } from "@xcmm1543/miuui-core"
 import type { ThemeProviderProps, ZIndexLayer } from "../types"
 import { semanticTokensForSeed, Z_INDEX } from "@xcmm1543/miuui-tokens"
-import { MIU_ICONS_KEY, MIU_THEME_KEY, type MiuThemeContext } from "../composables/useMiu"
+import {
+  MIU_ICONS_KEY,
+  MIU_IMAGE_RESOLVER_KEY,
+  MIU_THEME_KEY,
+  type MiuThemeContext,
+} from "../composables/useMiu"
 import { resolveMaterialValue, resolveMotionValue } from "../composables/usePluginResolution"
 import { useConfirm } from "../composables/useConfirm"
 import ConfirmDialog from "./ConfirmDialog.vue"
@@ -21,6 +26,7 @@ const props = withDefaults(defineProps<ThemeProviderProps>(), {
   radius: "md",
   material: "solid",
   motionTier: "full",
+  respectReducedMotion: true,
   locale: DEFAULT_LOCALE,
   fallbackLocale: DEFAULT_FALLBACK_LOCALE,
   as: "div",
@@ -167,6 +173,7 @@ const context: MiuThemeContext = {
   radius: computed(() => props.radius),
   material: computed(() => resolvedMaterial.value.name),
   motionTier: computed(() => resolvedMotion.value.name),
+  respectReducedMotion: computed(() => props.respectReducedMotion),
   i18n: {
     locale,
     fallbackLocale,
@@ -201,15 +208,22 @@ provide(
   computed(() => props.icons ?? inheritedIcons?.value),
 )
 
-const attrs = computed(() =>
-  themeAttributes({
+const inheritedImageResolver = inject(MIU_IMAGE_RESOLVER_KEY, undefined)
+provide(
+  MIU_IMAGE_RESOLVER_KEY,
+  computed(() => props.imageResolver ?? inheritedImageResolver?.value),
+)
+
+const attrs = computed(() => ({
+  ...themeAttributes({
     theme: resolvedTheme.value,
     density: props.density,
     radius: props.radius,
     material: resolvedMaterial.value.name,
     motionTier: resolvedMotion.value.name,
   }),
-)
+  "data-respect-reduced-motion": props.respectReducedMotion ? undefined : "false",
+}))
 </script>
 
 <template>

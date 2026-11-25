@@ -11,6 +11,7 @@ import {
   type StyleValue,
 } from "vue"
 import { mergeStyle } from "./usePluginResolution"
+import { useMiuTheme } from "./useMiu"
 
 export interface IndicatorMetrics {
   x: number
@@ -47,9 +48,16 @@ function unwrapElement(node: unknown): HTMLElement | null {
     : null
 }
 
-function getMotionMode(el: HTMLElement | null): "full" | "reduced" | "none" {
+function getMotionMode(
+  el: HTMLElement | null,
+  respectReducedMotion: boolean,
+): "full" | "reduced" | "none" {
   if (typeof window === "undefined") return "none"
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return "none"
+  const respectOsReduced =
+    respectReducedMotion && !el?.closest('[data-respect-reduced-motion="false"]')
+  if (respectOsReduced && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return "none"
+  }
   if (el?.closest('[data-motion-tier="none"]')) return "none"
   if (el?.closest('[data-motion-tier="reduced"]')) return "reduced"
   return "full"
@@ -58,6 +66,7 @@ function getMotionMode(el: HTMLElement | null): "full" | "reduced" | "none" {
 export function useSlidingIndicator(
   options: UseSlidingIndicatorOptions,
 ): UseSlidingIndicatorReturn {
+  const theme = useMiuTheme()
   const itemElements = new Map<string, HTMLElement>()
   const indicatorElRef = ref<HTMLElement | null>(null)
   const indicatorMetrics = ref<IndicatorMetrics | null>(null)
@@ -102,7 +111,7 @@ export function useSlidingIndicator(
   function launchFlipGlide(fromBox: IndicatorMetrics, toBox: IndicatorMetrics): void {
     const indEl = indicatorElRef.value
     if (!indEl || typeof indEl.animate !== "function") return
-    const motion = getMotionMode(indEl)
+    const motion = getMotionMode(indEl, theme.respectReducedMotion.value)
     if (motion === "none") return
 
     const dx = fromBox.x - toBox.x

@@ -1,6 +1,7 @@
 export * from "./types"
 export * from "./composables/useMiu"
 export * from "./composables/useMiuIcons"
+export * from "./composables/useMiuImage"
 export * from "./composables/useFormField"
 export * from "./composables/useSizeHint"
 export * from "./composables/useControlSize"

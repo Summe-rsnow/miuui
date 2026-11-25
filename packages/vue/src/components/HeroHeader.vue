@@ -3,6 +3,7 @@ import { computed, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { HeroHeaderProps, HeroSkeletonAction, ImagePreviewOriginRect } from "../types"
 import { captureOriginRect } from "../composables/useOriginRect"
+import { useResolvedImageSrc } from "../composables/useMiuImage"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Image from "./Image.vue"
 import ImagePreview from "./ImagePreview.vue"
@@ -32,7 +33,12 @@ const coverRef = ref<HTMLElement | null>(null)
 const previewOriginRect = ref<ImagePreviewOriginRect | null>(null)
 
 const canPreview = computed(() => !props.loading && props.previewable && Boolean(props.cover))
-const escapedCover = computed(() => (props.cover ? props.cover.replace(/["\\]/g, "\\$&") : ""))
+const { resolvedSrc: resolvedCover } = useResolvedImageSrc(() =>
+  !props.loading ? props.cover : undefined,
+)
+const escapedCover = computed(() =>
+  resolvedCover.value ? resolvedCover.value.replace(/["\\]/g, "\\$&") : "",
+)
 const backdropStyle = computed(() =>
   mergeStyle(regionStyle(props, "backdrop"), {
     backgroundImage: !props.loading && escapedCover.value ? `url("${escapedCover.value}")` : "none",

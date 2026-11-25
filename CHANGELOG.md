@@ -2,6 +2,14 @@
 
 All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
+## [0.8.2] - 2026-11-25
+
+### 增强（Enhancements）
+
+- **`ThemeProvider` 全局图片解析注入（`imageResolver`）**：新增 `imageResolver?: (url: string) => string | Promise<string>` Prop 与 `MIU_IMAGE_RESOLVER_KEY` / `useMiuImageResolver()` / `useResolvedImageSrc()`；`Image`（支持 `lazy` 视口触发）、`Avatar`、`HeroHeader`（含模糊背景 `backdrop` 与封面）、`ImageGroup` 与 `ImagePreview`（含舞台大图 `thumb` 即时占位与底部缩略图栏）全部自动经由该钩子解析图片地址，解析失败时自动回退原始 URL，未配置时零开销同步透传。
+- **独立托管动效开关（`respectReducedMotion`）**：`ThemeProvider` 新增 `respectReducedMotion?: boolean`（默认 `true`），桌面端等显式托管 `motionTier` 的宿主可设为 `false`（输出 `data-respect-reduced-motion="false"`），避免因操作系统关闭窗口动画（`prefers-reduced-motion: reduce`）导致 `ImagePreview` FLIP 放大与 `Tabs` / `SegmentedControl` 滑块指示器动画被静默禁用。
+- **测试与发布**：新增 `v082.test.ts` 覆盖全局图片解析、缩略图占位回退与 `respectReducedMotion` 行为。
+
 ## [0.8.1] - 2026-11-25
 
 ### 增强（Enhancements）

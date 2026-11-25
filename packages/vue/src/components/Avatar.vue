@@ -3,6 +3,7 @@ import { computed, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { AvatarProps } from "../types"
 import { useControlSize } from "../composables/useControlSize"
+import { useResolvedImageSrc } from "../composables/useMiuImage"
 import { mergeStyle } from "../composables/usePluginResolution"
 import Icon from "./Icon.vue"
 
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<AvatarProps>(), {
 const emit = defineEmits<{ click: [event: MouseEvent | KeyboardEvent] }>()
 
 const failed = ref(false)
+const { resolvedSrc } = useResolvedImageSrc(() => props.src)
 const { resolvedSize } = useControlSize({
   size: () => (typeof props.size === "number" ? "md" : props.size),
   componentName: "Avatar",
@@ -102,8 +104,8 @@ function onKeydown(event: KeyboardEvent): void {
     @keydown="onKeydown"
   >
     <img
-      v-if="src && !failed"
-      :src="src"
+      v-if="resolvedSrc && !failed"
+      :src="resolvedSrc"
       alt=""
       aria-hidden="true"
       :class="regionClass(props, 'image', 'miu-avatar__image')"
