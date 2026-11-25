@@ -7,7 +7,7 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 ### 增强（Enhancements）
 
 - **`ThemeProvider` 全局图片解析注入（`imageResolver`）**：新增 `imageResolver?: (url: string) => string | Promise<string>` Prop 与 `MIU_IMAGE_RESOLVER_KEY` / `useMiuImageResolver()` / `useResolvedImageSrc()`；`Image`（支持 `lazy` 视口触发）、`Avatar`、`HeroHeader`（含模糊背景 `backdrop` 与封面）、`ImageGroup` 与 `ImagePreview`（含舞台大图 `thumb` 即时占位与底部缩略图栏）全部自动经由该钩子解析图片地址，解析失败时自动回退原始 URL，未配置时零开销同步透传。
-- **独立托管动效开关（`respectReducedMotion`）**：`ThemeProvider` 新增 `respectReducedMotion?: boolean`（默认 `true`），桌面端等显式托管 `motionTier` 的宿主可设为 `false`（输出 `data-respect-reduced-motion="false"`），避免因操作系统关闭窗口动画（`prefers-reduced-motion: reduce`）导致 `ImagePreview` FLIP 放大与 `Tabs` / `SegmentedControl` 滑块指示器动画被静默禁用。
+- **独立托管动效开关（`respectReducedMotion`）**：`ThemeProvider` 新增 `respectReducedMotion?: boolean`（默认 `true`），桌面端等显式托管 `motionTier` 的宿主可设为 `false`（输出 `data-respect-reduced-motion="false"`），避免因操作系统关闭窗口动画（`prefers-reduced-motion: reduce`）导致 `ImagePreview` FLIP 放大与 `Tabs` / `SegmentedControl` / `RadioGroup` 滑块指示器动画被静默禁用。
 - **测试与发布**：新增 `v082.test.ts` 覆盖全局图片解析、缩略图占位回退与 `respectReducedMotion` 行为。
 
 ## [0.8.1] - 2026-11-25
@@ -75,13 +75,8 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
 ### Fixed
 
-- **输入框玻璃高光与边框阴影优化**：为 `.miu-input[data-material]` 与 `.miu-textarea[data-material]` 补全显式边框、`backdrop-filter` / `-webkit-backdrop-filter` 与内嵌边缘高光（`--miu-material-highlight`），增强 `:focus-within` 聚焦态层次感。
-
-## [0.6.1] - 2026-11-18
-
-### Fixed
-
 - **`Textarea` 材质插件解析与透传**：引入 `useResolvedMaterial` 与 `mergeStyle`，对齐 `Input` 的三档材质解析、`materialTokens` 注入与 `[data-material]` 属性继承。
+- **输入框玻璃高光与边框阴影优化**：为 `.miu-input[data-material]` 与 `.miu-textarea[data-material]` 补全显式边框、`backdrop-filter` / `-webkit-backdrop-filter` 与内嵌边缘高光（`--miu-material-highlight`），增强 `:focus-within` 聚焦态层次感。
 
 ## [0.6.0] - 2026-11-17
 
@@ -154,6 +149,10 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
   - `Badge`: Added `pulse` prop with pinging status indicator (paused under `reduced`/`none` motion tiers).
   - `Image`: Added `pixelated` rendering mode and `fallbackSrc` fallback URL before `#fallback`.
   - `Pagination`: Added `hasNext` and `loading` support for cursor/unknown-total numeric mode.
+  - `Tabs` & `PageHeader`: Added `#trigger` slot on `Tabs` and `#lead` slot on `PageHeader`.
+
+### Fixed
+- Aligned `RadioGroup` (`variant="button"`) layout, bound `Image` hover scale to `--miu-motion-scale-hover`, and scoped `LoadingOverlay` portal rendering.
 
 ## [0.4.1] - 2026-11-13
 
@@ -164,10 +163,9 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 ## [0.4.0] - 2026-11-13
 
 ### Added
-- **23 new components** completing the 50-component catalog:
-  - Form & input controls: `RadioGroup` (`radio` & `button` variants), `Slider` (horizontal/vertical, single/range), `Progress` (determinate/indeterminate), `NumberInput` (step/precision/clamping).
-  - Overlays & media: `Popconfirm`, `Image` (fallback + lightbox preview), `LoadingOverlay` (inline + fullscreen teleport), plus `toast.success` / `error` / `warning` / `info` shorthand helpers.
-  - Navigation & layout primitives (`AppBar`, `SideNav` / `NavMenu`, `Breadcrumb`, `Toc`, `Pagination` numeric + link modes, `SectionHeader`, `PageHeader`, `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge`, `Card`, `Pill`, `PillGroup`, `Alert`, `Code`, `Kbd`, `CommandPalette`, `ContextMenu`, `DropdownMenu`, `Drawer`, `Table`, `TruncateText`, `MessageComposer`, `FormRow`).
+- **6 new components** (44 → 50 total):
+  - Form & input controls: `RadioGroup` (`radio` & `button` variants), `Progress` (determinate/indeterminate), `NumberInput` (step/precision/clamping).
+  - Overlays & media: `Popconfirm`, `Image` (fallback + lightbox preview), `LoadingOverlay` (inline + fullscreen teleport), plus `useConfirm()` composable and `toast.success` / `error` / `warning` / `info` shorthand helpers.
 - **Unified spring motion language across all 50 components**:
   - Added sliding active indicator (`ResizeObserver` + `translate3d`) to `Tabs` (`underline` & `pills`) and `RadioGroup` (`variant="button"`), matching `SegmentedControl`.
   - Added gentle breathing float (`@keyframes miu-float`) to `EmptyState` icon with automatic pause in `@xcmm1543/miuui-motions` for `reduced` / `none` / `prefers-reduced-motion`.
@@ -178,6 +176,7 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
   - `Card`: restored hover elevation, primary border glow, and glass/mica surface brightening order after `[data-material]` rules.
   - `Tooltip`: added `max-block-size` scroll containment and opaque light-mode material backdrop contrast.
   - `Input`: password visibility toggle (`eye` / `eyeOff` icons) and localized i18n strings.
+  - `Pagination`: added `numeric` page bar mode (`total`, `page`, `pageSize`, `showPageSize`, `showQuickJumper`).
 
 ### Verified
 - `pnpm check` (DTCG token validation, Reka UI compat matrix, Oxlint, hard-coded CSS & physical property lint, Oxfmt, `vue-tsc`, workspace build, bundle size gate, 136 unit tests across 13 files).
@@ -185,15 +184,20 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
 ## [0.3.0] - 2026-11-13
 
-### Added
-- Refined OKLCH color scale generation, token export, and component visual baselines across light/dark/mica/glass themes.
+### Changed
+- Refined dark-mode 5-tier surface hierarchy (`--miu-color-bg-overlay`, `--miu-color-bg-muted`), added `--miu-color-specular` / `--miu-color-primary-specular` top highlights and layered `--miu-shadow-1`..`--miu-shadow-5` shadows across `@xcmm1543/miuui-tokens` & `@xcmm1543/miuui-vue`.
+- Polished visual proportions and styling for `Switch`, `SegmentedControl`, `Badge`, `Code`, `Kbd`, and `NavMenu`, and updated component visual baselines.
 
-## [0.2.0] - 2026-11-13
-
-### Added
-- `Input` `showCount`, `Dialog` width variants, `Tabs` alignment (`start` / `center` / `end`), `TruncateText` expandable toggle, and `FormRow` deprecation path toward `FormField`.
-
-## [0.1.0] - 2026-11-13
+## [0.2.0] - 2026-11-12
 
 ### Added
-- Initial monorepo foundation: `@xcmm1543/miuui-core`, `@xcmm1543/miuui-tokens`, `@xcmm1543/miuui-icons`, `@xcmm1543/miuui-materials`, `@xcmm1543/miuui-motions`, `@xcmm1543/miuui-vue`, and `@xcmm1543/miuui-codemod`.
+- **2 new components** (42 → 44 total): `Slider` and `PillGroup`.
+- **Dynamic OKLCH Seed Palette**: Added `semanticTokensForSeed()` in `@xcmm1543/miuui-tokens` and `accentSeed` prop on `ThemeProvider`.
+- **Icons & Codemod**: Expanded `@xcmm1543/miuui-icons` to 28 icons with `/dynamic` and `/brand` subpath exports; added `@xcmm1543/miuui-codemod` package.
+- **Runtime & Quality Gates**: Added `usePluginResolution` (`MiuRegistry` runtime material/motion resolution), `scripts/check-reka-compat.mjs` + `docs/adr/0001-reka-ui-compatibility.md`, `scripts/check-hardcoded.mjs` CSS logical property lint, and floating pill scrollbar tokens.
+- **Component enhancements**: `Input` `showCount`, `Dialog` width variants, `Tabs` `align` (`start` / `center` / `end`), `TruncateText` `expandable` toggle, and `FormRow` deprecation path toward `FormField`.
+
+## [0.1.0] - 2026-11-12
+
+### Added
+- Initial monorepo foundation (`@miuui/core`, `@miuui/tokens`, `@miuui/icons`, `@miuui/materials`, `@miuui/motions`, `@miuui/vue`; later scoped to `@xcmm1543/miuui-*` in `0.5.6`) with 42 core & shell components, Precision Violet OKLCH palette (`VIOLET_SEED`), 4-layer design tokens, `solid` / `mica` / `glass` materials, and `full` / `reduced` / `none` motion tiers.
