@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<PageLayoutProps>(), {
   divider: false,
   contentAlign: "start",
   fitHeight: false,
+  fill: false,
 })
 
 const emit = defineEmits<{ back: [event: MouseEvent] }>()
@@ -29,6 +30,7 @@ const contentStyle = computed(() => {
     :class="
       regionClass(props, 'root', 'miu-page-layout', {
         'miu-page-layout--fit-height': fitHeight,
+        'miu-page-layout--fill': fill,
       })
     "
     :style="regionStyle(props, 'root')"

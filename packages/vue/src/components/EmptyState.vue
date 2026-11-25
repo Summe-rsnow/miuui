@@ -9,6 +9,7 @@ import Icon from "./Icon.vue"
 const props = withDefaults(defineProps<EmptyStateProps>(), {
   iconSize: "xl",
   radius: "default",
+  fill: false,
 })
 const { t } = useMiuI18n()
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "EmptyState")
@@ -17,7 +18,11 @@ const title = computed(() => props.title ?? t("emptyState.title"))
 
 <template>
   <div
-    :class="regionClass(props, 'root', 'miu-empty-state')"
+    :class="
+      regionClass(props, 'root', 'miu-empty-state', {
+        'miu-empty-state--fill': fill,
+      })
+    "
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
     :data-miu-icon-size="iconSize"
     :data-miu-radius="radius"

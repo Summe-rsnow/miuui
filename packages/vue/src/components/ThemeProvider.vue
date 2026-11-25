@@ -7,8 +7,8 @@ import {
   DEFAULT_LOCALE,
   themeAttributes,
 } from "@xcmm1543/miuui-core"
-import type { ThemeProviderProps } from "../types"
-import { semanticTokensForSeed } from "@xcmm1543/miuui-tokens"
+import type { ThemeProviderProps, ZIndexLayer } from "../types"
+import { semanticTokensForSeed, Z_INDEX } from "@xcmm1543/miuui-tokens"
 import { MIU_ICONS_KEY, MIU_THEME_KEY, type MiuThemeContext } from "../composables/useMiu"
 import { resolveMaterialValue, resolveMotionValue } from "../composables/usePluginResolution"
 import { useConfirm } from "../composables/useConfirm"
@@ -108,14 +108,44 @@ const resolvedMaterial = computed(() =>
   ),
 )
 
+const Z_INDEX_ENTRIES: Array<[ZIndexLayer, string]> = [
+  ["sticky", "--miu-z-sticky"],
+  ["modalBackdrop", "--miu-z-modal-backdrop"],
+  ["modal", "--miu-z-modal"],
+  ["dropdown", "--miu-z-dropdown"],
+  ["popover", "--miu-z-popover"],
+  ["tooltip", "--miu-z-tooltip"],
+  ["loading", "--miu-z-loading"],
+  ["toast", "--miu-z-toast"],
+]
+
 const providerStyle = computed<Record<string, string> | undefined>(() => {
   const seedTokens = props.accentSeed
     ? semanticTokensForSeed(props.accentSeed, resolvedTheme.value)
     : undefined
   const matTokens = resolvedMaterial.value.tokens
   const motTokens = resolvedMotion.value.tokens
-  if (!seedTokens && !matTokens && !motTokens) return undefined
-  return { ...seedTokens, ...matTokens, ...motTokens }
+
+  const offset =
+    typeof props.zIndexOffset === "number" && Number.isFinite(props.zIndexOffset)
+      ? props.zIndexOffset
+      : 0
+  let zTokens: Record<string, string> | undefined
+  if (offset !== 0 || props.zIndex) {
+    const entries: Record<string, string> = {}
+    for (const [layer, cssVar] of Z_INDEX_ENTRIES) {
+      const override = props.zIndex?.[layer]
+      if (typeof override === "number" && Number.isFinite(override)) {
+        entries[cssVar] = String(override)
+      } else if (offset !== 0) {
+        entries[cssVar] = String(Z_INDEX[layer] + offset)
+      }
+    }
+    if (Object.keys(entries).length > 0) zTokens = entries
+  }
+
+  if (!seedTokens && !matTokens && !motTokens && !zTokens) return undefined
+  return { ...seedTokens, ...matTokens, ...motTokens, ...zTokens }
 })
 
 const isRootProvider = inject(MIU_THEME_KEY, null) === null

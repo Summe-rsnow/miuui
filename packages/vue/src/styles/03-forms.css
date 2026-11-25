@@ -2237,6 +2237,14 @@
   padding-block-end: var(--miu-space-1);
 }
 
+.miu-category-filter__filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--miu-space-2);
+  padding-block-start: var(--miu-space-2);
+}
+
 .miu-vertical-slider {
   display: inline-flex;
   flex-direction: column;

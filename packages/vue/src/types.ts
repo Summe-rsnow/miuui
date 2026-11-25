@@ -28,6 +28,17 @@ export interface IconProps {
   rotate?: 0 | 90 | 180 | 270
 }
 
+/** 可通过 ThemeProvider 统一调整的浮层层级名。 */
+export type ZIndexLayer =
+  | "sticky"
+  | "modalBackdrop"
+  | "modal"
+  | "dropdown"
+  | "popover"
+  | "tooltip"
+  | "loading"
+  | "toast"
+
 /** 主题提供者 Props。 */
 export interface ThemeProviderProps {
   /** 主题模式：浅色、深色或跟随系统。 */
@@ -58,6 +69,10 @@ export interface ThemeProviderProps {
   toastMax?: number
   /** 全局图标覆盖映射表。 */
   icons?: IconRegistry
+  /** 为所有内建浮层 `z-index` 令牌统一叠加偏移量（如桌面端存在自绘顶栏/全局播放栏时使用）。 */
+  zIndexOffset?: number
+  /** 按层级精确覆写内建 `--miu-z-*` 令牌值（优先级高于 `zIndexOffset`）。 */
+  zIndex?: Partial<Record<ZIndexLayer, number>>
   /** 根节点渲染的元素标签名。 */
   as?: string
 }
@@ -854,6 +869,8 @@ export interface EmptyStateProps extends ComponentSemanticProps<
   title?: string
   /** 描述文案。 */
   description?: string
+  /** 在 flex 容器中自动撑满剩余空间并保持居中。 */
+  fill?: boolean
 }
 
 /** 表格列定义。 */
@@ -1705,7 +1722,7 @@ export interface CategoryGroupItem {
 
 /** 二级分类过滤器 Props。 */
 export interface CategoryFilterProps extends ComponentSemanticProps<
-  "root" | "tabs" | "subtags" | "actions"
+  "root" | "tabs" | "subtags" | "actions" | "filters"
 > {
   /** 一级分组数据。 */
   groups: CategoryGroupItem[]
@@ -1757,6 +1774,8 @@ export interface PageLayoutProps extends ComponentSemanticProps<"root" | "header
   contentAlign?: "start" | "center"
   /** 撑满容器高度（适合内置滚动表格/编辑器）。 */
   fitHeight?: boolean
+  /** 至少撑满容器高度并在内容区启用纵向弹性布局（适合桌面端页面壳层）。 */
+  fill?: boolean
 }
 
 /** 加载遮罩 Props。 */
@@ -1974,6 +1993,8 @@ export interface PopupPanelProps extends ComponentSemanticProps<PopupPanelSemant
   bare?: boolean
   /** 非裸模式下是否显示边框。 */
   bordered?: boolean
+  /** 是否让页脚区域作为可点击按钮渲染，并触发 `footerClick` 事件。 */
+  footerClickable?: boolean
   /** 圆角尺寸。 */
   radius?: Radius | "default"
   /** 阴影层级。 */

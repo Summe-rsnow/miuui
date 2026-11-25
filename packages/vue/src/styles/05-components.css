@@ -672,6 +672,16 @@
   animation: miu-slide-fade-in var(--miu-motion-duration-base) var(--miu-motion-ease-out);
 }
 
+.miu-empty-state--fill {
+  inline-size: 100%;
+  box-sizing: border-box;
+  flex: 1 0 auto;
+}
+
+.miu-empty-state--fill:not([data-density="compact"]) {
+  min-block-size: calc(var(--miu-space-24) * 2 + var(--miu-space-2));
+}
+
 .miu-empty-state[data-material],
 [data-material="mica"] .miu-empty-state:not([data-material]),
 [data-material="glass"] .miu-empty-state:not([data-material]) {
@@ -2100,6 +2110,10 @@
   min-block-size: 0;
 }
 
+.miu-page-layout--fill {
+  min-block-size: 100%;
+}
+
 .miu-page-layout__content {
   flex: 1;
   min-inline-size: 0;
@@ -2110,6 +2124,18 @@
   min-block-size: 0;
   display: flex;
   flex-direction: column;
+}
+
+.miu-page-layout--fill .miu-page-layout__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.miu-page-layout--fit-height .miu-page-layout__content > .miu-tabs,
+.miu-page-layout--fit-height .miu-page-layout__content > .miu-category-filter,
+.miu-page-layout--fill .miu-page-layout__content > .miu-tabs,
+.miu-page-layout--fill .miu-page-layout__content > .miu-category-filter {
+  flex-shrink: 0;
 }
 
 .miu-page-layout__content[data-align="center"] {
@@ -2245,6 +2271,29 @@
   padding-block: var(--miu-space-2);
   padding-inline: var(--miu-space-4);
   border-block-start: var(--miu-border-width) solid var(--miu-color-border-subtle);
+}
+
+.miu-popup-panel__footer--clickable {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  background: transparent;
+  border-inline: none;
+  border-block-end: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--miu-motion-duration-fast) var(--miu-motion-ease-out);
+}
+
+.miu-popup-panel__footer--clickable:hover {
+  background: var(--miu-color-bg-muted);
+}
+
+.miu-popup-panel__footer--clickable:focus-visible {
+  outline: var(--miu-focus-ring-width) solid var(--miu-color-focus-ring);
+  outline-offset: calc(var(--miu-focus-ring-offset) * -1);
 }
 
 .miu-hero {

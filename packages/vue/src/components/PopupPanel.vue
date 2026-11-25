@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<PopupPanelProps>(), {
   noScroll: false,
   bare: false,
   bordered: true,
+  footerClickable: false,
   radius: "default",
   shadow: "md",
 })
@@ -77,13 +78,30 @@ const resolvedCloseLabel = computed(() => props.closeLabel ?? i18n.t("common.clo
       <slot />
     </div>
 
-    <div
-      v-if="$slots.footer"
-      :class="regionClass(props, 'footer', 'miu-popup-panel__footer')"
-      :style="regionStyle(props, 'footer')"
-      @click="emit('footerClick')"
-    >
-      <slot name="footer" />
-    </div>
+    <template v-if="$slots.footer">
+      <button
+        v-if="footerClickable"
+        type="button"
+        :class="
+          regionClass(
+            props,
+            'footer',
+            'miu-popup-panel__footer',
+            'miu-popup-panel__footer--clickable',
+          )
+        "
+        :style="regionStyle(props, 'footer')"
+        @click="emit('footerClick')"
+      >
+        <slot name="footer" />
+      </button>
+      <div
+        v-else
+        :class="regionClass(props, 'footer', 'miu-popup-panel__footer')"
+        :style="regionStyle(props, 'footer')"
+      >
+        <slot name="footer" />
+      </div>
+    </template>
   </div>
 </template>

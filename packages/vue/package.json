@@ -1,6 +1,6 @@
 {
   "name": "@xcmm1543/miuui-vue",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "μui Vue 3.5+ adapter built on Reka UI primitives",
   "homepage": "https://github.com/Summe-rsnow/miuui#readme",
   "bugs": {
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "reka-ui": "^2.11.0",
-    "vue": "^3.5.45"
+    "vue": "^3.5.46"
   },
   "peerDependencies": {
     "reka-ui": ">=2.11.0 <3.0.0",

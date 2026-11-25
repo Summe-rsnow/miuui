@@ -80,6 +80,8 @@ const mainTabs = computed<TabsItem[]>(() => {
 
 const activeGroup = computed(() => props.groups.find((g) => g.key === activeMainKey.value))
 
+const hasAnySubtags = computed(() => props.groups.some((g) => g.subtags.length > 0))
+
 const isExpanded = computed(() => {
   if (props.showDefault && activeMainKey.value === props.defaultKey) return false
   return Boolean(activeGroup.value && activeGroup.value.subtags.length > 0)
@@ -221,7 +223,7 @@ function onReadonlyKeydown(event: KeyboardEvent): void {
         <slot name="actions" />
       </div>
     </div>
-    <Collapse :open="isExpanded">
+    <Collapse v-if="hasAnySubtags" :open="isExpanded">
       <div
         :class="regionClass(props, 'subtags', 'miu-category-filter__subtags')"
         :style="regionStyle(props, 'subtags')"
@@ -239,5 +241,12 @@ function onReadonlyKeydown(event: KeyboardEvent): void {
         />
       </div>
     </Collapse>
+    <div
+      v-if="$slots.filters"
+      :class="regionClass(props, 'filters', 'miu-category-filter__filters')"
+      :style="regionStyle(props, 'filters')"
+    >
+      <slot name="filters" />
+    </div>
   </div>
 </template>

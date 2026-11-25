@@ -2,6 +2,16 @@
 
 All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
+## [0.8.1] - 2026-11-25
+
+### 增强（Enhancements）
+
+- **`ThemeProvider` 浮层层级控制**：新增 `ZIndexLayer` 类型及 `zIndexOffset?: number`、`zIndex?: Partial<Record<ZIndexLayer, number>>` Props，支持通过统一偏移量或按层覆写内建 `--miu-z-*` 令牌，减少桌面端宿主手工重写全部层级变量的样板代码。
+- **`PageLayout` & `EmptyState` 桌面满高填充**：两者新增 `fill?: boolean` Prop（`.miu-page-layout--fill` 与 `.miu-empty-state--fill`），提供桌面页最小满屏高度、内容区纵向弹性布局、顶部 `Tabs` / `CategoryFilter` 防压缩以及空状态自动居中撑满能力。
+- **`PopupPanel` 页脚显式交互语义**：新增 `footerClickable?: boolean`（默认 `false`），开启时以原生 `<button type="button">` 渲染页脚并触发 `footerClick`（支持键盘 Tab 与焦点环），未开启时保持无点击监听的普通 `<div>`。
+- **`CategoryFilter` 多维筛选与空折叠优化**：新增 `"filters"` 语义区域及 `#filters` 插槽，用于同一过滤栏下追加独立条件筛选（如频道 + 地区）；当所有分组均无 `subtags` 时自动跳过空 `<Collapse>` 渲染。
+- **测试与工具链同步**：补充 `v081.test.ts` 覆盖上述新能力，同步更新 `vue`、`vitest`、`oxlint`、`oxfmt` 等开发依赖（保留 `typescript` `^6.0.3`）。
+
 ## [0.8.0] - 2026-11-24
 
 ### 新增组件（New Components）
