@@ -949,11 +949,6 @@
   display: block;
 }
 
-.miu-truncate--popover:focus-visible {
-  outline: var(--miu-focus-ring-width) solid var(--miu-color-focus-ring);
-  outline-offset: var(--miu-focus-ring-offset);
-}
-
 .miu-truncate__text {
   display: -webkit-box;
   overflow: hidden;
@@ -2374,11 +2369,6 @@
 
 .miu-hero__cover--preview {
   cursor: pointer;
-}
-
-.miu-hero__cover--preview:focus-visible {
-  outline: var(--miu-focus-ring-width) solid var(--miu-color-focus-ring);
-  outline-offset: var(--miu-focus-ring-offset);
 }
 
 .miu-hero__cover-img,

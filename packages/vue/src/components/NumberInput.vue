@@ -142,11 +142,11 @@ defineExpose({ focus, blur, inputRef })
       :class="regionClass(props, 'decrement', 'miu-number-input__stepper')"
       :style="regionStyle(props, 'decrement')"
       :tabindex="field.readonly.value ? -1 : undefined"
-      aria-label="-"
+      :aria-label="t('numberInput.decrement')"
       @focus="onFocus"
       @blur="onBlur"
     >
-      <Icon name="minus" :size="iconSize ?? 'xs'" />
+      <Icon name="minus" :size="resolvedIconSize.size" />
     </NumberFieldDecrement>
     <NumberFieldInput
       ref="inputRef"
@@ -178,11 +178,11 @@ defineExpose({ focus, blur, inputRef })
       :class="regionClass(props, 'increment', 'miu-number-input__stepper')"
       :style="regionStyle(props, 'increment')"
       :tabindex="field.readonly.value ? -1 : undefined"
-      aria-label="+"
+      :aria-label="t('numberInput.increment')"
       @focus="onFocus"
       @blur="onBlur"
     >
-      <Icon name="plus" :size="iconSize ?? 'xs'" />
+      <Icon name="plus" :size="resolvedIconSize.size" />
     </NumberFieldIncrement>
   </NumberFieldRoot>
 </template>

@@ -231,7 +231,7 @@ describe("v0.4.0 SlayMuManager desktop primitives", () => {
     )
     expect(tip.exists()).toBe(true)
 
-    const minus = track(mount(Icon, { props: { name: "minus", label: "Minimize" } }))
+    const minus = track(mount(Icon, { props: { name: "minus", ariaLabel: "Minimize" } }))
     expect(minus.find("path").attributes("d")).toBe("M5 12h14")
   })
 

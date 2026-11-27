@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAttrs } from "vue"
+import { ref, useAttrs } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { HelpTooltipProps } from "../types"
 import Icon from "./Icon.vue"
@@ -7,6 +7,7 @@ import Tooltip from "./Tooltip.vue"
 
 defineOptions({ inheritAttrs: false })
 const attrs = useAttrs()
+const triggerRef = ref<HTMLButtonElement>()
 
 const props = withDefaults(defineProps<HelpTooltipProps>(), {
   icon: "help",
@@ -21,6 +22,12 @@ const props = withDefaults(defineProps<HelpTooltipProps>(), {
 })
 
 const emit = defineEmits<{ "update:open": [value: boolean] }>()
+
+defineExpose({
+  focus: () => triggerRef.value?.focus(),
+  blur: () => triggerRef.value?.blur(),
+  triggerRef,
+})
 </script>
 
 <template>
@@ -41,6 +48,7 @@ const emit = defineEmits<{ "update:open": [value: boolean] }>()
   >
     <template #trigger>
       <button
+        ref="triggerRef"
         type="button"
         v-bind="attrs"
         :disabled="disabled"

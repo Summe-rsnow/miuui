@@ -40,6 +40,7 @@ const contentStyle = computed(() => {
       :title="title"
       :description="description"
       :back="back"
+      :back-label="backLabel"
       :divider="divider"
       :density="density"
       :icon-size="iconSize"

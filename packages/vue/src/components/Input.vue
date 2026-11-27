@@ -184,7 +184,7 @@ defineExpose({ focus, blur, inputRef })
         @focus="onFocus"
         @blur="onBlur"
       >
-        <Icon :name="passwordRevealed ? 'eyeOff' : 'eye'" size="sm" />
+        <Icon :name="passwordRevealed ? 'eyeOff' : 'eye'" :size="resolvedIconSize.size" />
       </button>
       <button
         v-if="clearable && model.length > 0 && !field.disabled.value && !field.readonly.value"
@@ -196,7 +196,7 @@ defineExpose({ focus, blur, inputRef })
         @focus="onFocus"
         @blur="onBlur"
       >
-        <Icon name="close" size="sm" />
+        <Icon name="close" :size="resolvedIconSize.size" />
       </button>
     </span>
   </div>

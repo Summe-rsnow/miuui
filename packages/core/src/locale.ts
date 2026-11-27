@@ -68,10 +68,21 @@ export const zhCN: MiuMessageTree = {
   table: {
     empty: "暂无数据",
     loading: "加载中",
+    actions: "操作",
     selected: {
       one: "已选择 {count} 项",
       other: "已选择 {count} 项",
     },
+  },
+  numberInput: {
+    decrement: "减少",
+    increment: "增加",
+  },
+  image: {
+    preview: "预览",
+  },
+  colorPicker: {
+    hex: "十六进制颜色",
   },
   emptyState: {
     title: "暂无内容",
@@ -116,6 +127,15 @@ export const zhCN: MiuMessageTree = {
   pillGroup: {
     all: "全部",
   },
+  combobox: {
+    placeholder: "搜索或选择",
+    empty: "暂无匹配选项",
+    removeTag: "移除标签",
+  },
+  tagInput: {
+    placeholder: "输入后按回车添加",
+    remove: "移除标签",
+  },
 }
 
 export const enUS: MiuMessageTree = {
@@ -150,10 +170,21 @@ export const enUS: MiuMessageTree = {
   table: {
     empty: "No data",
     loading: "Loading",
+    actions: "Actions",
     selected: {
       one: "{count} item selected",
       other: "{count} items selected",
     },
+  },
+  numberInput: {
+    decrement: "Decrement",
+    increment: "Increment",
+  },
+  image: {
+    preview: "Preview",
+  },
+  colorPicker: {
+    hex: "Hex color",
   },
   emptyState: {
     title: "Nothing here yet",
@@ -197,6 +228,15 @@ export const enUS: MiuMessageTree = {
   },
   pillGroup: {
     all: "All",
+  },
+  combobox: {
+    placeholder: "Search or select",
+    empty: "No matching options",
+    removeTag: "Remove tag",
+  },
+  tagInput: {
+    placeholder: "Type and press Enter",
+    remove: "Remove tag",
   },
 }
 

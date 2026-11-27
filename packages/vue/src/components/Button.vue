@@ -88,9 +88,8 @@ defineExpose({
   >
     <Spinner
       v-if="loading"
-      :size="spinnerSize"
-      class="miu-button__spinner"
-      :class="regionClass(props, 'spinner')"
+      :icon-size="spinnerSize"
+      :class="regionClass(props, 'spinner', 'miu-button__spinner')"
       :style="regionStyle(props, 'spinner')"
     />
     <span

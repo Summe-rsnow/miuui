@@ -1,6 +1,6 @@
 {
   "name": "@xcmm1543/miuui-tokens",
-  "version": "0.8.2",
+  "version": "1.0.0",
   "description": "μui OKLCH palette generator, four-layer design tokens and W3C DTCG exporter",
   "homepage": "https://github.com/Summe-rsnow/miuui#readme",
   "bugs": {

@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<VerticalSliderProps>(), {
 const emit = defineEmits<{
   "update:modelValue": [value: number]
   change: [value: number]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
 }>()
 
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "VerticalSlider")
@@ -338,6 +340,8 @@ defineExpose({
       @keydown.page-down.prevent="onStepChange(isContinuous ? 10 : 2)"
       @keydown.home.prevent="onBoundary(false)"
       @keydown.end.prevent="onBoundary(true)"
+      @focus="emit('focus', $event)"
+      @blur="emit('blur', $event)"
     >
       <template v-if="!isContinuous">
         <div class="miu-vertical-slider__steps">

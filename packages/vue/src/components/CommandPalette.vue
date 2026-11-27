@@ -129,6 +129,7 @@ function onKeydown(event: KeyboardEvent): void {
       activeIndex.value = Math.max(0, filtered.value.length - 1)
       break
     case "Enter":
+      if (event.isComposing) return
       event.preventDefault()
       selectActive()
       break

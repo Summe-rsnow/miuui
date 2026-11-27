@@ -1,10 +1,11 @@
+@layer miu-reset, miu-tokens, miu-base, miu-material, miu-motion, miu-override;
+
 @layer miu-material {
   [data-material="solid"] {
     --miu-material-surface: var(--miu-color-surface-solid-bg);
     --miu-material-border: var(--miu-color-border-subtle);
     --miu-material-backdrop: none;
     --miu-material-highlight: none;
-    --miu-material-gloss: none;
   }
 
   [data-material="mica"] {
@@ -12,7 +13,6 @@
     --miu-material-border: var(--miu-glass-hairline);
     --miu-material-backdrop: var(--miu-glass-filter-thin);
     --miu-material-highlight: var(--miu-color-surface-glass-highlight);
-    --miu-material-gloss: block;
   }
 
   [data-material="glass"] {
@@ -20,18 +20,6 @@
     --miu-material-border: var(--miu-glass-hairline);
     --miu-material-backdrop: var(--miu-glass-filter-regular);
     --miu-material-highlight: var(--miu-color-surface-glass-highlight);
-    --miu-material-gloss: block;
-  }
-
-  [data-motion-tier="reduced"][data-material="mica"],
-  [data-motion-tier="reduced"][data-material="glass"],
-  [data-motion-tier="none"][data-material="mica"],
-  [data-motion-tier="none"][data-material="glass"],
-  [data-motion-tier="reduced"] [data-material="mica"],
-  [data-motion-tier="reduced"] [data-material="glass"],
-  [data-motion-tier="none"] [data-material="mica"],
-  [data-motion-tier="none"] [data-material="glass"] {
-    --miu-material-gloss: none;
   }
 
   @media (prefers-reduced-transparency: reduce) {
@@ -41,7 +29,6 @@
       --miu-material-border: var(--miu-color-border-subtle);
       --miu-material-backdrop: none;
       --miu-material-highlight: none;
-      --miu-material-gloss: none;
     }
   }
 }

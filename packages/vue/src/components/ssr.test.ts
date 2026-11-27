@@ -1,6 +1,7 @@
 import { createSSRApp, h } from "vue"
 import { renderToString } from "vue/server-renderer"
 import { afterEach, describe, expect, it, vi } from "vitest"
+import Accordion from "./Accordion.vue"
 import Alert from "./Alert.vue"
 import AppBar from "./AppBar.vue"
 import Avatar from "./Avatar.vue"
@@ -12,9 +13,11 @@ import Checkbox from "./Checkbox.vue"
 import Code from "./Code.vue"
 import Collapse from "./Collapse.vue"
 import ColorPicker from "./ColorPicker.vue"
+import Combobox from "./Combobox.vue"
 import ConfirmDialog from "./ConfirmDialog.vue"
 import CommandPalette from "./CommandPalette.vue"
 import Dialog from "./Dialog.vue"
+import Divider from "./Divider.vue"
 import Drawer from "./Drawer.vue"
 import EmptyState from "./EmptyState.vue"
 import FormField from "./FormField.vue"
@@ -47,9 +50,11 @@ import SegmentedControl from "./SegmentedControl.vue"
 import Select from "./Select.vue"
 import Skeleton from "./Skeleton.vue"
 import Spinner from "./Spinner.vue"
+import Steps from "./Steps.vue"
 import Switch from "./Switch.vue"
 import Table from "./Table.vue"
 import Tabs from "./Tabs.vue"
+import TagInput from "./TagInput.vue"
 import Textarea from "./Textarea.vue"
 import ThemeProvider from "./ThemeProvider.vue"
 import Toc from "./Toc.vue"
@@ -136,12 +141,21 @@ describe("SSR rendering and client hydration consistency", () => {
             h(EmptyState, { icon: "search", title: "Empty" }),
             h(MessageComposer, { modelValue: "Hi" }),
             h(Skeleton, { width: 120, height: 24 }),
-            h(Spinner, { size: "md" }),
+            h(Spinner, { iconSize: "md" }),
             h(Image, { src: "https://example.com/demo.png", alt: "Preview", previewable: true }),
             h(LoadingOverlay, { loading: false, text: "Working..." }),
             h(Icon, { name: "check" }),
             h(Kbd, { keys: "Ctrl K" }),
             h(Code, { variant: "primary" }, () => "@xcmm1543/miuui-vue"),
+            h(Divider, { label: "Section" }),
+            h(Accordion, { items: [{ value: "a", title: "A", content: "Body A" }] }),
+            h(Steps, {
+              modelValue: 1,
+              items: [{ title: "One" }, { title: "Two" }],
+              ariaLabel: "Steps",
+            }),
+            h(Combobox, { options: [{ value: "v", label: "Vue" }], ariaLabel: "Combo" }),
+            h(TagInput, { modelValue: ["vue"], ariaLabel: "Tags" }),
             h(Collapse, { open: true }, () => "Expanded"),
             h(ColorPicker, { modelValue: "#9A49E0", ariaLabel: "Accent" }),
             h(List, { bordered: true }, () => [h(ListItem, { title: "Item", subtitle: "Sub" })]),
@@ -151,7 +165,7 @@ describe("SSR rendering and client hydration consistency", () => {
             h(Progress, { shape: "circle", modelValue: 75, showValue: true, ariaLabel: "Ring" }),
             h(HeroHeader, { title: "Hero", tag: "Tag", description: "Hero desc" }),
             h(MediaCard, { title: "Card", subtitle: "Artist", interactive: true }),
-            h(PopupPanel, { title: "Panel", closable: true }, () => "Body"),
+            h(PopupPanel, { title: "Panel", showClose: true }, () => "Body"),
             h(Scrollbar, { container: null }),
             h(VerticalSlider, {
               modelValue: 0,

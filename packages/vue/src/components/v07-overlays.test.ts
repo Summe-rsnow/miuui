@@ -610,7 +610,7 @@ describe("v0.7.0 overlay & floating components", () => {
   it("LoadingOverlay handles scroll lock, avoids nested role=status, and applies inline radius & material", async () => {
     const noText = track(
       mount(LoadingOverlay, {
-        props: { loading: true, fullscreen: true, material: "test-acrylic" },
+        props: { loading: true, fullscreen: true, iconSize: "xl", material: "test-acrylic" },
         attachTo: document.body,
       }),
     )
@@ -618,6 +618,7 @@ describe("v0.7.0 overlay & floating components", () => {
     expect(document.body.style.overflow).toBe("hidden")
     const overlay = document.querySelector<HTMLElement>(".miu-loading-overlay--fullscreen")
     expect(overlay?.getAttribute("data-material")).toBe("test-acrylic")
+    expect(overlay?.getAttribute("data-miu-icon-size")).toBe("xl")
     expect(overlay?.getAttribute("role")).toBeNull()
     expect(overlay?.querySelectorAll('[role="status"]')).toHaveLength(1)
 
@@ -638,7 +639,7 @@ describe("v0.7.0 overlay & floating components", () => {
   it("ToastViewport mounts via useMounted and renders pill and solid variants cleanly", async () => {
     const { toast, clear } = useToast()
     clear()
-    track(mount(ToastViewport, { props: { styleVariant: "solid" }, attachTo: document.body }))
+    track(mount(ToastViewport, { props: { variant: "solid" }, attachTo: document.body }))
     toast.info("Solid info", { material: "test-acrylic" })
     toast.success("Pill notice", { styleVariant: "pill" })
     await flushPromises()

@@ -24,7 +24,7 @@ export interface IconProps {
   /** 图标尺寸 token 或像素数值。 */
   size?: IconSize | number
   /** 无障碍标签；设置后渲染 `role="img"`。 */
-  label?: string
+  ariaLabel?: string
   /** 旋转角度（度）。 */
   rotate?: 0 | 90 | 180 | 270
 }
@@ -851,9 +851,9 @@ export interface SkeletonProps extends ComponentSemanticProps<"root" | "shimmer"
 /** 加载指示器 Props。 */
 export interface SpinnerProps extends ComponentSemanticProps<"root"> {
   /** 指示器尺寸。 */
-  size?: IconSize
+  iconSize?: IconSize
   /** 无障碍标签（默认使用本地化 loading 文案）。 */
-  label?: string
+  ariaLabel?: string
 }
 
 /** 空状态 Props。 */
@@ -1445,7 +1445,7 @@ export interface ToastViewportProps extends ComponentSemanticProps<
   /** 表面材质。 */
   material?: MaterialName
   /** 默认风格变体。 */
-  styleVariant?: ToastStyleVariant
+  variant?: ToastStyleVariant
   /** 圆角尺寸。 */
   radius?: Radius | "default"
   /** 最大同时展示数量。 */
@@ -1638,10 +1638,15 @@ export interface ImageProps extends ComponentSemanticProps<"root" | "img" | "fal
 
 /** 图片预览触发源在视口中的几何区域（用于 FLIP 放大/关闭缩放动画）。 */
 export interface ImagePreviewOriginRect {
+  /** 触发源左边缘距视口左侧距离（像素）。 */
   left: number
+  /** 触发源上边缘距视口顶部距离（像素）。 */
   top: number
+  /** 触发源宽度（像素）。 */
   width: number
+  /** 触发源高度（像素）。 */
   height: number
+  /** 触发源圆角 CSS 值。 */
   borderRadius?: string
 }
 
@@ -1773,6 +1778,8 @@ export interface PageLayoutProps extends ComponentSemanticProps<"root" | "header
   density?: Density
   /** 返回按钮图标尺寸。 */
   iconSize?: IconSize
+  /** 返回按钮无障碍标签。 */
+  backLabel?: string
   /** 内容区最大宽度预设或 CSS 长度。 */
   contentMaxWidth?: "sm" | "md" | "lg" | "xl" | string
   /** 内容区水平对齐。 */
@@ -1792,7 +1799,7 @@ export interface LoadingOverlayProps extends ComponentSemanticProps<"root" | "ca
   /** 是否全屏固定定位（否则相对于父容器绝对定位）。 */
   fullscreen?: boolean
   /** 指示器尺寸。 */
-  size?: IconSize
+  iconSize?: IconSize
   /** 圆角尺寸（局部遮罩继承容器圆角）。 */
   radius?: Radius | "default"
   /** 表面材质。 */
@@ -1989,7 +1996,7 @@ export interface PopupPanelProps extends ComponentSemanticProps<PopupPanelSemant
   /** 面板标题。 */
   title?: string
   /** 是否显示关闭按钮。 */
-  closable?: boolean
+  showClose?: boolean
   /** 关闭按钮无障碍标签。 */
   closeLabel?: string
   /** 内容区是否禁止内部滚动。 */
@@ -2118,5 +2125,245 @@ export interface MediaCardProps extends ComponentSemanticProps<MediaCardSemantic
   /** 悬浮操作按钮位置。 */
   actionPlacement?: MediaCardActionPlacement
   /** 交互按钮无障碍标签。 */
+  ariaLabel?: string
+}
+
+/** 分割线语义区域。 */
+export type DividerSemanticRegion = "root" | "line" | "label"
+
+/** 分割线 Props。 */
+export interface DividerProps extends ComponentSemanticProps<DividerSemanticRegion> {
+  /** 分割线方向。 */
+  orientation?: "horizontal" | "vertical"
+  /** 内嵌文本标签。 */
+  label?: string
+  /** 文本标签对齐位置。 */
+  labelAlign?: "start" | "center" | "end"
+  /** 是否使用虚线样式。 */
+  dashed?: boolean
+  /** 是否为纯装饰性分割线（启用时设置 `aria-hidden="true"`）。 */
+  decorative?: boolean
+  /** 上下或左右外边距规格。 */
+  spacing?: "none" | "sm" | "md" | "lg"
+}
+
+/** 手风琴单条配置项。 */
+export interface AccordionItem {
+  /** 唯一标识值。 */
+  value: string
+  /** 标题文案。 */
+  title: string
+  /** 辅助说明文案。 */
+  description?: string
+  /** 展开后展示的默认文本内容。 */
+  content?: string
+  /** 标题前置图标。 */
+  icon?: IconProp
+  /** 是否禁用该项。 */
+  disabled?: boolean
+}
+
+/** 手风琴语义区域。 */
+export type AccordionSemanticRegion =
+  | "root"
+  | "item"
+  | "header"
+  | "trigger"
+  | "indicator"
+  | "content"
+
+/** 手风琴 Props。 */
+export interface AccordionProps extends ComponentSemanticProps<AccordionSemanticRegion> {
+  /** 受控展开值（单项为字符串，多项为字符串数组）。 */
+  modelValue?: string | string[]
+  /** 非受控默认展开值。 */
+  defaultValue?: string | string[]
+  /** 手风琴条目列表。 */
+  items: AccordionItem[]
+  /** 是否允许同时展开多项。 */
+  multiple?: boolean
+  /** 单项模式下是否允许全部折叠收起。 */
+  collapsible?: boolean
+  /** 视觉样式变体。 */
+  variant?: "default" | "bordered" | "separated"
+  /** 控件尺寸。 */
+  size?: ControlSize
+  /** 图标尺寸。 */
+  iconSize?: IconSize
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+  /** 布局密度。 */
+  density?: Density
+  /** 禁用整个手风琴交互。 */
+  disabled?: boolean
+}
+
+/** 步骤节点状态。 */
+export type StepStatus = "wait" | "process" | "finish" | "error"
+
+/** 步骤条单步配置项。 */
+export interface StepItem {
+  /** 步骤唯一键值。 */
+  key?: string
+  /** 步骤标题。 */
+  title: string
+  /** 步骤描述文案。 */
+  description?: string
+  /** 自定义步骤图标。 */
+  icon?: IconProp
+  /** 显式覆盖当前步骤状态。 */
+  status?: StepStatus
+  /** 禁用该步骤点击切换。 */
+  disabled?: boolean
+}
+
+/** 步骤条语义区域。 */
+export type StepsSemanticRegion =
+  | "root"
+  | "item"
+  | "trigger"
+  | "indicator"
+  | "content"
+  | "title"
+  | "description"
+  | "separator"
+
+/** 步骤条 Props。 */
+export interface StepsProps extends ComponentSemanticProps<StepsSemanticRegion> {
+  /** 当前激活步骤索引（从 0 开始）。 */
+  modelValue?: number
+  /** 步骤数据列表。 */
+  items: StepItem[]
+  /** 步骤条排列方向。 */
+  orientation?: "horizontal" | "vertical"
+  /** 线性推进模式（限制仅可跳转已完成或当前步骤）。 */
+  linear?: boolean
+  /** 是否允许点击步骤头切换当前步骤。 */
+  clickable?: boolean
+  /** 控件尺寸。 */
+  size?: "sm" | "md" | "lg"
+  /** 图标尺寸。 */
+  iconSize?: IconSize
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 禁用交互状态。 */
+  disabled?: boolean
+  /** 无障碍标签。 */
+  ariaLabel?: string
+}
+
+/** 组合框可选项配置。 */
+export interface ComboboxOption {
+  /** 选项展示文本。 */
+  label: string
+  /** 选项唯一值。 */
+  value: string | number
+  /** 禁用该选项。 */
+  disabled?: boolean
+  /** 选项补充描述。 */
+  description?: string
+  /** 选项前置图标。 */
+  icon?: IconProp
+  /** 所属分组名称。 */
+  group?: string
+}
+
+/** 组合框语义区域。 */
+export type ComboboxSemanticRegion =
+  | "root"
+  | "control"
+  | "input"
+  | "tags"
+  | "tag"
+  | "clear"
+  | "trigger"
+  | "content"
+  | "viewport"
+  | "item"
+  | "itemIndicator"
+  | "empty"
+
+/** 组合框 Props。 */
+export interface ComboboxProps extends ComponentSemanticProps<ComboboxSemanticRegion> {
+  /** 当前选中值（单选为标量，多选为数组）。 */
+  modelValue?: string | number | Array<string | number>
+  /** 候选项列表。 */
+  options: ComboboxOption[]
+  /** 是否启用多选模式。 */
+  multiple?: boolean
+  /** 控件 ID。 */
+  id?: string
+  /** 表单字段名。 */
+  name?: string
+  /** 输入占位提示文本。 */
+  placeholder?: string
+  /** 无匹配候选项时的空状态提示文本。 */
+  emptyText?: string
+  /** 控件尺寸。 */
+  size?: ControlSize
+  /** 图标尺寸。 */
+  iconSize?: IconSize
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+  /** 禁用状态。 */
+  disabled?: boolean
+  /** 只读状态。 */
+  readonly?: boolean
+  /** 校验错误态。 */
+  invalid?: boolean
+  /** 允许一键清空已选值。 */
+  clearable?: boolean
+  /** 无障碍标签。 */
+  ariaLabel?: string
+  /** 受控下拉面板展开状态。 */
+  open?: boolean
+  /** 自定义选项过滤匹配函数。 */
+  filterFn?: (option: ComboboxOption, query: string) => boolean
+}
+
+/** 标签输入框语义区域。 */
+export type TagInputSemanticRegion = "root" | "tag" | "tagText" | "tagDelete" | "input" | "clear"
+
+/** 标签输入框 Props。 */
+export interface TagInputProps extends ComponentSemanticProps<TagInputSemanticRegion> {
+  /** 已添加的标签字符串列表。 */
+  modelValue?: string[]
+  /** 控件 ID。 */
+  id?: string
+  /** 表单字段名。 */
+  name?: string
+  /** 输入占位提示文本。 */
+  placeholder?: string
+  /** 最大可添加标签数量。 */
+  max?: number
+  /** 触发拆分为标签的分隔符或正则表达式。 */
+  delimiter?: string | RegExp
+  /** 是否允许添加重复标签。 */
+  duplicate?: boolean
+  /** 失焦时是否自动提交当前输入文本为标签。 */
+  addOnBlur?: boolean
+  /** 粘贴文本时是否按分隔符自动拆分为标签。 */
+  addOnPaste?: boolean
+  /** 控件尺寸。 */
+  size?: ControlSize
+  /** 图标尺寸。 */
+  iconSize?: IconSize
+  /** 圆角尺寸。 */
+  radius?: Radius | "default"
+  /** 表面材质覆盖。 */
+  material?: MaterialName
+  /** 禁用状态。 */
+  disabled?: boolean
+  /** 只读状态。 */
+  readonly?: boolean
+  /** 校验错误态。 */
+  invalid?: boolean
+  /** 允许一键清空全部标签。 */
+  clearable?: boolean
+  /** 无障碍标签。 */
   ariaLabel?: string
 }

@@ -103,11 +103,10 @@ for (const pkg of targets) {
     logLevel: "warn",
     plugins: pkg.vue ? [vue()] : [],
     build: {
-      target: pkg.node ? "node20" : ["chrome111", "edge111", "firefox113", "safari15.4"],
+      target: ["chrome111", "edge111", "firefox113", "safari15.4"],
       outDir: distDir,
       emptyOutDir: true,
       minify: false,
-      ...(pkg.node ? { ssr: true } : {}),
       lib: {
         entry: pkg.entries
           ? Object.fromEntries(Object.entries(pkg.entries).map(([k, v]) => [k, resolve(pkgDir, v)]))
@@ -119,8 +118,7 @@ for (const pkg of targets) {
           id === "vue" ||
           id === "reka-ui" ||
           id.startsWith("reka-ui/") ||
-          id.startsWith("@xcmm1543/miuui-") ||
-          (pkg.node && id.startsWith("node:")),
+          id.startsWith("@xcmm1543/miuui-"),
         output: {
           format: "es",
           preserveModules: true,
@@ -142,7 +140,8 @@ for (const pkg of targets) {
   for (const [from, to] of pkg.bundleCss ?? []) {
     const dest = resolve(pkgDir, to)
     mkdirSync(dirname(dest), { recursive: true })
-    writeFileSync(dest, bundleCssImports(resolve(pkgDir, from)), "utf8")
+    const bundled = bundleCssImports(resolve(pkgDir, from)).trimEnd()
+    writeFileSync(dest, `${bundled}\n`, "utf8")
   }
 
   console.log(`Built @xcmm1543/miuui-${pkg.name} -> dist/`)

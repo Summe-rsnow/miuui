@@ -2,6 +2,7 @@
 import { computed } from "vue"
 import { regionClass, regionStyle, safeHref } from "@xcmm1543/miuui-core"
 import type { PaginationLink, PaginationProps } from "../types"
+import { useControlSize } from "../composables/useControlSize"
 import { useMiuI18n } from "../composables/useMiu"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Button from "./Button.vue"
@@ -19,7 +20,6 @@ const props = withDefaults(defineProps<PaginationProps>(), {
   hasNext: true,
   loading: false,
   disabled: false,
-  size: "xs",
 })
 
 const emit = defineEmits<{
@@ -29,6 +29,12 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useMiuI18n()
+const { resolvedSize, resolvedIconSize } = useControlSize({
+  size: () => props.size,
+  defaultSize: "xs",
+  iconSize: () => props.iconSize,
+  componentName: "Pagination",
+})
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "Pagination")
 
 const isLocked = computed(() => props.loading || props.disabled)
@@ -101,9 +107,10 @@ function onPageSizeUpdate(val: string | number | undefined): void {
     role="navigation"
     :class="regionClass(props, 'root', 'miu-pagination', 'miu-pagination--numeric')"
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
+    :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
     :data-material="materialName"
-    :data-miu-icon-size="iconSize"
+    :data-miu-icon-size="resolvedIconSize.size"
     :data-loading="loading || undefined"
     :data-disabled="disabled || undefined"
     :aria-busy="loading || undefined"
@@ -114,7 +121,9 @@ function onPageSizeUpdate(val: string | number | undefined): void {
       <Select
         :model-value="pageSize"
         :options="pageSizeOptions"
-        :size="size"
+        :size="resolvedSize.size"
+        :radius="radius"
+        :material="material"
         :disabled="isLocked"
         class="miu-pagination__size-select"
         @update:model-value="onPageSizeUpdate"
@@ -123,8 +132,8 @@ function onPageSizeUpdate(val: string | number | undefined): void {
     <div class="miu-pagination__pages">
       <Button
         variant="ghost"
-        :size="size"
-        :icon-size="iconSize"
+        :size="resolvedSize.size"
+        :icon-size="resolvedIconSize.size"
         icon-only
         radius="full"
         :title="t('pagination.previous')"
@@ -149,7 +158,7 @@ function onPageSizeUpdate(val: string | number | undefined): void {
         <Button
           v-else
           :variant="item === currentPage ? 'solid' : 'ghost'"
-          :size="size"
+          :size="resolvedSize.size"
           radius="full"
           :disabled="isLocked"
           :class-names="{
@@ -169,8 +178,8 @@ function onPageSizeUpdate(val: string | number | undefined): void {
       </template>
       <Button
         variant="ghost"
-        :size="size"
-        :icon-size="iconSize"
+        :size="resolvedSize.size"
+        :icon-size="resolvedIconSize.size"
         icon-only
         radius="full"
         :title="t('pagination.next')"
@@ -188,7 +197,9 @@ function onPageSizeUpdate(val: string | number | undefined): void {
     <NumberInput
       v-if="showQuickJumper && hasTotal"
       :model-value="currentPage"
-      :size="size"
+      :size="resolvedSize.size"
+      :radius="radius"
+      :material="material"
       :min="1"
       :max="totalPages"
       :disabled="isLocked"
@@ -204,9 +215,10 @@ function onPageSizeUpdate(val: string | number | undefined): void {
     role="navigation"
     :class="regionClass(props, 'root', 'miu-pagination')"
     :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
+    :data-miu-size="resolvedSize.size"
     :data-miu-radius="radius"
     :data-material="materialName"
-    :data-miu-icon-size="iconSize"
+    :data-miu-icon-size="resolvedIconSize.size"
     :data-loading="loading || undefined"
     :data-disabled="disabled || undefined"
     :aria-busy="loading || undefined"

@@ -76,9 +76,9 @@ describe("migrated components (0.8.0)", () => {
     continuous.unmount()
   })
 
-  it("renders PopupPanel with title, closable button, body and footer", async () => {
+  it("renders PopupPanel with title, showClose button, body and footer", async () => {
     const wrapper = mount(PopupPanel, {
-      props: { title: "Queue", closable: true, footerClickable: true },
+      props: { title: "Queue", showClose: true, footerClickable: true },
       slots: {
         default: "<div class='body-item'>Song 1</div>",
         footer: "Clear",

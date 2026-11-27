@@ -235,7 +235,7 @@ describe("component coverage smoke", () => {
     expect(table.attributes("data-material")).toBe("glass")
     track(mount(Skeleton, { props: { variant: "circle", width: 24, height: 24, radius: "full" } }))
     track(mount(Skeleton, { props: { variant: "text", animated: false } }))
-    track(mount(Spinner, { props: { size: "lg", label: "Loading" } }))
+    track(mount(Spinner, { props: { iconSize: "lg", ariaLabel: "Loading" } }))
     track(mount(TruncateText, { props: { text: "A long text", lines: 2, title: "Full text" } }))
   })
 
@@ -253,6 +253,16 @@ describe("component coverage smoke", () => {
   it("registers all plugin components", () => {
     const app = createApp({ render: () => null })
     app.use(MiuUi)
-    expect(Object.keys(app._context.components).length).toBeGreaterThan(30)
+    const registered = Object.keys(app._context.components)
+    expect(registered).toHaveLength(69)
+    expect(registered).toEqual(
+      expect.arrayContaining([
+        "MiuAccordion",
+        "MiuCombobox",
+        "MiuDivider",
+        "MiuSteps",
+        "MiuTagInput",
+      ]),
+    )
   })
 })

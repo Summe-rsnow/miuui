@@ -1,4 +1,5 @@
 import type { App, Component, Plugin } from "vue"
+import Accordion from "./components/Accordion.vue"
 import Alert from "./components/Alert.vue"
 import AppBar from "./components/AppBar.vue"
 import Avatar from "./components/Avatar.vue"
@@ -11,10 +12,12 @@ import Checkbox from "./components/Checkbox.vue"
 import Code from "./components/Code.vue"
 import Collapse from "./components/Collapse.vue"
 import ColorPicker from "./components/ColorPicker.vue"
+import Combobox from "./components/Combobox.vue"
 import CommandPalette from "./components/CommandPalette.vue"
 import ConfirmDialog from "./components/ConfirmDialog.vue"
 import ContextMenu from "./components/ContextMenu.vue"
 import Dialog from "./components/Dialog.vue"
+import Divider from "./components/Divider.vue"
 import Drawer from "./components/Drawer.vue"
 import DropdownMenu from "./components/DropdownMenu.vue"
 import EmptyState from "./components/EmptyState.vue"
@@ -53,9 +56,11 @@ import Select from "./components/Select.vue"
 import Skeleton from "./components/Skeleton.vue"
 import Slider from "./components/Slider.vue"
 import Spinner from "./components/Spinner.vue"
+import Steps from "./components/Steps.vue"
 import Switch from "./components/Switch.vue"
 import Table from "./components/Table.vue"
 import Tabs from "./components/Tabs.vue"
+import TagInput from "./components/TagInput.vue"
 import Textarea from "./components/Textarea.vue"
 import ThemeProvider from "./components/ThemeProvider.vue"
 import ToastViewport from "./components/ToastViewport.vue"
@@ -65,6 +70,7 @@ import TruncateText from "./components/TruncateText.vue"
 import VerticalSlider from "./components/VerticalSlider.vue"
 
 export const components: Record<string, Component> = {
+  MiuAccordion: Accordion,
   MiuAlert: Alert,
   MiuAppBar: AppBar,
   MiuAvatar: Avatar,
@@ -77,10 +83,12 @@ export const components: Record<string, Component> = {
   MiuCode: Code,
   MiuCollapse: Collapse,
   MiuColorPicker: ColorPicker,
+  MiuCombobox: Combobox,
   MiuCommandPalette: CommandPalette,
   MiuConfirmDialog: ConfirmDialog,
   MiuContextMenu: ContextMenu,
   MiuDialog: Dialog,
+  MiuDivider: Divider,
   MiuDrawer: Drawer,
   MiuDropdownMenu: DropdownMenu,
   MiuEmptyState: EmptyState,
@@ -119,9 +127,11 @@ export const components: Record<string, Component> = {
   MiuSlider: Slider,
   MiuSkeleton: Skeleton,
   MiuSpinner: Spinner,
+  MiuSteps: Steps,
   MiuSwitch: Switch,
   MiuTable: Table,
   MiuTabs: Tabs,
+  MiuTagInput: TagInput,
   MiuTextarea: Textarea,
   MiuThemeProvider: ThemeProvider,
   MiuToastViewport: ToastViewport,

@@ -49,5 +49,3 @@ export function getThemeInitScript(context: Partial<ThemeContext> = {}): string 
   const script = `(function(){var r=document.documentElement;${statements}})();`
   return `<script>${script.replaceAll("<", "\\u003c")}</script>`
 }
-
-export const THEME_STORAGE_KEY = "miuui-theme"

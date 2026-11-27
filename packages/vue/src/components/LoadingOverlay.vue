@@ -10,7 +10,7 @@ import Spinner from "./Spinner.vue"
 
 const props = withDefaults(defineProps<LoadingOverlayProps>(), {
   fullscreen: true,
-  size: "lg",
+  iconSize: "lg",
   radius: "default",
   lockScroll: true,
 })
@@ -42,6 +42,7 @@ const rootClasses = computed(() =>
         :class="rootClasses"
         :style="mergeStyle(regionStyle(props, 'root'), materialTokens)"
         :data-material="materialName"
+        :data-miu-icon-size="iconSize"
         :data-miu-radius="fullscreen ? undefined : radius"
         :role="hasText ? 'status' : undefined"
         :aria-live="hasText ? 'polite' : undefined"
@@ -52,7 +53,7 @@ const rootClasses = computed(() =>
         >
           <slot name="icon">
             <Spinner
-              :size="size"
+              :icon-size="iconSize"
               :role="hasText ? 'none' : 'status'"
               :aria-hidden="hasText ? 'true' : undefined"
             />

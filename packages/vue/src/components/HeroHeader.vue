@@ -3,6 +3,7 @@ import { computed, ref, watch } from "vue"
 import { regionClass, regionStyle } from "@xcmm1543/miuui-core"
 import type { HeroHeaderProps, HeroSkeletonAction, ImagePreviewOriginRect } from "../types"
 import { captureOriginRect } from "../composables/useOriginRect"
+import { useMiuI18n } from "../composables/useMiu"
 import { useResolvedImageSrc } from "../composables/useMiuImage"
 import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolution"
 import Image from "./Image.vue"
@@ -26,6 +27,7 @@ const emit = defineEmits<{
   coverClick: []
 }>()
 
+const { t } = useMiuI18n()
 const { materialName, materialTokens } = useResolvedMaterial(() => props.material, "HeroHeader")
 
 const showPreview = ref(false)
@@ -105,7 +107,7 @@ function onCoverClick(): void {
           :style="regionStyle(props, 'cover')"
           :role="canPreview ? 'button' : undefined"
           :tabindex="canPreview ? 0 : undefined"
-          :aria-label="canPreview ? title || 'Preview' : undefined"
+          :aria-label="canPreview ? title || t('image.preview') : undefined"
           @click="onCoverClick"
           @keydown.enter.prevent="canPreview && onCoverClick()"
           @keydown.space.prevent="canPreview && onCoverClick()"

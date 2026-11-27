@@ -29,8 +29,7 @@ const backLabel = computed(() => props.backLabel ?? t("common.back"))
       <button
         v-if="back"
         type="button"
-        class="miu-page-header__back"
-        :class="regionClass(props, 'back')"
+        :class="regionClass(props, 'back', 'miu-page-header__back')"
         :style="regionStyle(props, 'back')"
         :aria-label="backLabel"
         @click="emit('back', $event)"

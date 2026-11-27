@@ -31,7 +31,15 @@
 .miu-color-picker__swatch:focus-visible,
 .miu-color-picker__input:focus-visible,
 .miu-color-picker__preset:focus-visible,
-.miu-help-tooltip__trigger:focus-visible {
+.miu-help-tooltip__trigger:focus-visible,
+.miu-textarea__clear:focus-visible,
+.miu-select__clear:focus-visible,
+.miu-tabs__panel:focus-visible,
+.miu-number-input__clear:focus-visible,
+.miu-color-picker__clear:focus-visible,
+.miu-vertical-slider__track:focus-visible,
+.miu-truncate--popover:focus-visible,
+.miu-hero__cover--preview:focus-visible {
   outline: var(--miu-focus-ring-width) solid var(--miu-color-focus-ring);
   outline-offset: var(--miu-focus-ring-offset);
 }

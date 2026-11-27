@@ -1,6 +1,6 @@
 # @xcmm1543/miuui-vue
 
-μui Vue 3.5+ component adapter built on Reka UI (`>=2.11.0 <3.0.0`) — 59 accessible components, `MiuUi` plugin installer, and composables.
+μui `1.0.0` Vue 3.5+ component adapter built on Reka UI (`>=2.11.0 <3.0.0`) — 69 accessible components, `MiuUi` plugin installer, and composables.
 
 ## Installation
 
@@ -24,6 +24,4 @@ import { MiuUi } from "@xcmm1543/miuui-vue"
 app.use(MiuUi)
 ```
 
-For tree-shaking and named imports, import components directly from `@xcmm1543/miuui-vue` (single `Button` gzipped size gate <= 25 KB; `packages/vue` ships with `"sideEffects": ["*.css"]`). If migrating from `0.6.x`, see [`docs/migration.md`](../../docs/migration.md).
-
-See the [repository](https://github.com/Summe-rsnow/miuui) for full documentation.
+For tree-shaking and named imports, import components directly from `@xcmm1543/miuui-vue` (single `Button` gzipped size gate <= 25 KB; `packages/vue` ships with `"sideEffects": ["*.css"]` and `@layer miu-base` cascade rules). For 1.0.0 release notes and migration details, see [the release guide](../../../website/guide/release.md) or the [repository](https://github.com/Summe-rsnow/miuui).

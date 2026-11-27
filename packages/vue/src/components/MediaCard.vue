@@ -57,6 +57,7 @@ const isInteractive = computed(() => props.interactive && !props.disabled && !pr
     :data-material="materialName"
     :data-disabled="disabled || undefined"
     :data-loading="loading || undefined"
+    :aria-disabled="(interactive && (disabled || loading)) || undefined"
   >
     <button
       v-if="isInteractive"

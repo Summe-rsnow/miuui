@@ -1,3 +1,5 @@
+@layer miu-reset, miu-tokens, miu-base, miu-material, miu-motion, miu-override;
+
 @layer miu-motion {
   [data-motion-tier="reduced"] {
     --miu-motion-ease-spring: var(--miu-motion-ease-out);
@@ -46,10 +48,15 @@
   [data-motion-tier="none"] .miu-empty-state__icon,
   [data-motion-tier="none"] .miu-button__spinner,
   [data-motion-tier="none"] .miu-input__clear,
+  [data-motion-tier="none"] .miu-textarea__clear,
+  [data-motion-tier="none"] .miu-number-input__clear,
+  [data-motion-tier="none"] .miu-color-picker__clear,
   [data-motion-tier="none"] .miu-form-field__error,
   [data-motion-tier="none"] .miu-checkbox__indicator,
   [data-motion-tier="none"] .miu-select__content,
   [data-motion-tier="none"] .miu-select__indicator,
+  [data-motion-tier="none"] .miu-overlay-backdrop,
+  [data-motion-tier="none"] .miu-popover,
   [data-motion-tier="none"] .miu-menu,
   [data-motion-tier="none"] .miu-tooltip,
   [data-motion-tier="none"] .miu-tabs__panel,
@@ -68,11 +75,18 @@
   [data-motion-tier="none"] .miu-image__img,
   [data-motion-tier="none"] .miu-image__lightbox-img,
   [data-motion-tier="none"] .miu-loading-overlay__content,
-  [data-motion-tier="none"] .miu-image-preview__img {
+  [data-motion-tier="none"] .miu-image-preview,
+  [data-motion-tier="none"] .miu-image-preview__img,
+  [data-motion-tier="none"] .miu-accordion__content,
+  [data-motion-tier="none"] .miu-combobox__clear,
+  [data-motion-tier="none"] .miu-tag-input__clear,
+  [data-motion-tier="none"] .miu-combobox__content,
+  [data-motion-tier="none"] .miu-combobox__item-indicator {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
   }
 
+  [data-motion-tier="none"] *::-webkit-scrollbar-thumb,
   [data-motion-tier="none"] .miu-button,
   [data-motion-tier="none"] .miu-button__icon,
   [data-motion-tier="none"] .miu-icon,
@@ -80,6 +94,7 @@
   [data-motion-tier="none"] .miu-input__clear,
   [data-motion-tier="none"] .miu-input__toggle,
   [data-motion-tier="none"] .miu-textarea,
+  [data-motion-tier="none"] .miu-textarea__clear,
   [data-motion-tier="none"] .miu-textarea__resizer,
   [data-motion-tier="none"] .miu-form-row--clickable,
   [data-motion-tier="none"] .miu-form-row--card,
@@ -88,6 +103,7 @@
   [data-motion-tier="none"] .miu-switch__thumb,
   [data-motion-tier="none"] .miu-select__trigger,
   [data-motion-tier="none"] .miu-select__chevron,
+  [data-motion-tier="none"] .miu-select__clear,
   [data-motion-tier="none"] .miu-select__item,
   [data-motion-tier="none"] .miu-dialog__close,
   [data-motion-tier="none"] .miu-drawer__close,
@@ -113,35 +129,62 @@
   [data-motion-tier="none"] .miu-toast-move,
   [data-motion-tier="none"] .miu-toast-enter-active,
   [data-motion-tier="none"] .miu-toast-leave-active,
+  [data-motion-tier="none"] .miu-app-bar,
   [data-motion-tier="none"] .miu-nav-menu__link,
   [data-motion-tier="none"] .miu-toc__link,
   [data-motion-tier="none"] .miu-breadcrumb__link,
   [data-motion-tier="none"] .miu-pagination__link,
   [data-motion-tier="none"] .miu-pagination__icon,
   [data-motion-tier="none"] .miu-pagination--numeric,
+  [data-motion-tier="none"] .miu-kbd,
+  [data-motion-tier="none"] .miu-code,
   [data-motion-tier="none"] .miu-alert,
   [data-motion-tier="none"] .miu-command-palette__item,
   [data-motion-tier="none"] .miu-slider__track,
   [data-motion-tier="none"] .miu-slider__range,
   [data-motion-tier="none"] .miu-slider__thumb,
   [data-motion-tier="none"] .miu-progress__indicator,
+  [data-motion-tier="none"] .miu-progress__circle-indicator,
   [data-motion-tier="none"] .miu-number-input,
   [data-motion-tier="none"] .miu-number-input__stepper,
+  [data-motion-tier="none"] .miu-number-input__clear,
   [data-motion-tier="none"] .miu-image__img,
   [data-motion-tier="none"] .miu-fade-enter-active,
   [data-motion-tier="none"] .miu-fade-leave-active,
   [data-motion-tier="none"] .miu-collapse,
   [data-motion-tier="none"] .miu-color-picker__input,
+  [data-motion-tier="none"] .miu-color-picker__clear,
   [data-motion-tier="none"] .miu-color-picker__preset,
   [data-motion-tier="none"] .miu-list-item,
   [data-motion-tier="none"] .miu-help-tooltip__trigger,
   [data-motion-tier="none"] .miu-image-preview__thumb,
   [data-motion-tier="none"] .miu-image-group__item,
+  [data-motion-tier="none"] .miu-scrollbar,
+  [data-motion-tier="none"] .miu-scrollbar__thumb,
+  [data-motion-tier="none"] .miu-popup-panel__footer--clickable,
   [data-motion-tier="none"] .miu-media-card,
   [data-motion-tier="none"] .miu-media-card__cover,
   [data-motion-tier="none"] .miu-media-card__action,
   [data-motion-tier="none"] .miu-vertical-slider__thumb,
-  [data-motion-tier="none"] .miu-vertical-slider__step-dot {
+  [data-motion-tier="none"] .miu-vertical-slider__thumb--dragging,
+  [data-motion-tier="none"] .miu-vertical-slider__continuous-thumb,
+  [data-motion-tier="none"] .miu-vertical-slider__step-dot,
+  [data-motion-tier="none"] .miu-accordion__item,
+  [data-motion-tier="none"] .miu-accordion__trigger,
+  [data-motion-tier="none"] .miu-accordion__indicator,
+  [data-motion-tier="none"] .miu-steps__trigger,
+  [data-motion-tier="none"] .miu-steps__indicator,
+  [data-motion-tier="none"] .miu-steps__title,
+  [data-motion-tier="none"] .miu-steps__separator,
+  [data-motion-tier="none"] .miu-combobox,
+  [data-motion-tier="none"] .miu-tag-input,
+  [data-motion-tier="none"] .miu-combobox__tag-remove,
+  [data-motion-tier="none"] .miu-tag-input__tag-delete,
+  [data-motion-tier="none"] .miu-combobox__clear,
+  [data-motion-tier="none"] .miu-combobox__trigger,
+  [data-motion-tier="none"] .miu-tag-input__clear,
+  [data-motion-tier="none"] .miu-combobox__chevron,
+  [data-motion-tier="none"] .miu-combobox__item {
     transition-duration: 0.01ms;
   }
 
@@ -170,10 +213,15 @@
 
     .miu-button__spinner:not([data-respect-reduced-motion="false"] *),
     .miu-input__clear:not([data-respect-reduced-motion="false"] *),
+    .miu-textarea__clear:not([data-respect-reduced-motion="false"] *),
+    .miu-number-input__clear:not([data-respect-reduced-motion="false"] *),
+    .miu-color-picker__clear:not([data-respect-reduced-motion="false"] *),
     .miu-form-field__error:not([data-respect-reduced-motion="false"] *),
     .miu-checkbox__indicator:not([data-respect-reduced-motion="false"] *),
     .miu-select__content:not([data-respect-reduced-motion="false"] *),
     .miu-select__indicator:not([data-respect-reduced-motion="false"] *),
+    .miu-overlay-backdrop:not([data-respect-reduced-motion="false"] *),
+    .miu-popover:not([data-respect-reduced-motion="false"] *),
     .miu-menu:not([data-respect-reduced-motion="false"] *),
     .miu-tooltip:not([data-respect-reduced-motion="false"] *),
     .miu-tabs__panel:not([data-respect-reduced-motion="false"] *),
@@ -192,7 +240,13 @@
     .miu-image__img:not([data-respect-reduced-motion="false"] *),
     .miu-image__lightbox-img:not([data-respect-reduced-motion="false"] *),
     .miu-loading-overlay__content:not([data-respect-reduced-motion="false"] *),
-    .miu-image-preview__img:not([data-respect-reduced-motion="false"] *) {
+    .miu-image-preview:not([data-respect-reduced-motion="false"] *),
+    .miu-image-preview__img:not([data-respect-reduced-motion="false"] *),
+    .miu-accordion__content:not([data-respect-reduced-motion="false"] *),
+    .miu-combobox__clear:not([data-respect-reduced-motion="false"] *),
+    .miu-tag-input__clear:not([data-respect-reduced-motion="false"] *),
+    .miu-combobox__content:not([data-respect-reduced-motion="false"] *),
+    .miu-combobox__item-indicator:not([data-respect-reduced-motion="false"] *) {
       animation-duration: 0.01ms;
       animation-iteration-count: 1;
     }

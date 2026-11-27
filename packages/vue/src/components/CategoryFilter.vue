@@ -30,6 +30,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useMiuI18n()
+const tabsCompRef = ref<InstanceType<typeof Tabs>>()
 const { resolvedSize, resolvedIconSize } = useControlSize({
   size: () => props.size,
   iconSize: () => props.iconSize,
@@ -178,6 +179,12 @@ function onReadonlyKeydown(event: KeyboardEvent): void {
     event.stopPropagation()
   }
 }
+
+defineExpose({
+  focus: () => tabsCompRef.value?.focus(),
+  blur: () => tabsCompRef.value?.blur(),
+  tabsRef: tabsCompRef,
+})
 </script>
 
 <template>
@@ -198,6 +205,7 @@ function onReadonlyKeydown(event: KeyboardEvent): void {
   >
     <div class="miu-category-filter__bar">
       <Tabs
+        ref="tabsCompRef"
         :model-value="activeMainKey"
         :items="mainTabs"
         :variant="tabVariant"
@@ -206,7 +214,6 @@ function onReadonlyKeydown(event: KeyboardEvent): void {
         :icon-size="iconSize"
         :material="material"
         :disabled="disabled"
-        :readonly="readonly || undefined"
         :aria-readonly="readonly || undefined"
         :aria-label="ariaLabel"
         :class-names="{ root: regionClass(props, 'tabs', 'miu-category-filter__tabs') }"

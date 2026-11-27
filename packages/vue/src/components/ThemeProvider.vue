@@ -234,7 +234,7 @@ const attrs = computed(() => ({
       v-if="isRootProvider"
       :position="toastPosition"
       :material="toastMaterial"
-      :style-variant="toastStyleVariant"
+      :variant="toastStyleVariant"
       :max="toastMax"
     />
     <ConfirmDialog

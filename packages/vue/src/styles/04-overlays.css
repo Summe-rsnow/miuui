@@ -306,7 +306,7 @@
 }
 
 .miu-menu__item[data-disabled] {
-  opacity: 0.45;
+  opacity: var(--miu-opacity-disabled);
   pointer-events: none;
 }
 

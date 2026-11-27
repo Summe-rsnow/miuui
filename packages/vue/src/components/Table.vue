@@ -82,7 +82,7 @@ function alignClass(column: TableColumn): string | undefined {
             </slot>
           </th>
           <th v-if="hasActions" scope="col" class="miu-table__th miu-table__th--actions">
-            <span class="miu-sr-only">Actions</span>
+            <span class="miu-sr-only">{{ t("table.actions") }}</span>
           </th>
         </tr>
       </thead>

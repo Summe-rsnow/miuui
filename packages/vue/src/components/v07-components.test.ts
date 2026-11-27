@@ -55,7 +55,7 @@ const customIcon: IconDefinition = {
 describe("v0.7.0 Display / Layout / Nav / Feedback unification", () => {
   it("Icon renders IconDefinition and built-in IconName via name", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined)
-    const custom = track(mount(Icon, { props: { name: customIcon, label: "Star" } }))
+    const custom = track(mount(Icon, { props: { name: customIcon, ariaLabel: "Star" } }))
     expect(custom.find("path").attributes("d")).toContain("M12 2L15 9")
     expect(custom.attributes("role")).toBe("img")
 
@@ -578,7 +578,7 @@ describe("v0.7.0 Display / Layout / Nav / Feedback unification", () => {
     expect(skeleton.attributes("style")).toContain("width: 80px")
     expect(skeleton.attributes("style")).toContain("opacity: 0.7")
 
-    const spinner = track(mount(Spinner, { props: { size: "lg", label: "Busy" } }))
+    const spinner = track(mount(Spinner, { props: { iconSize: "lg", ariaLabel: "Busy" } }))
     expect(spinner.attributes("data-miu-icon-size")).toBe("lg")
     expect(spinner.attributes("aria-label")).toBe("Busy")
 
@@ -843,5 +843,77 @@ describe("v0.7.0 Display / Layout / Nav / Feedback unification", () => {
     expect(collapse.attributes("data-disabled")).toBe("true")
     expect(collapse.attributes("aria-disabled")).toBe("true")
     expect(collapse.attributes("inert")).toBeDefined()
+  })
+
+  it("applies v1.0.0 useControlSize, prop forwarding, and i18n fixes across display, layout, and nav components", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined)
+    const bc = track(
+      mount(Breadcrumb, {
+        props: { items: [{ text: "Home", link: "/" }], size: "xl" as unknown as "md" },
+      }),
+    )
+    expect(bc.attributes("data-miu-size")).toBe("md")
+
+    const code = track(mount(Code, { props: { value: "x", size: "xl" as unknown as "md" } }))
+    expect(code.attributes("data-miu-size")).toBe("md")
+    expect(code.classes()).toContain("miu-code--md")
+
+    const kbd = track(mount(Kbd, { props: { keys: "K", size: "xl" as unknown as "sm" } }))
+    expect(kbd.attributes("data-miu-size")).toBe("sm")
+    expect(kbd.classes()).toContain("miu-kbd--sm")
+    expect(warn).toHaveBeenCalledTimes(3)
+    warn.mockRestore()
+
+    const pg = track(
+      mount(Pagination, {
+        props: {
+          mode: "numeric",
+          page: 1,
+          total: 40,
+          size: "md",
+          radius: "lg",
+          material: "glass",
+          pageSizeOptions: [{ label: "20", value: 20 }],
+        },
+      }),
+    )
+    expect(pg.attributes("data-miu-size")).toBe("md")
+    expect(pg.get(".miu-select").attributes("data-miu-radius")).toBe("lg")
+    expect(pg.get(".miu-select").attributes("data-material")).toBe("glass")
+    expect(pg.get(".miu-number-input").attributes("data-miu-radius")).toBe("lg")
+    expect(pg.get(".miu-number-input").attributes("data-material")).toBe("glass")
+
+    const layout = track(
+      mount(PageLayout, {
+        props: { title: "Docs", back: true, backLabel: "Return home" },
+      }),
+    )
+    expect(layout.get(".miu-page-header__back").attributes("aria-label")).toBe("Return home")
+
+    const localized = track(
+      mount(
+        {
+          components: { ThemeProvider, Table, Image },
+          template: `
+            <ThemeProvider locale="en-US">
+              <Table :columns="[{ key: 'name', label: 'Name' }]" :rows="[{ id: 1, name: 'A' }]">
+                <template #row-actions><button type="button">Go</button></template>
+              </Table>
+              <Image src="https://example.com/a.png" previewable />
+            </ThemeProvider>
+          `,
+        },
+        { attachTo: document.body },
+      ),
+    )
+    expect(localized.get(".miu-table__th--actions .miu-sr-only").text()).toBe("Actions")
+    expect(localized.get(".miu-image").attributes("aria-label")).toBe("Preview")
+    const enterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      cancelable: true,
+      bubbles: true,
+    })
+    localized.get(".miu-image").element.dispatchEvent(enterEvent)
+    expect(enterEvent.defaultPrevented).toBe(true)
   })
 })

@@ -32,7 +32,7 @@ function defaultIconName(variant: ToastVariant): IconName {
 
 const props = withDefaults(defineProps<ToastViewportProps>(), {
   position: "bottom-right",
-  styleVariant: "accent",
+  variant: "accent",
   radius: "default",
 })
 
@@ -77,7 +77,7 @@ interface ResolvedToastEntry {
 
 function resolveEntry(item: ToastItem): ResolvedToastEntry {
   const styleVariant =
-    item.styleVariant ?? toastDefaults.value.styleVariant ?? props.styleVariant ?? "accent"
+    item.styleVariant ?? toastDefaults.value.styleVariant ?? props.variant ?? "accent"
   const radius =
     styleVariant === "pill"
       ? "full"

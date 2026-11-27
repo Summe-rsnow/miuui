@@ -1,6 +1,7 @@
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils"
 import axe from "axe-core"
 import { afterEach, describe, expect, it } from "vitest"
+import Accordion from "./Accordion.vue"
 import Alert from "./Alert.vue"
 import Avatar from "./Avatar.vue"
 import Badge from "./Badge.vue"
@@ -9,9 +10,11 @@ import Button from "./Button.vue"
 import Card from "./Card.vue"
 import Checkbox from "./Checkbox.vue"
 import Code from "./Code.vue"
+import Combobox from "./Combobox.vue"
 import CommandPalette from "./CommandPalette.vue"
 import ConfirmDialog from "./ConfirmDialog.vue"
 import Dialog from "./Dialog.vue"
+import Divider from "./Divider.vue"
 import Drawer from "./Drawer.vue"
 import DropdownMenu from "./DropdownMenu.vue"
 import EmptyState from "./EmptyState.vue"
@@ -31,9 +34,11 @@ import PopupPanel from "./PopupPanel.vue"
 import Progress from "./Progress.vue"
 import SegmentedControl from "./SegmentedControl.vue"
 import Select from "./Select.vue"
+import Steps from "./Steps.vue"
 import Switch from "./Switch.vue"
 import Table from "./Table.vue"
 import Tabs from "./Tabs.vue"
+import TagInput from "./TagInput.vue"
 import Textarea from "./Textarea.vue"
 import Toc from "./Toc.vue"
 import VerticalSlider from "./VerticalSlider.vue"
@@ -283,13 +288,16 @@ describe("axe-core accessibility gate", () => {
     track(
       mount({
         components: {
+          Accordion,
           Alert,
           Avatar,
           Badge,
           Breadcrumb,
           Code,
           Card,
+          Combobox,
           ConfirmDialog,
+          Divider,
           DropdownMenu,
           EmptyState,
           HeroHeader,
@@ -303,6 +311,8 @@ describe("axe-core accessibility gate", () => {
           Popover,
           PopupPanel,
           Progress,
+          Steps,
+          TagInput,
           Toc,
           VerticalSlider,
         },
@@ -325,9 +335,14 @@ describe("axe-core accessibility gate", () => {
               <template #action><IconButton icon="play" aria-label="Play Album" /></template>
             </MediaCard>
             <HeroHeader title="Featured Playlist" tag="Playlist" description="Hero description" previewable />
-            <PopupPanel title="Queue" closable>
+            <PopupPanel title="Queue" show-close>
               <div>Queue body</div>
             </PopupPanel>
+            <Divider label="Section" />
+            <Accordion :items="[{ value: 'a', title: 'Item A', content: 'Body A' }]" />
+            <Steps :model-value="1" :items="[{ title: 'Step 1' }, { title: 'Step 2' }]" aria-label="Setup" />
+            <Combobox :options="[{ value: 'v', label: 'Vue' }]" aria-label="Framework" />
+            <TagInput :model-value="['vue']" aria-label="Tags" />
             <VerticalSlider :model-value="0" mode="continuous" center-zero aria-label="EQ Band" />
             <Progress shape="circle" :model-value="60" show-value aria-label="Upload progress" />
             <MessageComposer v-model="msg" placeholder="Reply" />

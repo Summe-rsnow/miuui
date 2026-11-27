@@ -139,9 +139,9 @@ function openPreview(): void {
     :data-miu-radius="radius"
     :role="canPreview ? 'button' : undefined"
     :tabindex="canPreview ? 0 : undefined"
-    :aria-label="canPreview ? alt || t('commandPalette.open') : undefined"
+    :aria-label="canPreview ? alt || t('image.preview') : undefined"
     @click="openPreview"
-    @keydown.enter="openPreview"
+    @keydown.enter.prevent="openPreview"
     @keydown.space.prevent="openPreview"
   >
     <img

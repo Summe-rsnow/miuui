@@ -5,11 +5,11 @@ import type { SpinnerProps } from "../types"
 import { useMiuI18n } from "../composables/useMiu"
 
 const props = withDefaults(defineProps<SpinnerProps>(), {
-  size: "md",
+  iconSize: "md",
 })
 
 const { t } = useMiuI18n()
-const accessibleLabel = computed(() => props.label ?? t("common.loading"))
+const accessibleLabel = computed(() => props.ariaLabel ?? t("common.loading"))
 </script>
 
 <template>
@@ -18,6 +18,6 @@ const accessibleLabel = computed(() => props.label ?? t("common.loading"))
     :style="regionStyle(props, 'root')"
     role="status"
     :aria-label="accessibleLabel"
-    :data-miu-icon-size="size"
+    :data-miu-icon-size="iconSize"
   />
 </template>

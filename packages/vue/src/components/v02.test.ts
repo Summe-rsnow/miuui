@@ -214,7 +214,7 @@ describe("v0.2.0 Muyu prep enhancements & FormRow deprecation drill", () => {
     expect(loaded?.name).toBe("play")
     expect(MiuBrandMark.viewBox).toBe("0 0 48 48")
 
-    const icon = track(mount(Icon, { props: { name: "heartFilled", label: "Liked" } }))
+    const icon = track(mount(Icon, { props: { name: "heartFilled", ariaLabel: "Liked" } }))
     expect(icon.attributes("fill")).toBe("currentColor")
     expect(icon.attributes("stroke")).toBe("none")
   })

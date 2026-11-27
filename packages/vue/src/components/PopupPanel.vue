@@ -7,7 +7,7 @@ import { mergeStyle, useResolvedMaterial } from "../composables/usePluginResolut
 import IconButton from "./IconButton.vue"
 
 const props = withDefaults(defineProps<PopupPanelProps>(), {
-  closable: false,
+  showClose: false,
   noScroll: false,
   bare: false,
   bordered: true,
@@ -40,7 +40,7 @@ const resolvedCloseLabel = computed(() => props.closeLabel ?? i18n.t("common.clo
     :data-material="bare ? undefined : materialName"
   >
     <div
-      v-if="$slots.header || title || closable"
+      v-if="$slots.header || title || showClose"
       :class="regionClass(props, 'header', 'miu-popup-panel__header')"
       :style="regionStyle(props, 'header')"
     >
@@ -53,7 +53,7 @@ const resolvedCloseLabel = computed(() => props.closeLabel ?? i18n.t("common.clo
           {{ title }}
         </span>
         <IconButton
-          v-if="closable"
+          v-if="showClose"
           icon="close"
           size="xs"
           icon-size="xs"

@@ -2,6 +2,40 @@
 
 All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
+## [1.0.0] - 2026-11-27
+
+### 新增组件（New Components — 64 → 69）
+
+- **`Divider` / `Accordion` / `Steps` / `Combobox` / `TagInput`**：新增 5 个基础与表单组件（全库共 **69** 个组件，均在 `index.ts` 与 `plugin.ts` 注册并纳入文档、无障碍与单测门禁）。
+
+### 破坏性变更与 API 清理（Breaking Changes & Cleanup）
+
+- **`PopupPanelProps`**：`closable?: boolean` 重命名为 `showClose?: boolean`。
+- **`ToastViewportProps`**：`styleVariant?: ToastStyleVariant` 重命名为 `variant?: ToastStyleVariant`（`ThemeProviderProps.toastStyleVariant` 与 `ToastOptions.styleVariant` / `ToastDefaults.styleVariant` 保持不变）。
+- **`IconProps` & `SpinnerProps`**：`label?: string` 重命名为 `ariaLabel?: string`。
+- **`SpinnerProps` & `LoadingOverlayProps`**：`size?: IconSize` 重命名为 `iconSize?: IconSize`（`LoadingOverlay` 根节点同步绑定 `:data-miu-icon-size="iconSize"`）。
+- **`@xcmm1543/miuui-core`**：移除未使用的 `THEME_STORAGE_KEY` 导出。
+- **`@xcmm1543/miuui-materials`**：移除未使用的 `--miu-material-gloss` 变量及其空样式规则。
+
+### 基础设施与组件修复（Infrastructure & Component Fixes）
+
+- **材质令牌隔离（`packages/materials`）**：`micaMaterial` 与 `glassMaterial` 移除 `glassBaseTokens(semantic)` 展开，仅内联注入 `--miu-material-*` 令牌，防止 `--miu-glass-*` 污染局部子树；新增 `materials.test.ts` 验证。
+- **`@layer` 级联秩序**：`packages/materials/src/style.css` 与 `packages/motions/src/style.css` 统一声明 `@layer miu-reset, miu-tokens, miu-base, miu-material, miu-motion, miu-override;`；`packages/vue/dist/style.css` 保留 `@import "./components.css" layer(miu-base);` 将组件样式放入 `miu-base` 层，而 `packages/vue/dist/components.css` 保持未分层（unlayered），避免宿主未分层 reset（如 VitePress / Tailwind）覆盖组件样式。
+- **减动效完整性（`packages/motions`）**：为 `[data-motion-tier="none"]` 与 `@media (prefers-reduced-motion: reduce)` 补全全部缺失的动画与过渡选择器（含清除按钮、遮罩、`Popover`、`ImagePreview`、环形进度及 1.0.0 新增组件），并新增 `motions.test.ts`。
+- **CSS 状态令牌与 `:focus-visible` 收口**：`Select`、`Tabs`、`SegmentedControl`、`NumberInput` 与菜单项禁用态统一使用 `var(--miu-opacity-disabled)`；标准 `:focus-visible` 焦点环规则统一收拢至 `01-interactive.css`。
+- **IME、无障碍、国际化与 `useControlSize` 对齐**：
+  - `CommandPalette` 回车确认补充 `event.isComposing` 守卫；
+  - `CategoryFilter` 移除向 `<Tabs>` 透传的无效 `:readonly` 并补全 `defineExpose({ focus, blur, tabsRef })`；
+  - `MediaCard` 为可交互禁用/加载态绑定 `:aria-disabled`；
+  - `@xcmm1543/miuui-core` `zh-CN` / `en-US` 新增 `table.actions`、`numberInput.decrement`、`numberInput.increment`、`image.preview`、`colorPicker.hex`；`NumberInput`、`Table`、`Image`、`HeroHeader` 与 `ColorPicker` 接入国际化文案与 ARIA 绑定；
+  - `Breadcrumb`、`Code`、`Kbd`、`Pagination` 接入 `useControlSize()` 并绑定 `:data-miu-size`；`Input`、`Select`、`NumberInput` 内部图标统一使用 `resolvedIconSize.size`；
+  - `Pagination` 向内部 `Select` / `NumberInput` 透传 `material` 与 `radius`；`PageLayout` 新增并透传 `backLabel`；`HelpTooltip` 补全 `defineExpose({ focus, blur, triggerRef })`；`VerticalSlider` 转发 `focus` / `blur` 事件；`ImagePreviewOriginRect` 补全字段 JSDoc。
+
+### 文档与门禁（Documentation & Verification）
+
+- **单仓单一事实源重构**：官网收敛为 69 篇三段式组件文档与 4 篇整合指南；移除 `miuui/docs/design-rules.md` 与 `miuui/docs/migration.md`（统一收归 `website/guide/architecture.md` 与 `website/guide/release.md` 维护）。
+- **全量验证**：`pnpm check` 10 项门禁全通过（`check:compat` 校验 102 个 Reka UI 原语；`vitest` 24 个测试文件 / 240 项单测通过；单 `Button` 产物 `33575 B` raw / `9989 B` gzip，`PlusIcon` `127 B` raw / `135 B` gzip）。
+
 ## [0.8.2] - 2026-11-25
 
 ### 增强（Enhancements）
@@ -53,7 +87,7 @@ All notable changes to `@xcmm1543/miuui-*` are documented in this file.
 
 ### 移除（Removals）
 
-- **破坏性清理（Direct Removals in 0.7.0）**：直接移除全部 11 个历史冗余/别名 Props、`ListItem` `#suffix` 插槽以及 `@xcmm1543/miuui-codemod` 包（仓库收敛为 6 个发布包），详见 [`docs/migration.md`](./docs/migration.md)：
+- **破坏性清理（Direct Removals in 0.7.0）**：直接移除全部 11 个历史冗余/别名 Props、`ListItem` `#suffix` 插槽以及 `@xcmm1543/miuui-codemod` 包（仓库收敛为 6 个发布包），详见 [`website/guide/release.md`](../website/guide/release.md)：
   - `IconProps.icon` -> `name`（`name: IconProp`）
   - `ButtonBaseProps.pill` / `BadgeProps.pill` / `SegmentedControlProps.pill` -> `radius="full"`
   - `IconButtonProps.shape` -> `radius="full"` / `radius`（同时在 `IconButtonProps` 中剔除无效继承字段 `iconRight` 与 `pill`）

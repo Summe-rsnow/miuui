@@ -206,7 +206,7 @@ defineExpose({ focus, blur, triggerRef })
           </SelectValue>
         </slot>
         <span class="miu-select__indicators">
-          <Spinner v-if="loading" :size="resolvedIconSize.size" />
+          <Spinner v-if="loading" :icon-size="resolvedIconSize.size" />
           <SelectIcon v-else class="miu-select__chevron">
             <Icon name="chevron" />
           </SelectIcon>
@@ -235,11 +235,11 @@ defineExpose({ focus, blur, triggerRef })
             >
               <slot name="item" :option="option" :selected="option.value === modelValue">
                 <span class="miu-select__item-icon">
-                  <Icon v-if="option.icon" :name="option.icon" size="sm" />
+                  <Icon v-if="option.icon" :name="option.icon" :size="resolvedIconSize.size" />
                 </span>
                 <SelectItemText>{{ option.label }}</SelectItemText>
                 <SelectItemIndicator class="miu-select__indicator">
-                  <Icon name="check" size="sm" />
+                  <Icon name="check" :size="resolvedIconSize.size" />
                 </SelectItemIndicator>
               </slot>
             </SelectItem>
@@ -264,7 +264,7 @@ defineExpose({ focus, blur, triggerRef })
       @focus="onFocus"
       @blur="onBlur"
     >
-      <Icon name="close" size="sm" />
+      <Icon name="close" :size="resolvedIconSize.size" />
     </button>
   </div>
 </template>
